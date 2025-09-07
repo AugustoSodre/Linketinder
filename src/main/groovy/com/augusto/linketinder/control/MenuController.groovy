@@ -13,6 +13,6 @@ class MenuController {
                 println("Input inválido")
             }
         }
-
     }
+
 }
