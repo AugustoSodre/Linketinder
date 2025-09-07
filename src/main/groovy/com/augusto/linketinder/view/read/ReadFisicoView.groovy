@@ -8,7 +8,9 @@ class ReadFisicoView {
     void show(){
 
         for (final PessoaFisica p in ListaFisicaEstatica.getLista()) {
+            println()
             println(p.toString())
+            println()
         }
 
     }

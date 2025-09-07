@@ -3,7 +3,7 @@ package com.augusto.linketinder.view.menu
 import com.augusto.linketinder.control.MenuController
 import com.augusto.linketinder.view.create.CadastroFisicoView
 import com.augusto.linketinder.view.delete.DeleteView
-import com.augusto.linketinder.view.read.ListFisicoView
+import com.augusto.linketinder.view.read.ReadFisicoView
 import com.augusto.linketinder.view.update.UpdateFisicoView
 
 class MenuFisico {
@@ -28,7 +28,7 @@ class MenuFisico {
                 new CadastroFisicoView().show()
                 break
             case 2:
-                new ListFisicoView().show()
+                new ReadFisicoView().show()
                 break
             case 3:
                 new UpdateFisicoView().show()
