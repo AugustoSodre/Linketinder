@@ -6,10 +6,15 @@ class PessoaFisica implements Pessoa{
     String cpf
     int idade
 
+    PessoaFisica(){
+        setId(hashCode().toString())
+    }
+
     @Override
     String toString() {
         return """\
         PessoaFisica {
+            id          = ${id}
             nome        = ${nome}
             email       = ${email}
             estado      = ${estado}

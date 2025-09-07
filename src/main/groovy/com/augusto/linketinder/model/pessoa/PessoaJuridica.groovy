@@ -5,13 +5,18 @@ import groovy.transform.ToString
 @ToString
 class PessoaJuridica implements Pessoa{
 
-    String cnpj
     String pais
+    String cnpj
+
+    PessoaJuridica(){
+        setId(hashCode().toString())
+    }
 
     @Override
     String toString() {
         return """\
         PessoaJuridica {
+            id          = ${id}
             nome        = ${nome}
             email       = ${email}
             estado      = ${estado}
