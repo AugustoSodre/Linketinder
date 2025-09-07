@@ -4,6 +4,6 @@ import com.augusto.linketinder.model.pessoa.PessoaJuridica
 
 class ListaJuridicaEstatica {
 
-    static List<PessoaJuridica> lista = null
+    static List<PessoaJuridica> lista = []
 
 }
