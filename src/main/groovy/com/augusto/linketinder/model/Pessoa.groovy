@@ -8,8 +8,8 @@ trait Pessoa {
     String descricao
     List<String> competencias
 
-    //TODO implementar metodo 'curtir'
-    void curtir(){}
+    //Implementar metodo 'curtir'
+    def curtir(){}
 
 
 }

@@ -2,7 +2,10 @@ package com.augusto.linketinder
 
 import com.augusto.linketinder.model.Pessoa
 import com.augusto.linketinder.model.PessoaFisica
+import com.augusto.linketinder.model.PessoaJuridica
 
-PessoaFisica p = new PessoaFisica()
+PessoaFisica p = new PessoaFisica(nome:"Jose")
+PessoaJuridica pj = new PessoaJuridica(nome:"Arroz-Gostoso")
 
-p.toString()
+println p.toString()
+println pj.toString()
