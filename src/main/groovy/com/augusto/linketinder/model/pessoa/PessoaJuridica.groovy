@@ -1,4 +1,4 @@
-package com.augusto.linketinder.model
+package com.augusto.linketinder.model.pessoa
 
 import groovy.transform.ToString
 

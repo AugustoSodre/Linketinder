@@ -1,11 +1,11 @@
-package com.augusto.linketinder.model
+package com.augusto.linketinder.model.pessoa
 
 import groovy.transform.ToString
 
 @ToString
 class PessoaFisica implements Pessoa{
 
-    String CPF
+    String cpf
     int idade
 
 }
