@@ -1,8 +1,12 @@
 package com.augusto.linketinder.view.menu
 
+import com.augusto.linketinder.control.MenuController
+
+
 class MenuMain {
 
-    void showMainMenu(){
+    boolean showMainMenu(){
+        limpaTela()
         println()
         println("-" * 25)
         println "Linketinder!"
@@ -13,41 +17,30 @@ class MenuMain {
         println "0. Sair"
         println()
         println("-" * 25)
-        print "Digite sua opção: "
+
+
+        switch (new MenuController().getIntInput()){
+            case 1:
+                limpaTela()
+                new MenuFisico().showMenuFisico()
+                break
+            case 2:
+                limpaTela()
+                new MenuJuridico().showMenuJuridico()
+                break
+            case 0:
+                return true
+            default:
+                print("Input inválido!")
+        }
+
+        return false
     }
 
-    void showFisicoMenu(){
-        println()
-        println("-" * 25)
-        println "Candidatos"
-        println()
-        println "Opções:"
-        println "1. Cadastrar Candidato"
-        println "2. Mostrar Candidatos"
-        println "3. Alterar Candidato"
-        println "4. Deletar Candidato"
-        println "0. Sair"
-        println()
-        println("-" * 25)
-        print "Digite sua opção: "
-
-        //Chamar Controller pro input
-    }
-
-    void showJuridicoMenu(){
-        println()
-        println("-" * 25)
-        println "Empregadores"
-        println()
-        println "Opções:"
-        println "1. Cadastrar Empregador"
-        println "2. Mostrar Empregadores"
-        println "3. Alterar Empregador"
-        println "4. Deletar Empregador"
-        println "0. Sair"
-        println()
-        println("-" * 25)
-        print "Digite sua opção: "
+    void limpaTela(){
+        for (i in 0..<50) {
+            println()
+        }
     }
 }
 

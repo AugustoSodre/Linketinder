@@ -2,5 +2,7 @@ package com.augusto.linketinder.view.delete
 
 class DeleteView {
 
-    void showDeleteMenu(){}
+    void show(){
+        println "Delete view"
+    }
 }

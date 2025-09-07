@@ -6,5 +6,10 @@ static void main(String[] args){
 
     MenuMain menuMain = new MenuMain()
 
-    menuMain.showMainMenu()
+    while (true){
+        if(menuMain.showMainMenu()){
+            break
+        }
+    }
+
 }
