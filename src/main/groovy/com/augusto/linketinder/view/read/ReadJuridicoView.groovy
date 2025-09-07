@@ -1,6 +1,6 @@
 package com.augusto.linketinder.view.read
 
-class ListJuridicoView {
+class ReadJuridicoView {
 
     void show(){
         println "ListAllJuridico"
