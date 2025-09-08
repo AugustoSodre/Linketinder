@@ -9,7 +9,7 @@ class CadastroController {
     String getStringInput(){
         while (true){
             try{
-                return br.readLine()
+                return br.readLine().trim()
             } catch (Exception ignored){
                 println("Input inválido")
             }
@@ -26,7 +26,7 @@ class CadastroController {
 
         while(true){
             email = getStringInput()
-            if (email ==~ /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/){
+            if (email ==~ /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/){
                 return email
             } else{
                 println "Email inválido! Tente novamente"
@@ -58,18 +58,42 @@ class CadastroController {
     }
 
     //TODO fazer getCompetencias
-    List<EnumCompetencias> getCompetenciasInput(){
-        while (true){
-            return null
+    List<EnumCompetencias> getCompetenciasInput() {
+        List<EnumCompetencias> tempList = []
+
+        while (true) {
+            println()
+            println("Competências selecionadas:")
+            tempList.each {println("- " + it.toString())}
+            println()
+            print("Digite uma competência para adicionar [0 para sair]: ")
+
+            int opcao = getIntInput()
+
+            if (opcao == 0) break
+
+            if (opcao > 0 && opcao <= EnumCompetencias.values().length) {
+                EnumCompetencias comp = EnumCompetencias.values()[opcao - 1]
+                if (!tempList.contains(comp)) {
+                    tempList << comp
+                } else {
+                    println("Competência já foi selecionada.")
+                }
+            } else {
+                println("Opção inválida, tente novamente.")
+            }
         }
+
+        return tempList
     }
+
 
     String getCpfInput(){
         String cpf
 
         while(true){
             cpf = getStringInput()
-            if (cpf ==~ /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/){
+            if (cpf ==~ /^\d{3}(\.\d{3}){2}-\d{2}$|^\d{11}$/){
                 return cpf
             } else{
                 println "CPF inválido! Tente novamente"
@@ -82,7 +106,7 @@ class CadastroController {
 
         while(true){
             cnpj = getStringInput()
-            if (cnpj ==~ /^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}-?\d{2}$/){
+            if (cnpj ==~ /^\d{2}(\.\d{3}){2}\/\d{4}-\d{2}$|^\d{14}$/){
                 return cnpj
             } else{
                 println "CNPJ inválido! Tente novamente"
@@ -93,6 +117,16 @@ class CadastroController {
     //Pais nao checado
     String getPaisInput(){
         return getStringInput()
+    }
+
+    int getIntInput(){
+        while (true){
+            try{
+                return Integer.parseInt(br.readLine())
+            } catch (Exception ignored){
+                println("Input inválido")
+            }
+        }
     }
 
     int getIdadeInput(){
