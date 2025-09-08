@@ -3,7 +3,8 @@ package com.augusto.linketinder.view.menu
 import com.augusto.linketinder.control.MenuController
 import com.augusto.linketinder.view.create.CadastroJuridicoView
 import com.augusto.linketinder.view.delete.DeleteView
-import com.augusto.linketinder.view.read.ReadJuridicoView
+
+import com.augusto.linketinder.view.read.ReadView
 import com.augusto.linketinder.view.update.UpdateJuridicoView
 
 class MenuJuridico {
@@ -28,7 +29,7 @@ class MenuJuridico {
                 new CadastroJuridicoView().show()
                 break
             case 2:
-                new ReadJuridicoView().show()
+                new ReadView().showJuridico()
                 break
             case 3:
                 new UpdateJuridicoView().show()
