@@ -35,7 +35,7 @@ class MenuJuridico {
                 new UpdateJuridicoView().show()
                 break
             case 4:
-                new DeleteView().show()
+                new DeleteView().showDeleteJuridico()
                 break
             case 0:
                 break

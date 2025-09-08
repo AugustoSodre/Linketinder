@@ -35,7 +35,7 @@ class MenuFisico {
                 new UpdateFisicoView().show()
                 break
             case 4:
-                new DeleteView().show()
+                new DeleteView().showDeleteFisico()
                 break
             case 0:
                 break
