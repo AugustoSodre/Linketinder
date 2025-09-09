@@ -201,9 +201,36 @@ class CadastroControllerTest {
     void getCompetenciasInput() {
     }
 
-    @Test
-    void getCpfInput() {
+
+    // --- Testes para getCpfInput()
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "123.456.789-10",
+            "00011122233"
+    })
+    void testValidGetCpfInput(String input) {
+        //Arrange
+        mockBufferedReader(input);
+
+        //Act
+        String result = getCadastroController().getCpfInput();
+
+        //Assert
+        assertEquals(input.trim(), result);
     }
+
+    @Test
+    void testInvalidGetCpfInput() {
+        //Arrange
+        String input = ("o\n").repeat(6);
+        mockBufferedReader(input);
+
+        //Act + Assert
+        assertThrows(RuntimeException.class, () -> {
+            cadastroController.getCpfInput();
+        });
+    }
+
 
     @Test
     void getCnpjInput() {
