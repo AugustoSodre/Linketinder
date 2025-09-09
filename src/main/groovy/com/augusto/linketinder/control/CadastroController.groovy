@@ -1,6 +1,11 @@
 package com.augusto.linketinder.control
 
 import com.augusto.linketinder.model.lista.EnumCompetencias
+import com.augusto.linketinder.model.lista.ListaFisicaEstatica
+import com.augusto.linketinder.model.lista.ListaJuridicaEstatica
+import com.augusto.linketinder.model.pessoa.Pessoa
+import com.augusto.linketinder.model.pessoa.PessoaFisica
+import com.augusto.linketinder.model.pessoa.PessoaJuridica
 
 class CadastroController {
 
@@ -28,7 +33,7 @@ class CadastroController {
 
     //Nome nao checado
     String getNomeInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        return getStringInput()
+        return getStringInput(maxTentativas)
     }
 
     String getEmailInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
@@ -113,10 +118,9 @@ class CadastroController {
 
     //Descricao nao checada
     String getDescricaoInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        return getStringInput()
+        return getStringInput(maxTentativas)
     }
 
-    //TODO fazer getCompetencias
     List<EnumCompetencias> getCompetenciasInput(int maxTentativas = MAX_TENTATIVAS_PADRAO) {
         List<EnumCompetencias> tempList = []
         int tentativasInvalidas = 0
@@ -193,7 +197,7 @@ class CadastroController {
 
     //Pais nao checado
     String getPaisInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        return getStringInput()
+        return getStringInput(maxTentativas)
     }
 
     int getIntInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
@@ -222,4 +226,11 @@ class CadastroController {
         throw new RuntimeException("Máximo de tentativas excedido para idade")
     }
 
+    void insertPessoa(Pessoa pessoa){
+        if(pessoa.getClass() == PessoaFisica){
+            ListaFisicaEstatica.getLista().add(pessoa as PessoaFisica)
+        } else{
+            ListaJuridicaEstatica.getLista().add(pessoa as PessoaJuridica)
+        }
+    }
 }

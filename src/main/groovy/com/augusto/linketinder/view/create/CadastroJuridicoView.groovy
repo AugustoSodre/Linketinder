@@ -44,7 +44,7 @@ class CadastroJuridicoView {
         pessoa.competencias = cadastroController.getCompetenciasInput()
 
         // Adiciona pessoa ao final do processo
-        ListaJuridicaEstatica.getLista().add(pessoa)
+        cadastroController.insertPessoa(pessoa)
 
         println()
         println("Empresa adicionada com sucesso!")

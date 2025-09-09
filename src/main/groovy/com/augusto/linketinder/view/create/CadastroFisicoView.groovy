@@ -46,7 +46,7 @@ class CadastroFisicoView {
         pessoa.competencias = cadastroController.getCompetenciasInput()
 
         //Adiciona pessoa ao final do processo
-        ListaFisicaEstatica.getLista().add(pessoa)
+        cadastroController.insertPessoa(pessoa)
 
         println("Candidato adicionada com sucesso!")
     }
