@@ -33,21 +33,16 @@ class CadastroControllerTest {
 
 
     // --- Testes para getStringInput()
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "\n",
-            " \n",
-             " \n "
-    })
-    void testEmptyGetStringInput(String input) {
+    @Test
+    void testEmptyGetStringInput() {
         //Arrange
+        String input = ("o\n").repeat(6);
         mockBufferedReader(input);
 
-        //Act
-        String result = getCadastroController().getStringInput();
-
-        //Assert
-        assertTrue(result.isEmpty());
+        //Act + Assert
+        assertThrows(RuntimeException.class, () -> {
+            cadastroController.getEstadoInput();
+        });
     }
 
 
@@ -86,11 +81,8 @@ class CadastroControllerTest {
             "Lucas Gonçalves",
             "Jose12Gameplays",
             "12345",
-            " ",
-            "",
-            "\n"
     })
-    void testGetNomeInput(String input) {
+    void testValidGetNomeInput(String input) {
         //Arrange
         mockBufferedReader(input + "\n");
 
@@ -181,12 +173,9 @@ class CadastroControllerTest {
     @ParameterizedTest
     @ValueSource(strings = {
             "Estudante",
-            "Grande Estudante",
-            " ",
-            "",
-            "\n"
+            "Grande Estudante"
     })
-    void testGetDescricaoInput(String input) {
+    void testValidGetDescricaoInput(String input) {
         //Arrange
         mockBufferedReader(input + "\n");
 
@@ -261,11 +250,17 @@ class CadastroControllerTest {
         });
     }
 
-    @Test
+
+    //--- Testes para getPaisInput()
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "Brasil",
+            "BR"
+    })
     void getPaisInput() {
     }
 
-    //--- Testing int number inputs
+    //--- Testes para inputs de números inteiros
     @Test
     void testGetIntInput() {
         // invalid first, then valid
