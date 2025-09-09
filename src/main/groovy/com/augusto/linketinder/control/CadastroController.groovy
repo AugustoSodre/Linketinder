@@ -34,9 +34,51 @@ class CadastroController {
         }
     }
 
-    //Estados nao checados
     String getEstadoInput(){
-        return getStringInput()
+        def estados = [
+                "AC",
+                "AL",
+                "AP",
+                "AM",
+                "BA",
+                "CE",
+                "DF",
+                "ES",
+                "GO",
+                "MA",
+                "MT",
+                "MS",
+                "MG",
+                "PA",
+                "PB",
+                "PR",
+                "PE",
+                "PI",
+                "RJ",
+                "RN",
+                "RS",
+                "RO",
+                "RR",
+                "SC",
+                "SP",
+                "SE",
+                "TO"
+        ]
+
+        String estado
+
+        while(true){
+            estado = getStringInput().toUpperCase()
+
+            if(estado in estados){
+                break
+            } else{
+                println("Input inválido!")
+            }
+
+        }
+
+        return estado
     }
 
     String getCepInput(){
