@@ -186,42 +186,50 @@ class CadastroControllerTest {
     // // --- Testes para getCompetenciasInput()
     @Test
     void testGetCompetenciasInputWithValidSelections() {
+        //Arrange
         mockBufferedReader("1\n2\n0\n");
 
+        //Act
         List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
 
+        //Assert
         assertNotNull(result);
         assertFalse(result.isEmpty());
     }
 
     @Test
     void testGetCompetenciasInputExitImmediately() {
+        //Arrange
         mockBufferedReader("0\n");
 
+        //Act
         List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
 
+        //Assert
         assertNotNull(result);
-
         assertEquals(0, result.size());
     }
 
     @Test
     void testGetCompetenciasInputDuplicateSelection() {
+        //Arrange
         mockBufferedReader("1\n1\n0\n");
 
+        //Act
         List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
 
+        //Assert
         assertNotNull(result);
-
         assertTrue(result.size() <= 1);
     }
 
     @Test
     void testGetCompetenciasInputExceedsMaxTentativas() {
-        // Simula muitas opções inválidas
+        //Arrange
         String invalidInput = "999\n".repeat(6);
         mockBufferedReader(invalidInput);
 
+        //Act + Assert
         assertThrows(RuntimeException.class, () -> cadastroController.getCompetenciasInput());
     }
 
@@ -302,35 +310,47 @@ class CadastroControllerTest {
     //--- Testes para inputs de números inteiros
     @Test
     void testGetIntInput() {
-        // invalid first, then valid
+        //Arrange
         String input = "notanumber\n42\n";
         mockBufferedReader(input);
 
+        //Act
         int result = cadastroController.getIntInput();
+
+        //Assert
         assertEquals(42, result);
     }
 
     @Test
     void testGetIdadeInput() {
+        //Arrange
         mockBufferedReader("25");
+
+        //Act
         int idade = cadastroController.getIdadeInput();
+
+        //Assert
         assertEquals(25, idade);
     }
 
     //--- Testes para adicionar Pessoa a lista respectiva
     @Test
     void testInsertPessoaFisica() {
+        //Arrange
         PessoaFisica pessoaFisica = new PessoaFisica();
         cadastroController.insertPessoa(pessoaFisica);
 
+        //Act + Assert
         assertEquals(ListaFisicaEstatica.getLista().getLast(), pessoaFisica);
     }
 
     @Test
     void testInsertPessoaJuridica() {
+        //Arrange
         PessoaJuridica pessoaJuridica = new PessoaJuridica();
         cadastroController.insertPessoa(pessoaJuridica);
 
+        //Act + Assert
         assertEquals(ListaJuridicaEstatica.getLista().getLast(), pessoaJuridica);
     }
 
