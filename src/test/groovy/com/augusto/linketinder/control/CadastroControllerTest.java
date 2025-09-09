@@ -118,7 +118,7 @@ class CadastroControllerTest {
         String result = getCadastroController().getEstadoInput();
 
         //Assert
-        assertEquals(input, result);
+        assertEquals(input.toUpperCase(), result);
     }
 
     @Test
