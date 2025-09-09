@@ -125,7 +125,7 @@ class CadastroControllerTest {
             "dF",
             "Sp"
 })
-    void testGetValidEstadoInput(String input) {
+    void testValidGetEstadoInput(String input) {
         //Arrange
         mockBufferedReader(input + "\n");
 
@@ -137,7 +137,7 @@ class CadastroControllerTest {
     }
 
     @Test
-    void testInvalidEstadoInput() {
+    void testInvalidGetEstadoInput() {
         //Arrange
         String input = ("o\n").repeat(6);
         mockBufferedReader(input);
@@ -148,8 +148,34 @@ class CadastroControllerTest {
         });
     }
 
+
+    // --- Testes para getCepInput()
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "77777-777",
+            "12345678"
+    })
+    void testValidGetCepInput(String input) {
+        //Arrange
+        mockBufferedReader(input);
+
+        //Act
+        String result = getCadastroController().getCepInput();
+
+        //Assert
+        assertEquals("77777-777", result);
+    }
+
     @Test
-    void getCepInput() {
+    void testInvalidGetCepInput() {
+        //Arrange
+        String input = ("o\n").repeat(6);
+        mockBufferedReader(input);
+
+        //Act + Assert
+        assertThrows(RuntimeException.class, () -> {
+            cadastroController.getCepInput();
+        });
     }
 
     @Test
