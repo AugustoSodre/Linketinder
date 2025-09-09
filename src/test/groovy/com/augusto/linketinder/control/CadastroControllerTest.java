@@ -1,6 +1,10 @@
 package com.augusto.linketinder.control;
 
 import com.augusto.linketinder.model.lista.EnumCompetencias;
+import com.augusto.linketinder.model.lista.ListaFisicaEstatica;
+import com.augusto.linketinder.model.lista.ListaJuridicaEstatica;
+import com.augusto.linketinder.model.pessoa.PessoaFisica;
+import com.augusto.linketinder.model.pessoa.PessoaJuridica;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -312,5 +316,23 @@ class CadastroControllerTest {
         int idade = cadastroController.getIdadeInput();
         assertEquals(25, idade);
     }
+
+    //--- Testes para adicionar Pessoa a lista respectiva
+    @Test
+    void testInsertPessoaFisica() {
+        PessoaFisica pessoaFisica = new PessoaFisica();
+        cadastroController.insertPessoa(pessoaFisica);
+
+        assertEquals(ListaFisicaEstatica.getLista().getLast(), pessoaFisica);
+    }
+
+    @Test
+    void testInsertPessoaJuridica() {
+        PessoaJuridica pessoaJuridica = new PessoaJuridica();
+        cadastroController.insertPessoa(pessoaJuridica);
+
+        assertEquals(ListaJuridicaEstatica.getLista().getLast(), pessoaJuridica);
+    }
+
 
 }
