@@ -7,14 +7,23 @@ class CadastroController {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
     private static final int MAX_TENTATIVAS_PADRAO = 5
 
-    String getStringInput(){
-        while (true){
+    String getStringInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
+        int tentativas = 0
+        while (tentativas < maxTentativas){
             try{
-                return br.readLine().trim()
+                String input = br.readLine()
+                if (input != null && !input.isEmpty()) {
+                    return input.trim()
+                } else {
+                    println("Input inválido")
+                    tentativas++
+                }
             } catch (Exception ignored){
                 println("Input inválido")
+                tentativas++
             }
         }
+        throw new RuntimeException("Máximo de tentativas excedido para input de string")
     }
 
     //Nome nao checado
