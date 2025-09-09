@@ -2,6 +2,7 @@ package com.augusto.linketinder.control;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -9,25 +10,34 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CadastroControllerTest {
 
-    CadastroController cadastroController = new CadastroController();
+    CadastroController cadastroController;
 
     public CadastroController getCadastroController() {
         return cadastroController;
     }
 
     void mockBufferedReader(String input){
-        getCadastroController().setBr(new BufferedReader(new StringReader(input + "\n")));
+        getCadastroController().setBr(new BufferedReader(new StringReader(input)));
+    }
+
+    @BeforeEach
+    void setUp() {
+        cadastroController = new CadastroController();
     }
 
 
+    // --- Testes para getStringInput()
     @ParameterizedTest
     @ValueSource(strings = {
-            ""
+            "\n",
+            " \n",
+             " \n "
     })
     void testEmptyGetStringInput(String input) {
         //Arrange
@@ -39,6 +49,7 @@ class CadastroControllerTest {
         //Assert
         assertTrue(result.isEmpty());
     }
+
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -55,7 +66,7 @@ class CadastroControllerTest {
     })
     void testRegularGetStringInput(String input) {
         //Arrange
-        mockBufferedReader(input);
+        mockBufferedReader(input + "\n");
 
         //Act
         String result = getCadastroController().getStringInput();
@@ -64,17 +75,60 @@ class CadastroControllerTest {
         assertTrue(!result.isEmpty() && result.equals(input));
     }
 
+
+    // --- Testes para getNomeInput()
     @ParameterizedTest
     @ValueSource(strings = {
             "Augusto",
             "João",
             "Maria",
             "Calos Almeida",
-            "Lucas Gonçalves"
+            "Lucas Gonçalves",
+            "Jose12Gameplays",
+            "12345",
+            " ",
+            "",
+            "\n"
     })
-    void getNomeInput(String input) {
+
+    void testGetNomeInput(String input) {
         //Arrange
-        mockBufferedReader(input);
+        mockBufferedReader(input + "\n");
+
+        //Act
+        String result = getCadastroController().getNomeInput();
+
+        //Assert
+        assertEquals(input.trim(), result);
+    }
+
+
+    // --- Testes para getEmailInput()
+    @Test
+    void testValidGetEmailInput() {
+        //Arrange
+        mockBufferedReader("jose@hotmail.com");
+
+        //Act
+        String result = getCadastroController().getEmailInput();
+
+        //Assert
+        assertEquals("jose@hotmail.com", result);
+    }
+
+
+    // --- Testes para getEstadoInput()
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "AC",
+            "ba",
+            "dF",
+            "Sp"
+
+})
+    void testGetValidEstadoInput(String input) {
+        //Arrange
+        mockBufferedReader(input + "\n");
 
         //Act
         String result = getCadastroController().getNomeInput();
@@ -83,12 +137,24 @@ class CadastroControllerTest {
         assertEquals(input, result);
     }
 
-    @Test
-    void getEmailInput() {
-    }
+    @ParameterizedTest
+    @Timeout(value = 2, unit = TimeUnit.SECONDS)
+    @ValueSource(strings = {
+            "",
+            " ",
+            "o",
+            "oo",
+            "OOO"
+    })
+    void testInvalidEstadoInput(String input) {
+        //Arrange
+        mockBufferedReader(input);
 
-    @Test
-    void getEstadoInput() {
+        //Act
+        String result = getCadastroController().getEstadoInput();
+
+        //Assert
+        assertEquals(input, result);
     }
 
     @Test
@@ -115,11 +181,22 @@ class CadastroControllerTest {
     void getPaisInput() {
     }
 
+    //--- Testing int number inputs
     @Test
-    void getIntInput() {
+    void testGetIntInput() {
+        // invalid first, then valid
+        String input = "notanumber\n42\n";
+        mockBufferedReader(input);
+
+        int result = cadastroController.getIntInput();
+        assertEquals(42, result);
     }
 
     @Test
-    void getIdadeInput() {
+    void testGetIdadeInput() {
+        mockBufferedReader("25");
+        int idade = cadastroController.getIdadeInput();
+        assertEquals(25, idade);
     }
+
 }
