@@ -257,7 +257,15 @@ class CadastroControllerTest {
             "Brasil",
             "BR"
     })
-    void getPaisInput() {
+    void testGetPaisInput(String input) {
+        //Arrange
+        mockBufferedReader(input + "\n");
+
+        //Act
+        String result = getCadastroController().getPaisInput();
+
+        //Assert
+        assertEquals(input.trim(), result);
     }
 
     //--- Testes para inputs de números inteiros
