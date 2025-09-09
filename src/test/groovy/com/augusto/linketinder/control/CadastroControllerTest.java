@@ -90,7 +90,6 @@ class CadastroControllerTest {
             "",
             "\n"
     })
-
     void testGetNomeInput(String input) {
         //Arrange
         mockBufferedReader(input + "\n");
@@ -178,8 +177,24 @@ class CadastroControllerTest {
         });
     }
 
-    @Test
-    void getDescricaoInput() {
+    // --- Testes para getDescricaoInput()
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "Estudante",
+            "Grande Estudante",
+            " ",
+            "",
+            "\n"
+    })
+    void testGetDescricaoInput(String input) {
+        //Arrange
+        mockBufferedReader(input + "\n");
+
+        //Act
+        String result = getCadastroController().getNomeInput();
+
+        //Assert
+        assertEquals(input.trim(), result);
     }
 
     @Test
