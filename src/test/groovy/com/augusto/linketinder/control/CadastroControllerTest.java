@@ -124,7 +124,6 @@ class CadastroControllerTest {
             "ba",
             "dF",
             "Sp"
-
 })
     void testGetValidEstadoInput(String input) {
         //Arrange
@@ -137,24 +136,16 @@ class CadastroControllerTest {
         assertEquals(input, result);
     }
 
-    @ParameterizedTest
-    @Timeout(value = 2, unit = TimeUnit.SECONDS)
-    @ValueSource(strings = {
-            "",
-            " ",
-            "o",
-            "oo",
-            "OOO"
-    })
-    void testInvalidEstadoInput(String input) {
+    @Test
+    void testInvalidEstadoInput() {
         //Arrange
+        String input = ("o\n").repeat(6);
         mockBufferedReader(input);
 
-        //Act
-        String result = getCadastroController().getEstadoInput();
-
-        //Assert
-        assertEquals(input, result);
+        //Act + Assert
+        assertThrows(RuntimeException.class, () -> {
+            cadastroController.getEstadoInput();
+        });
     }
 
     @Test
