@@ -1,5 +1,6 @@
 package com.augusto.linketinder.control;
 
+import com.augusto.linketinder.model.lista.EnumCompetencias;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -176,8 +178,47 @@ class CadastroControllerTest {
         assertEquals(input.trim(), result);
     }
 
+
+    // // --- Testes para getCompetenciasInput()
     @Test
-    void getCompetenciasInput() {
+    void testGetCompetenciasInputWithValidSelections() {
+        mockBufferedReader("1\n2\n0\n");
+
+        List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
+
+        assertNotNull(result);
+        assertFalse(result.isEmpty());
+    }
+
+    @Test
+    void testGetCompetenciasInputExitImmediately() {
+        mockBufferedReader("0\n");
+
+        List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
+
+        assertNotNull(result);
+
+        assertEquals(0, result.size());
+    }
+
+    @Test
+    void testGetCompetenciasInputDuplicateSelection() {
+        mockBufferedReader("1\n1\n0\n");
+
+        List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
+
+        assertNotNull(result);
+
+        assertTrue(result.size() <= 1);
+    }
+
+    @Test
+    void testGetCompetenciasInputExceedsMaxTentativas() {
+        // Simula muitas opções inválidas
+        String invalidInput = "999\n".repeat(6);
+        mockBufferedReader(invalidInput);
+
+        assertThrows(RuntimeException.class, () -> cadastroController.getCompetenciasInput());
     }
 
 
