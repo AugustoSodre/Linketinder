@@ -36,9 +36,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> {
-            cadastroController.getEstadoInput();
-        });
+        assertThrows(RuntimeException.class, () -> cadastroController.getEstadoInput());
     }
 
 
@@ -130,9 +128,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> {
-            cadastroController.getEstadoInput();
-        });
+        assertThrows(RuntimeException.class, () -> cadastroController.getEstadoInput());
     }
 
 
@@ -160,9 +156,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> {
-            cadastroController.getCepInput();
-        });
+        assertThrows(RuntimeException.class, () -> cadastroController.getCepInput());
     }
 
     // --- Testes para getDescricaoInput()
@@ -211,9 +205,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> {
-            cadastroController.getCpfInput();
-        });
+        assertThrows(RuntimeException.class, () -> cadastroController.getCpfInput());
     }
 
 
@@ -241,9 +233,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> {
-            cadastroController.getCnpjInput();
-        });
+        assertThrows(RuntimeException.class, () -> cadastroController.getCnpjInput());
     }
 
 
