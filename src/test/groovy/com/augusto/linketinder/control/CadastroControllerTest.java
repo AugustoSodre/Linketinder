@@ -156,13 +156,13 @@ class CadastroControllerTest {
     })
     void testValidGetCepInput(String input) {
         //Arrange
-        mockBufferedReader(input);
+        mockBufferedReader(input + "\n");
 
         //Act
         String result = getCadastroController().getCepInput();
 
         //Assert
-        assertEquals("77777-777", result);
+        assertEquals(input, result);
     }
 
     @Test
@@ -210,7 +210,7 @@ class CadastroControllerTest {
     })
     void testValidGetCpfInput(String input) {
         //Arrange
-        mockBufferedReader(input);
+        mockBufferedReader(input + "\n");
 
         //Act
         String result = getCadastroController().getCpfInput();
@@ -222,7 +222,7 @@ class CadastroControllerTest {
     @Test
     void testInvalidGetCpfInput() {
         //Arrange
-        String input = ("o\n").repeat(6);
+        String input = ("o\n").repeat(6); // eh um formato invalido para CPF seguindo o REGEX
         mockBufferedReader(input);
 
         //Act + Assert
@@ -232,8 +232,33 @@ class CadastroControllerTest {
     }
 
 
+    // --- Testes para getCnpjInput()
+    @ParameterizedTest
+    @ValueSource(strings = {
+            "12345678912345",
+            "66.872.236/0001-26"
+    })
+    void testValidGetCnpjInput(String input) {
+        //Arrange
+        mockBufferedReader(input + "\n");
+
+        //Act
+        String result = getCadastroController().getCnpjInput();
+
+        //Assert
+        assertEquals(input.trim(), result);
+    }
+
     @Test
-    void getCnpjInput() {
+    void testInvalidGetCnpjInput() {
+        //Arrange
+        String input = ("1234567.89/12345\n").repeat(6); // eh um formato invalido para CNPJ seguindo o REGEX
+        mockBufferedReader(input);
+
+        //Act + Assert
+        assertThrows(RuntimeException.class, () -> {
+            cadastroController.getCnpjInput();
+        });
     }
 
     @Test
