@@ -220,7 +220,7 @@ class CadastroControllerTest {
 
         //Assert
         assertNotNull(result);
-        assertTrue(result.size() <= 1);
+        assertTrue(result.size() == 1);
     }
 
     @Test
