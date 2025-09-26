@@ -1,8 +1,10 @@
 import { Pessoa } from "./Pessoa";
+import { Vaga } from "./Vaga";
 
 export class Empresa extends Pessoa {
     private pais: string;
     private cnpj: string;
+    private vaga: Vaga;
 
     constructor(
         id: string,
@@ -12,11 +14,13 @@ export class Empresa extends Pessoa {
         cep: string = '',
         descricao: string = '',
         pais: string = '',
-        cnpj: string = ''
+        cnpj: string = '',
+        vaga: Vaga
     ) {
         super(id, nome, email, estado, cep, descricao);
         this.pais = pais;
         this.cnpj = cnpj;
+        this.vaga = vaga
     }
 
     public getPais(){
@@ -27,11 +31,19 @@ export class Empresa extends Pessoa {
         return this.cnpj
     }
 
+    public getVaga(){
+        return this.vaga
+    }
+
     public setPais(pais: string){
         this.pais = pais
     }
 
     public setCnpj(cnpj: string){
         this.cnpj = cnpj
+    }
+
+    public setVaga(vaga: Vaga){
+        this.vaga = vaga
     }
 }

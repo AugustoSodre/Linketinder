@@ -1,6 +1,4 @@
 
-
-
 export function router(){
     const app = document.querySelector<HTMLDivElement>("#app")!;
 
