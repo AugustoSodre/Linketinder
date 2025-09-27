@@ -1,6 +1,7 @@
 import { Candidato } from "../models/Candidato"
 import { Empresa } from "../models/Empresa"
 import { Vaga } from "../models/Vaga"
+import { renderHome } from "../pages/home"
 import { listCandidatos, listEmpresas } from "../storage/lists"
 
 export function handleFormCandidato(listCompetencias: string[]){
@@ -48,9 +49,25 @@ export function handleFormEmpresa(listCompetencias: string[]){
 }
 
 export function handleFormLoginCandidato(){
+    const cpfInput: string = (document.getElementById("cpf-login-candidato") as HTMLInputElement)?.value ?? ""
 
+    console.log(cpfInput)
+
+    for (const c of listCandidatos) {
+        // checa instancia real de Candidato ou objetos JSON do localstorage
+        const cpf = (c as any)?.getCpf?.() ?? (c as any)?.cpf ?? ""
+
+        if (cpf === cpfInput) {
+            localStorage.setItem("currentUser", JSON.stringify(c))
+            window.location.reload()
+            return
+        }
+    }
+
+    alert("CPF não encontrado!")
+    
 }
 
 export function handleFormLoginEmpresa(){
-    
+
 }

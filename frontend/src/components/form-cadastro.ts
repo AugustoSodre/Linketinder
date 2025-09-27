@@ -8,7 +8,7 @@ export function renderFormCandidato(app: HTMLDivElement){
     text = `
       <h2>Cadastro Candidato</h2>
 
-      <form action="POST" id="form-cadastro-candidato" class="form-cadastro">
+      <form action="" id="form-cadastro-candidato" class="form-cadastro">
         <div class="form-item">
           <label for="nome">Nome do Usuário:</label>
           <input type="text" id="nome" name="nome" required>
@@ -72,7 +72,7 @@ export function renderFormEmpresa(app: HTMLDivElement){
     let text: string = `
         <h2>Cadastro Empresa</h2>
 
-        <form action="POST" id="form-cadastro-empresa" class="form-cadastro">
+        <form action="" id="form-cadastro-empresa" class="form-cadastro">
 
         <div id="container-form-empresa">
             <div class="form-item">
