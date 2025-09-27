@@ -46,3 +46,11 @@ export function handleFormEmpresa(listCompetencias: string[]){
     window.location.reload()
 
 }
+
+export function handleFormLoginCandidato(){
+
+}
+
+export function handleFormLoginEmpresa(){
+    
+}
