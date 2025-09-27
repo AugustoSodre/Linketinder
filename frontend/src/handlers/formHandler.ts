@@ -12,7 +12,7 @@ export function handleFormCandidato(listCompetencias: string[]){
     const idade = parseInt((document.getElementById("idade") as HTMLInputElement)?.value ?? "")
     const cpf = (document.getElementById("cpf") as HTMLInputElement)?.value
 
-    const newCandidato = new Candidato(nome, email, estado, cep, descricao, idade, cpf, listCompetencias)
+    const newCandidato = new Candidato(nome, email, estado, cep, descricao, listCompetencias, idade, cpf)
 
     listCandidatos.push(newCandidato)
 
@@ -22,7 +22,7 @@ export function handleFormCandidato(listCompetencias: string[]){
 
 }
 
-export function handleFormEmpresa(listCompetencias: string[]){
+export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompetenciasVaga: string[]){
     const nome = (document.getElementById("nome") as HTMLInputElement)?.value
     const email = (document.getElementById("email") as HTMLInputElement)?.value
     const estado = (document.getElementById("estado") as HTMLInputElement)?.value
@@ -30,14 +30,15 @@ export function handleFormEmpresa(listCompetencias: string[]){
     const descricao = (document.getElementById("descricao") as HTMLInputElement)?.value
     const pais = (document.getElementById("pais") as HTMLInputElement)?.value
     const cnpj = (document.getElementById("cnpj") as HTMLInputElement)?.value
+    const competencias = listCompetenciasEmpresa
 
     const vaga = new Vaga(
         (document.getElementById("nome-vaga") as HTMLInputElement)?.value,
         (document.getElementById("descricao-vaga") as HTMLInputElement)?.value,
-        listCompetencias,
+        listCompetenciasVaga
     )
 
-    const newEmpresa = new Empresa(nome, email, estado, cep, descricao, pais, cnpj, vaga)
+    const newEmpresa = new Empresa(nome, email, estado, cep, descricao, competencias, pais, cnpj, vaga)
 
     listEmpresas.push(newEmpresa)
 

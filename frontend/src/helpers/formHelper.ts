@@ -2,6 +2,7 @@ import { handleFormCandidato, handleFormLoginCandidato, handleFormLoginEmpresa }
 import { handleFormEmpresa } from "../handlers/formHandler";
 
 export let competenciasSelecionadas: string[] = []
+export let competenciasSelecionadasVaga: string[] = []
 
 export function createFormListeners(){
     const formCadastroCandidato = document.getElementById("form-cadastro-candidato")
@@ -22,7 +23,7 @@ export function createFormListeners(){
         formCadastroEmpresa.addEventListener("submit", (e) => {
             e.preventDefault()
 
-            handleFormEmpresa(competenciasSelecionadas);
+            handleFormEmpresa(competenciasSelecionadas, competenciasSelecionadasVaga);
         })
 
     } else if(formLoginCandidato){
@@ -43,7 +44,11 @@ export function createFormListeners(){
 
     }
 
-    const competencias = document.querySelectorAll<HTMLInputElement>(".competencia")
+    let competencias = document.querySelectorAll<HTMLInputElement>(".competencia-empresa")
+    
+    if(!competencias){
+        competencias = document.querySelectorAll<HTMLInputElement>(".competencia-candidato")
+    }
 
     Array.from(competencias).forEach((c) => {
         c.addEventListener("change", function (){
@@ -62,15 +67,39 @@ export function createFormListeners(){
         })
     })
 
+    const competenciasVaga = document.querySelectorAll<HTMLInputElement>(".competencia-vaga")
+
+    if(competenciasVaga){
+        Array.from(competenciasVaga).forEach((c) => {
+        c.addEventListener("change", function (){
+
+            if (c.checked) {
+                if (!competenciasSelecionadasVaga.includes(c.value)) {
+                    competenciasSelecionadasVaga.push(c.value)
+                }
+            } else {
+                const compIndex = competenciasSelecionadas.indexOf(c.value)
+                if (competenciasSelecionadasVaga.includes(c.value)) {
+                    competenciasSelecionadasVaga.splice(compIndex, 1)
+                }
+            }
+
+        })
+    })
+    }
+    
+
 }
 
-export function generateCompetenciasText(): string{
+export function generateCompetenciasText(sufixo: string): string{
     const competencias: string[] = [
         "Angular",
         "React",
         "SpringBoot",
         "Django",
-        "Linux"
+        "Linux",
+        "DevOps",
+        "PowerBI"
     ]
 
     let text:string = ""
@@ -79,7 +108,7 @@ export function generateCompetenciasText(): string{
         text += `
         <div id="competencia-div">
             <label for="${competencia}">${competencia}</label>
-            <input type="checkbox" id="${competencia}" name="${competencia}" value="${competencia}" class="competencia">
+            <input type="checkbox" id="${competencia}" name="${competencia}" value="${competencia}" class="competencia-${sufixo}">
           </div>
         `
     })

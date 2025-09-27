@@ -8,14 +8,16 @@ export class Pessoa {
     private estado: string;
     private cep: string;
     private descricao: string;
+    private competencias: string[] = []
 
-    constructor(nome: string, email: string = '', estado: string = '', cep: string = '', descricao: string = '') {
+    constructor(nome: string, email: string = '', estado: string = '', cep: string = '', descricao: string = '', competencias: string[] = []) {
         this.id = this.generateId()
         this.nome = nome;
         this.email = email;
         this.estado = estado;
         this.cep = cep;
         this.descricao = descricao;
+        this.competencias = competencias
     }
 
     private generateId(): string{
@@ -49,6 +51,10 @@ export class Pessoa {
         return this.descricao;
     }
 
+    public getCompetencias(): string[] {
+        return this.competencias
+    }
+
     public setNome(nome: string): void {
         this.nome = nome;
     }
@@ -67,5 +73,9 @@ export class Pessoa {
 
     public setDescricao(descricao: string): void {
         this.descricao = descricao;
+    }
+
+    public setCompetencias(competencias: string[]): void {
+        this.competencias = competencias
     }
 }

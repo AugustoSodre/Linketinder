@@ -48,7 +48,7 @@ export function renderFormCandidato(app: HTMLDivElement){
             <label for="competencias-candidato">Competências:</label>
     `
 
-    text += generateCompetenciasText()
+    text += generateCompetenciasText("candidato")
 
     text += `
             </div>
@@ -69,46 +69,57 @@ export function renderFormCandidato(app: HTMLDivElement){
 
 export function renderFormEmpresa(app: HTMLDivElement){
 
-    let text: string = `
-        <h2>Cadastro Empresa</h2>
+    let text: string = 
+    `
+      <h2>Cadastro Empresa</h2>
 
-        <form action="" id="form-cadastro-empresa" class="form-cadastro">
+      <form action="" id="form-cadastro-empresa" class="form-cadastro">
 
-        <div id="container-form-empresa">
-            <div class="form-item">
-            <h3>Sobre a Empresa</h3>
-            <label for="nome">Nome da Empresa:</label>
-            <input type="text" id="nome" name="nome" required>
-            </div>
-            
-            <div class="form-item">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-            </div>
-            
-            <div class="form-item">
-            <label for="estado">Estado:</label>
-            <input type="text" id="estado" name="estado" required>
-            </div>
-            
-            <div class="form-item">
-            <label for="cep">CEP:</label>
-            <input type="text" id="cep" name="cep" required>
-            </div>
-            
-            <div class="form-item">
-            <label for="descricao">Descrição:</label>
-            <textarea id="descricao" name="descricao" rows="4" required></textarea>
-            </div>
-            
-            <div class="form-item">
-            <label for="pais">País:</label>
-            <input type="text" id="pais" name="pais" required>
-            </div>
-            
-            <div class="form-item">
-            <label for="cnpj">CNPJ:</label>
-            <input type="text" id="cnpj" name="cnpj" required>
+      <div id="container-form-empresa">
+          <div class="form-item">
+          <h3>Sobre a Empresa</h3>
+          <label for="nome">Nome da Empresa:</label>
+          <input type="text" id="nome" name="nome" required>
+          </div>
+          
+          <div class="form-item">
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+          </div>
+          
+          <div class="form-item">
+          <label for="estado">Estado:</label>
+          <input type="text" id="estado" name="estado" required>
+          </div>
+          
+          <div class="form-item">
+          <label for="cep">CEP:</label>
+          <input type="text" id="cep" name="cep" required>
+          </div>
+          
+          <div class="form-item">
+          <label for="descricao">Descrição:</label>
+          <textarea id="descricao" name="descricao" rows="4" required></textarea>
+          </div>
+          
+          <div class="form-item">
+          <label for="pais">País:</label>
+          <input type="text" id="pais" name="pais" required>
+          </div>
+          
+          <div class="form-item">
+          <label for="cnpj">CNPJ:</label>
+          <input type="text" id="cnpj" name="cnpj" required>
+          </div>
+
+          <div class="form-item">
+          <label for="competencias-empresa">Competências da Empresa:</label>
+
+        `
+        text += generateCompetenciasText("empresa")
+        
+        text += 
+        `
             </div>
         </div>
 
@@ -128,7 +139,7 @@ export function renderFormEmpresa(app: HTMLDivElement){
             <label for="competencias-vaga">Competências da Vaga:</label>
     `
 
-    text += generateCompetenciasText()
+    text += generateCompetenciasText("vaga")
 
     text += `
             </div>

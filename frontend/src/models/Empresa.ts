@@ -12,11 +12,12 @@ export class Empresa extends Pessoa {
         estado: string = '',
         cep: string = '',
         descricao: string = '',
+        competencias: string[] = [],
         pais: string = '',
         cnpj: string = '',
         vaga: Vaga
     ) {
-        super(nome, email, estado, cep, descricao);
+        super(nome, email, estado, cep, descricao, competencias);
         this.pais = pais;
         this.cnpj = cnpj;
         this.vaga = vaga

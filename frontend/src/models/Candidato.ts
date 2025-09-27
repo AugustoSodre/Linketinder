@@ -3,7 +3,6 @@ import { Pessoa } from "./Pessoa";
 export class Candidato extends Pessoa {
     private idade: number;
     private cpf: string;
-    private competencias: string[];
 
     constructor(
         nome: string = '',
@@ -11,14 +10,13 @@ export class Candidato extends Pessoa {
         estado: string = '',
         cep: string = '',
         descricao: string = '',
+        competencias: string[] = [],
         idade: number = 0,
-        cpf: string = '',
-        competencias: string[] = []
+        cpf: string = ''
     ) {
-        super(nome, email, estado, cep, descricao);
+        super(nome, email, estado, cep, descricao, competencias);
         this.idade = idade;
         this.cpf = cpf;
-        this.competencias = competencias
     }
 
     public getIdade(){
@@ -29,10 +27,6 @@ export class Candidato extends Pessoa {
         return this.cpf
     }
 
-    public getCompetencias(){
-        return this.competencias
-    }
-
     public setIdade(idade: number){
         this.idade = idade
     }
@@ -40,8 +34,5 @@ export class Candidato extends Pessoa {
     public setCpf(cpf: string){
         this.cpf = cpf
     }
-
-    public setCompetencias(competencias: string[]){
-        this.competencias = competencias
-    }
+    
 }
