@@ -14,10 +14,10 @@ export function renderCadastro(app: HTMLDivElement, type: string){
 
 
 function renderCadastroCandidato(app: HTMLDivElement){
-
+    console.log("Clicou Cadastro Candidato")
 }
 
 
 function renderCadastroEmpresa(app: HTMLDivElement){
-
+    console.log("Clicou Cadastro Empresa")
 }
