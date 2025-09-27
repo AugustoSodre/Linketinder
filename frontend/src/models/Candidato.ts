@@ -5,7 +5,6 @@ export class Candidato extends Pessoa {
     private cpf: string;
 
     constructor(
-        id: string,
         nome: string,
         email: string = '',
         estado: string = '',
@@ -14,7 +13,7 @@ export class Candidato extends Pessoa {
         idade: number = 0,
         cpf: string = ''
     ) {
-        super(id, nome, email, estado, cep, descricao);
+        super(nome, email, estado, cep, descricao);
         this.idade = idade;
         this.cpf = cpf;
     }

@@ -7,7 +7,6 @@ export class Empresa extends Pessoa {
     private vaga: Vaga;
 
     constructor(
-        id: string,
         nome: string,
         email: string = '',
         estado: string = '',
@@ -17,7 +16,7 @@ export class Empresa extends Pessoa {
         cnpj: string = '',
         vaga: Vaga
     ) {
-        super(id, nome, email, estado, cep, descricao);
+        super(nome, email, estado, cep, descricao);
         this.pais = pais;
         this.cnpj = cnpj;
         this.vaga = vaga
