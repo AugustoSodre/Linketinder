@@ -1,24 +1,13 @@
-import { renderFormCandidato, renderFormEmpresa } from "../components/form"
+import { renderFormCandidato, renderFormEmpresa } from "../components/form-cadastro"
 
 export function renderCadastro(app: HTMLDivElement, type: string){
     if(type == "Candidato"){
-        renderCadastroCandidato(app)
+        renderFormCandidato(app)
     }
     else if (type == "Empresa"){
-        renderCadastroEmpresa(app)
+        renderFormEmpresa(app)
         
     } else{
         window.location.reload()
     }
-}
-
-
-function renderCadastroCandidato(app: HTMLDivElement){
-    renderFormCandidato(app)
-
-}
-
-
-function renderCadastroEmpresa(app: HTMLDivElement){
-    renderFormEmpresa(app)
 }
