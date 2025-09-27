@@ -1,7 +1,6 @@
 import { Candidato } from "../models/Candidato"
 import { Empresa } from "../models/Empresa"
 import { Vaga } from "../models/Vaga"
-import { renderHome } from "../pages/home"
 import { listCandidatos, listEmpresas } from "../storage/lists"
 
 export function handleFormCandidato(listCompetencias: string[]){
@@ -69,5 +68,20 @@ export function handleFormLoginCandidato(){
 }
 
 export function handleFormLoginEmpresa(){
+    const cnpjInput: string = (document.getElementById("cnpj-login-empresa") as HTMLInputElement)?.value ?? ""
 
+    console.log(cnpjInput)
+
+    for (const c of listEmpresas) {
+        // checa instancia real de Candidato ou objetos JSON do localstorage
+        const cnpj = (c as any)?.getCnpj?.() ?? (c as any)?.cnpj ?? ""
+
+        if (cnpj === cnpjInput) {
+            localStorage.setItem("currentUser", JSON.stringify(c))
+            window.location.reload()
+            return
+        }
+    }
+
+    alert("CNPJ não encontrado!")
 }
