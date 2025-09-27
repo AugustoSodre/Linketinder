@@ -11,7 +11,7 @@ export function createListeners(){
             e.preventDefault();
             
             if (form.id === "form-cadastro-candidato") {
-                handleFormCandidato();
+                handleFormCandidato(competenciasSelecionadas);
             } else if (form.id === "form-cadastro-empresa") {
                 handleFormEmpresa(competenciasSelecionadas);
             }

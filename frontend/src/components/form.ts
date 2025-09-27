@@ -2,7 +2,10 @@
 import { createListeners, generateCompetenciasText } from "../helpers/formsHelper"
 
 export function renderFormCandidato(app: HTMLDivElement){
-    app.innerHTML = `
+
+    let text
+
+    text = `
       <h2>Cadastro Candidato</h2>
 
       <form action="POST" id="form-cadastro-candidato" class="form-cadastro">
@@ -41,12 +44,24 @@ export function renderFormCandidato(app: HTMLDivElement){
           <input type="text" id="cpf" name="cpf" required>
         </div>
         
-        <div class="form-item"></div>
-          <button id="submit-candidato" type="submit">Cadastrar Candidato</button>
-        </div>
+        <div class="form-item">
+            <label for="competencias-candidato">Competências:</label>
+    `
 
+    text += generateCompetenciasText()
+
+    text += `
+            </div>
+
+            <div class="form-item"></div>
+                <button id="submit-candidato" type="submit">Cadastrar Candidato</button>
+            </div>
+
+        </div>
       </form>
     `
+
+    app.innerHTML = text
 
     createListeners()
 
@@ -119,7 +134,7 @@ export function renderFormEmpresa(app: HTMLDivElement){
             </div>
 
             <div class="form-item"></div>
-                <button id="submit-candidato" type="submit">Cadastrar Empresa</button>
+                <button id="submit-empresa" type="submit">Cadastrar Empresa</button>
             </div>
 
         </div>
