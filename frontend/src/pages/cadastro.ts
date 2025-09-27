@@ -1,5 +1,4 @@
 import { renderFormCandidato, renderFormEmpresa } from "../components/form"
-import { listCandidatos, listEmpresas } from "../storage/lists"
 
 export function renderCadastro(app: HTMLDivElement, type: string){
     if(type == "Candidato"){
@@ -11,9 +10,6 @@ export function renderCadastro(app: HTMLDivElement, type: string){
     } else{
         window.location.reload()
     }
-
-    console.log(listCandidatos)
-    console.log(listEmpresas)
 }
 
 
