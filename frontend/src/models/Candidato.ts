@@ -5,7 +5,7 @@ export class Candidato extends Pessoa {
     private cpf: string;
 
     constructor(
-        nome: string,
+        nome: string = '',
         email: string = '',
         estado: string = '',
         cep: string = '',

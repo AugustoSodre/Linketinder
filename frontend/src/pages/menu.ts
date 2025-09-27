@@ -4,7 +4,6 @@ import { renderCadastro } from "./cadastro"
 
 export function renderMenu(app: HTMLDivElement){
     app.innerHTML = `
-        <h1>Linketinder</h1>
         <div id="menu-btn-container">
             <button class="btn-menu" id="btn-cadastrar-candidato">Cadastrar Candidato</button>
             <button class="btn-menu" id="btn-cadastrar-empresa">Cadastrar Empresa</button>
