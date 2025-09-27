@@ -6,10 +6,10 @@ export function renderMenu(app: HTMLDivElement){
     app.innerHTML = `
         <h1>Linketinder</h1>
         <div id="menu-btn-container">
-            <button id="btn-cadastrar-candidato">Cadastrar Candidato</button>
-            <button id="btn-cadastrar-empresa">Cadastrar Empresa</button>
-            <button id="btn-login-candidato">Login Candidato</button>
-            <button id="btn-login-empresa">Login Empresa</button>
+            <button class="btn-menu" id="btn-cadastrar-candidato">Cadastrar Candidato</button>
+            <button class="btn-menu" id="btn-cadastrar-empresa">Cadastrar Empresa</button>
+            <button class="btn-menu" id="btn-login-candidato">Login Candidato</button>
+            <button class="btn-menu" id="btn-login-empresa">Login Empresa</button>
         </div>
     `
 
