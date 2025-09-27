@@ -1,7 +1,5 @@
-import { renderFormCandidato } from "../components/form"
-import { Candidato } from "../models/Candidato"
+import { renderFormCandidato, renderFormEmpresa } from "../components/form"
 import { listCandidatos, listEmpresas } from "../storage/lists"
-import { renderMenu } from "./menu"
 
 export function renderCadastro(app: HTMLDivElement, type: string){
     if(type == "Candidato"){
@@ -11,7 +9,7 @@ export function renderCadastro(app: HTMLDivElement, type: string){
         renderCadastroEmpresa(app)
         
     } else{
-        renderMenu(app)
+        window.location.reload()
     }
 
     console.log(listCandidatos)
@@ -20,13 +18,11 @@ export function renderCadastro(app: HTMLDivElement, type: string){
 
 
 function renderCadastroCandidato(app: HTMLDivElement){
-    console.log("Clicou Cadastro Candidato")
-
     renderFormCandidato(app)
 
 }
 
 
 function renderCadastroEmpresa(app: HTMLDivElement){
-    console.log("Clicou Cadastro Empresa")
+    renderFormEmpresa(app)
 }
