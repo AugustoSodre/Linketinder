@@ -51,11 +51,11 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
 export function handleFormLoginCandidato(){
     const cpfInput: string = (document.getElementById("cpf-login-candidato") as HTMLInputElement)?.value ?? ""
 
-    console.log(cpfInput)
-
     for (const c of listCandidatos) {
-        // checa instancia real de Candidato ou objetos JSON do localstorage
-        const cpf = (c as any)?.getCpf?.() ?? (c as any)?.cpf ?? ""
+        // a lista nn possui instancias de vdd, elas são todos objetos JSON do Localstorage, 
+        // logo cpf eh so um atributo do JSON
+
+        const cpf = (c as any)?.cpf ?? ""
 
         if (cpf === cpfInput) {
             localStorage.setItem("currentUser", JSON.stringify(c))
@@ -71,11 +71,8 @@ export function handleFormLoginCandidato(){
 export function handleFormLoginEmpresa(){
     const cnpjInput: string = (document.getElementById("cnpj-login-empresa") as HTMLInputElement)?.value ?? ""
 
-    console.log(cnpjInput)
-
     for (const c of listEmpresas) {
-        // checa instancia real de Candidato ou objetos JSON do localstorage
-        const cnpj = (c as any)?.getCnpj?.() ?? (c as any)?.cnpj ?? ""
+        const cnpj = (c as any)?.cnpj ?? ""
 
         if (cnpj === cnpjInput) {
             localStorage.setItem("currentUser", JSON.stringify(c))
