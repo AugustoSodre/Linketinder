@@ -12,5 +12,8 @@ export var listCompetenciasDisponiveis: string[] = [
     "JavaScript",
     "TypeScript",
     "Angular",
-    "React"
+    "React",
+    "Linux",
+    "DevOps",
+    "PowerBI"
 ]
