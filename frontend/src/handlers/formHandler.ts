@@ -3,7 +3,7 @@ import { Empresa } from "../models/Empresa"
 import { Vaga } from "../models/Vaga"
 import { listCandidatos, listEmpresas } from "../storage/lists"
 
-export function handleFormCandidato(listCompetencias: string[]){
+export function handleFormCandidato(listCompetenciasCandidato: string[]){
     const nome = (document.getElementById("nome") as HTMLInputElement)?.value
     const email = (document.getElementById("email") as HTMLInputElement)?.value
     const estado = (document.getElementById("estado") as HTMLInputElement)?.value
@@ -12,7 +12,7 @@ export function handleFormCandidato(listCompetencias: string[]){
     const idade = parseInt((document.getElementById("idade") as HTMLInputElement)?.value ?? "")
     const cpf = (document.getElementById("cpf") as HTMLInputElement)?.value
 
-    const newCandidato = new Candidato(nome, email, estado, cep, descricao, listCompetencias, idade, cpf)
+    const newCandidato = new Candidato(nome, email, estado, cep, descricao, listCompetenciasCandidato, idade, cpf)
 
     listCandidatos.push(newCandidato)
 
