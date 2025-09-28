@@ -1,5 +1,6 @@
 import { handleFormCandidato, handleFormLoginCandidato, handleFormLoginEmpresa } from "../handlers/formHandler";
 import { handleFormEmpresa } from "../handlers/formHandler";
+import { listCompetenciasDisponiveis } from "../storage/lists";
 
 export let competenciasSelecionadas: string[] = []
 export let competenciasSelecionadasVaga: string[] = []
@@ -92,15 +93,7 @@ export function createFormListeners(){
 }
 
 export function generateCompetenciasText(sufixo: string): string{
-    const competencias: string[] = [
-        "Angular",
-        "React",
-        "SpringBoot",
-        "Django",
-        "Linux",
-        "DevOps",
-        "PowerBI"
-    ]
+    const competencias: string[] = listCompetenciasDisponiveis
 
     let text:string = ""
 
