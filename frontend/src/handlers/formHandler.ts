@@ -11,8 +11,9 @@ export function handleFormCandidato(listCompetenciasCandidato: string[]){
     const descricao = (document.getElementById("descricao") as HTMLInputElement)?.value
     const idade = parseInt((document.getElementById("idade") as HTMLInputElement)?.value ?? "")
     const cpf = (document.getElementById("cpf") as HTMLInputElement)?.value
-
-    const newCandidato = new Candidato(nome, email, estado, cep, descricao, listCompetenciasCandidato, idade, cpf)
+    const competencias = listCompetenciasCandidato
+ 
+    const newCandidato = new Candidato(nome, email, estado, cep, descricao, competencias, idade, cpf)
 
     listCandidatos.push(newCandidato)
 

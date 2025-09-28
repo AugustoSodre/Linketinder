@@ -1,19 +1,18 @@
+import { renderHomeCandidatoHTML } from "../components/homeGenerator"
+import { renderHomeEmpresaHTML } from "../components/homeGenerator"
 
-export function renderHome(app: HTMLDivElement, tipo: string){
+export function renderHome(app: HTMLDivElement, currentUser: any){
 
-    if(tipo == "Candidato"){
-        renderHomeCandidatoHTML(app)
-    } else if(tipo == "Empresa"){
-        renderHomeEmpresaHTML(app)
+    const parsedUser = JSON.parse(currentUser)
+
+    if(!parsedUser.vaga){
+        renderHomeCandidatoHTML(app, parsedUser)
+        
+    } else if (parsedUser.vaga){
+        renderHomeEmpresaHTML(app, parsedUser)
+
     } else{
         window.location.reload()
     }
-}
 
-function renderHomeCandidatoHTML(app: HTMLDivElement){
-    console.log("Home candidato")
-}
-
-function renderHomeEmpresaHTML(app: HTMLDivElement){
-    console.log("Home empresa")
 }

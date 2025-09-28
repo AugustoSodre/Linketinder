@@ -45,14 +45,14 @@ export function createFormListeners(){
     }
 
     let competencias = document.querySelectorAll<HTMLInputElement>(".competencia-empresa")
-    
-    if(!competencias){
+
+    if(competencias.length == 0){
         competencias = document.querySelectorAll<HTMLInputElement>(".competencia-candidato")
     }
 
     Array.from(competencias).forEach((c) => {
         c.addEventListener("change", function (){
-
+            console.log("Clicou na vaga")
             if (c.checked) {
                 if (!competenciasSelecionadas.includes(c.value)) {
                     competenciasSelecionadas.push(c.value)

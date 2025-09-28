@@ -8,13 +8,7 @@ export function router(){
     const currentUser = localStorage.getItem("currentUser")
 
     if(currentUser){
-        const parsedUser = JSON.parse(currentUser)
-        
-        if(parsedUser.cpf){
-            renderHome(app, "Candidato")
-        } else{
-            renderHome(app, "Empresa")
-        }
+        renderHome(app, currentUser)
         
     } else{
         renderMenu(app)
