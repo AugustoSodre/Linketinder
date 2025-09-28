@@ -9,8 +9,22 @@ export function createHomeListeners(currentUser: any){
 
     document.getElementById("btn-delete")?.addEventListener("click", () => {
         if(currentUser.vaga){
+            for(let i = 0; i < listEmpresas.length; i++){
+                const c: any = listEmpresas[i]
 
-        } else{
+                console.log(c)
+
+                if (c.cnpj == currentUser.cnpj){
+                    listEmpresas.splice(i, 1)
+                }
+            }
+
+            localStorage.removeItem("currentUser")
+            localStorage.setItem("listEmpresas", JSON.stringify(listEmpresas))
+            window.location.reload()
+
+        }
+        else{
             
             for(let i = 0; i < listCandidatos.length; i++){
                 const c: any = listCandidatos[i]
@@ -22,12 +36,10 @@ export function createHomeListeners(currentUser: any){
                 }
             }
 
+            localStorage.removeItem("currentUser")
+            localStorage.setItem("listCandidatos", JSON.stringify(listCandidatos))
+            window.location.reload()
         }
-
-        localStorage.removeItem("currentUser")
-        localStorage.setItem("listCandidatos", JSON.stringify(listCandidatos))
-        window.location.reload()
-
     })
 
 }
@@ -63,7 +75,35 @@ export function renderHomeHeaderHTML(): string{
 export function renderHomeLeftProfileHTML(currentUser: any): string{
     let text: string = ""
     if(currentUser.vaga){
-        text = ``
+        text = `
+        <div id="profile-left" class="profile-column">
+        <div class="profile-item" id="item-nome">
+            <label for="nome">Nome Empresa:</label>
+            <p id="nome">${currentUser.nome}</p>
+        </div>
+
+        <div class="profile-item" id="item-email">
+            <label for="email">Email:</label>
+            <p id="email">${currentUser.email}</p>
+        </div>
+
+        <div class="profile-item" id="item-estado">
+            <label for="estado">Estado:</label>
+            <p id="estado">${currentUser.estado}</p>
+        </div>
+
+        <div class="profile-item" id="item-cep">
+            <label for="cep">CEP:</label>
+            <p id="cep">${currentUser.cep}</p>
+        </div>
+
+        <div class="profile-item" id="item-pais">
+            <label for="pais">País:</label>
+            <p id="pais">${currentUser.pais}</p>
+        </div>
+
+        </div>
+        `
     } 
 
     else{
@@ -106,7 +146,35 @@ export function renderHomeRightProfileHTML(currentUser: any){
     let text = ""
 
     if(currentUser.vaga){
+        text = `
+        <div id="profile-right" class="profile-column">
+            <div class="profile-item" id="item-cpf">
+                <label for="cpf">CNPJ:</label>
+                <p id="cpf">${currentUser.cnpj}</p>
+            </div>
 
+            <div class="profile-item" id="item-descricao">
+                <label for="descricao">Descrição:</label>
+                <p id="descricao">${currentUser.descricao}</p>
+            </div>
+
+            <div class="profile-item" id="profile-competencias">
+                <label for="competencias">Competências:</label>
+                <ul id="competencias" class="skills">
+                `
+        text += generateCompetenciasList(currentUser)
+
+        text+=
+                `
+                </ul>
+            </div>
+        </div>
+        `
+        
+        text +=
+        `
+        </div>
+        `
     } 
 
     else{
@@ -138,7 +206,7 @@ export function renderHomeRightProfileHTML(currentUser: any){
     return text
 }
 
-export function renderHomeVagas(): string{
+export function renderHomeListaVagas(): string{
     let text = ""
     let vagaAtual
 
@@ -190,4 +258,39 @@ export function renderHomeVagas(): string{
     
     return text
 
+}
+
+export function renderHomeListaCandidatos(): string{
+    let text: string = `
+    <div class="list-candidatos" id="list-candidatos-container">
+    <h2 for="candidatos">Candidatos Disponíveis</h2>
+    `;
+
+    for(const c of listCandidatos){
+        const candidato = (c as any)
+        text += `
+        <div class="candidato-div">
+            <label for="nome">Nome:</label>
+            <p id="nome-candidato">Anonimo</p>
+
+            <label for="descricao">Descrição:</label>
+            <p id="descricao-candidato">${candidato.descricao}</p>
+
+            <div class="profile-item" id="candidato-competencias">
+            <label for="competencias">Competências:</label>
+            <ul id="competencias-candidato" class="skills">
+            `
+        text+= generateCompetenciasList(candidato)
+
+        text +=
+                `
+            </ul>
+        </div>
+        `
+
+    }
+
+    text += `</div>`;
+
+    return text;
 }

@@ -1,9 +1,7 @@
-import { createHomeListeners, renderHomeHeaderHTML, renderHomeLeftProfileHTML, renderHomeRightProfileHTML, renderHomeVagas } from "../helpers/homeHelpers"
+import { createHomeListeners, renderHomeHeaderHTML, renderHomeLeftProfileHTML, renderHomeRightProfileHTML, renderHomeListaVagas, renderHomeListaCandidatos } from "../helpers/homeHelpers"
 
 
 export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
-    console.log("Home candidato")
-
     let text = `
     <main id="profile-page" class="profile-page container">
     `
@@ -16,7 +14,7 @@ export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
 
     text += renderHomeRightProfileHTML(currentUser)
 
-    text += renderHomeVagas()
+    text += renderHomeListaVagas()
 
     text +=
     `   </div>
@@ -29,9 +27,27 @@ export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
 }
 
 export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
-    let text = ""
-    console.log("Home empresa")
+    let text: string = `<main id="profile-page" class="profile-page container">`
+    
+    text += renderHomeHeaderHTML()
+
+    text += `<div id="profile-body" class="profile-body">`
+
+    text += renderHomeLeftProfileHTML(currentUser)
+
+    text += renderHomeRightProfileHTML(currentUser)
+
+    text += renderHomeListaCandidatos()
+
+    //Render Grafico()
+    
+    text += `
+      </div>
+    </main>
+    `
 
     app.innerHTML = text
+
+    createHomeListeners(currentUser)
 }
 
