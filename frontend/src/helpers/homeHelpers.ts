@@ -277,14 +277,15 @@ export function renderHomeListaCandidatos(): string{
             <p id="descricao-candidato">${candidato.descricao}</p>
 
             <div class="profile-item" id="candidato-competencias">
-            <label for="competencias">Competências:</label>
-            <ul id="competencias-candidato" class="skills">
+                <label for="competencias">Competências:</label>
+                <ul id="competencias-candidato" class="skills">
             `
         text+= generateCompetenciasList(candidato)
 
         text +=
                 `
-            </ul>
+                </ul>
+            </div>
         </div>
         `
 
