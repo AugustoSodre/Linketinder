@@ -1,4 +1,5 @@
 import { createHomeListeners, renderHomeHeaderHTML, renderHomeLeftProfileHTML, renderHomeRightProfileHTML, renderHomeListaVagas, renderHomeListaCandidatos } from "../helpers/homeHelpers"
+import { generateCandidatosCompetenciaGraphListener } from "./grafico"
 
 
 export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
@@ -39,7 +40,7 @@ export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
 
     text += renderHomeListaCandidatos(currentUser)
 
-    //Render Grafico()
+    text += `<canvas id="chart-candidatos-competencias" style="width:100%;max-width:600px"></canvas>`
     
     text += `
       </div>
@@ -49,5 +50,6 @@ export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
     app.innerHTML = text
 
     createHomeListeners(currentUser)
+    generateCandidatosCompetenciaGraphListener()
 }
 
