@@ -4,24 +4,38 @@
 
 ## 📋 Sobre o Projeto
 
-O Linketinder é uma aplicação desenvolvida em Groovy que conecta candidatos e empresas, facilitando o processo de recrutamento. A aplicação permite o cadastro e visualização de candidatos e empresas através de uma interface de linha de comando interativa.
+O Linketinder é uma aplicação desenvolvida em Groovy e TypeScript que conecta candidatos e empresas, facilitando o processo de recrutamento. O projeto possui duas implementações distintas:
+- **Backend/CLI em Groovy**: Interface de linha de comando para cadastro e gerenciamento
+- **Frontend em TypeScript**: Interface web moderna e interativa
+
+*Nota: Atualmente as duas implementações funcionam de forma independente e não estão integradas.*
 
 ## 🚀 Tecnologias Utilizadas
 
-- **Groovy** - Linguagem principal do projeto
+### Backend (Groovy)
+- **Groovy** - Linguagem principal do backend
 - **Gradle** - Gerenciamento de dependências e build
+
+### Frontend (TypeScript)
+- **TypeScript** - Linguagem principal do frontend
+- **Vite** - Build tool e servidor de desenvolvimento
+- **HTML5/CSS3** - Interface e estilização
+- **JavaScript ES6+** - Funcionalidades interativas
+
+### Ferramentas de Desenvolvimento
 - **IntelliJ IDEA** - IDE de desenvolvimento
 
 ## 📁 Estrutura do Projeto
 
 ```
 Linketinder/
-├── src/
+├── src/                          # Backend Groovy
 │   ├── main/
 │   │   └── groovy/
 │   │       └── com/augusto/linketinder/
-│   │           ├── controller/
+│   │           ├── control/
 │   │           │   ├── CadastroController.groovy
+│   │           │   ├── DeleteController.groovy
 │   │           │   └── MenuController.groovy
 │   │           ├── model/
 │   │           │   ├── lista/
@@ -34,135 +48,192 @@ Linketinder/
 │   │           │       └── PessoaJuridica.groovy
 │   │           └── view/
 │   │               ├── create/
-│   │               │   ├── CadastroFisicoView.groovy
-│   │               │   └── CadastroJuridicoView.groovy
 │   │               ├── delete/
-│   │               │   └── DeleteView.groovy
 │   │               ├── menu/
-│   │               │   ├── MenuFisico.groovy
-│   │               │   ├── MenuJuridico.groovy
-│   │               │   └── MenuMain.groovy
 │   │               ├── read/
-│   │               │   ├── ReadFisicoView.groovy
-│   │               │   └── ReadJuridicoView.groovy
 │   │               └── update/
-│   │                   ├── UpdateFisicoView.groovy
-│   │                   └── UpdateJuridicoView.groovy
-│   │       └── App.groovy
-│   │   └── resources/
+│   │       ├── App.groovy
+│   │       └── ScriptPopularDadosInicial.groovy
 │   └── test/
-│       └── groovy/
+├── frontend/                     # Frontend TypeScript
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── form-cadastro.ts
+│   │   │   ├── form-login.ts
+│   │   │   ├── grafico.ts
+│   │   │   ├── homeGenerator.ts
+│   │   │   └── listar.ts
+│   │   ├── handlers/
+│   │   │   └── formHandler.ts
+│   │   ├── helpers/
+│   │   │   ├── formHelper.ts
+│   │   │   └── homeHelpers.ts
+│   │   ├── models/
+│   │   │   ├── Candidato.ts
+│   │   │   ├── Empresa.ts
+│   │   │   ├── Pessoa.ts
+│   │   │   └── Vaga.ts
+│   │   ├── pages/
+│   │   │   ├── cadastro.ts
+│   │   │   ├── home.ts
+│   │   │   ├── login.ts
+│   │   │   └── menu.ts
+│   │   ├── storage/
+│   │   │   └── lists.ts
+│   │   ├── styles/
+│   │   │   ├── style.css
+│   │   │   ├── style-cadastro.css
+│   │   │   ├── style-home.css
+│   │   │   ├── style-login.css
+│   │   │   └── style-menu.css
+│   │   ├── templates/
+│   │   │   ├── cadastroCandidato.html
+│   │   │   ├── cadastroEmpresa.html
+│   │   │   ├── homeCandidato.html
+│   │   │   ├── homeEmpresa.html
+│   │   │   ├── login.html
+│   │   │   └── menu.html
+│   │   ├── main.ts
+│   │   └── router.ts
+│   ├── public/
+│   ├── index.html
+│   ├── package.json
+│   └── tsconfig.json
 ├── build.gradle
 └── README.md
 ```
 
-## 🏗️ Arquitetura MVC
+## 🏗️ Arquitetura
 
-O projeto segue o padrão arquitetural MVC (Model-View-Controller):
+### Backend (MVC em Groovy)
+O backend segue o padrão arquitetural MVC (Model-View-Controller):
+- **Model**: Classes de domínio e estruturas de dados
+- **View**: Interface de linha de comando
+- **Controller**: Lógica de negócio e comunicação entre camadas
 
-- **Model**: Contém as classes de domínio (`Pessoa`, `PessoaFisica`, `PessoaJuridica`) e estruturas de dados
-- **View**: Responsável pela interface com o usuário e apresentação dos dados
-- **Controller**: Gerencia a lógica de negócio e comunicação entre Model e View
+### Frontend (SPA em TypeScript)
+O frontend utiliza uma arquitetura de Single Page Application (SPA):
+- **Components**: Componentes reutilizáveis da interface
+- **Pages**: Páginas da aplicação
+- **Models**: Definições de tipos e interfaces TypeScript
+- **Handlers**: Lógica de manipulação de eventos
+- **Storage**: Gerenciamento de dados em localStorage
 
-## ⚙️ Funcionalidades Implementadas
+## ⚙️ Funcionalidades
 
-### ✅ Funcionalidades Disponíveis:
-- **Cadastro de Candidatos (Pessoa Física)**
-    - Nome, email, CPF, idade
-    - Descrição pessoal
-    - Lista de competências
+### Backend (CLI Groovy)
+- ✅ Cadastro de candidatos e empresas via linha de comando
+- ✅ Visualização de registros
+- ✅ Gerenciamento CRUD básico
+- ✅ Sistema de competências
 
-- **Cadastro de Empresas (Pessoa Jurídica)**
-    - Nome da empresa, email, CNPJ
-    - País e CEP
-    - Descrição da empresa
+### Frontend (Web TypeScript)
+- ✅ Interface web responsiva
+- ✅ Sistema de login/cadastro
+- ✅ Páginas dedicadas para candidatos e empresas
+- ✅ Formulários interativos
+- ✅ Gráficos e visualizações
+- ✅ Armazenamento local (localStorage)
+- ✅ Roteamento SPA
 
-- **Visualização de Candidatos**
-    - Lista todos os candidatos cadastrados
+## 🛠️ Como Executar
 
-- **Visualização de Empresas**
-    - Lista todas as empresas cadastradas
+### Backend (Groovy)
 
-### 🚧 Funcionalidades Futuras:
-- Edição de candidatos e empresas
-- Exclusão de registros
-- Sistema de matching entre candidatos e vagas
-- Persistência de dados em banco
-- Interface web
-
-## 🛠️ Como Executar o Projeto
-
-### Pré-requisitos:
+**Pré-requisitos:**
 - Java 8 ou superior
 - Gradle instalado
-- IntelliJ IDEA (recomendado)
 
-### Passos para execução:
+**Execução:**
+```bash
+# Via Gradle
+gradle run
 
-1. **Clone o repositório:**
-   ```bash
-   git clone git@github.com:AugustoSodre/Linketinder.git
-   cd linketinder
-   ```
+# Via IntelliJ IDEA
+# Navegue até App.groovy e execute
+```
 
-2. **Abra o projeto no IntelliJ IDEA:**
-    - File → Open → Selecione a pasta do projeto
-    - O IntelliJ detectará automaticamente o projeto Gradle
+### Frontend (TypeScript)
 
-3. **Execute via IntelliJ:**
-    - Navegue até `src/main/groovy/App.groovy`
-    - Clique com botão direito → Run 'App'
+**Pré-requisitos:**
+- Node.js 16+ instalado
+- npm ou yarn
 
-4. **Ou execute via linha de comando:**
-   ```bash
-   gradle run
-   ```
+**Execução:**
+```bash
+# Navegue até a pasta frontend
+cd frontend
 
-5. **Ou compile e execute manualmente:**
-   ```bash
-   gradle build
-   gradle installDist
-   ./build/install/Linketinder/bin/Linketinder
-   ```
+# Instale as dependências
+npm install
 
-## 📖 Como Usar
+# Execute em modo de desenvolvimento
+npm run dev
 
-1. **Ao executar o programa, você verá o menu principal:**
-   ```
-   Linketinder!
-   
-   Opções:
-   1. Gerenciar Empregadores
-   2. Gerenciar Candidatos
-   0. Sair
-   ```
+# Build para produção
+npm run build
 
-2. **Para cadastrar um candidato:**
-    - Digite `2` para acessar o menu de candidatos
-    - Digite `1` para cadastrar um novo candidato
-    - Preencha as informações solicitadas
+# Preview da build de produção
+npm run preview
+```
 
-3. **Para cadastrar uma empresa:**
-    - Digite `1` para acessar o menu de empregadores
-    - Digite `1` para cadastrar uma nova empresa
-    - Preencha as informações solicitadas
+## 🌐 Acesso à Aplicação
 
-4. **Para visualizar os registros:**
-    - Use a opção `2` nos menus específicos para listar candidatos ou empresas
+### Backend
+- **Tipo**: Interface de linha de comando (CLI)
+- **Execução**: Via terminal após executar `gradle run`
+
+### Frontend
+- **Tipo**: Aplicação web (SPA)
+- **URL de desenvolvimento**: `http://localhost:5173` (após `npm run dev`)
+- **Funcionalidades**: Interface completa com login, cadastros e visualizações
+
+## 📋 Funcionalidades Detalhadas
+
+### Recursos do Frontend Web:
+1. **Página de Login**: Autenticação de candidatos e empresas
+2. **Cadastro Duplo**: Formulários específicos para candidatos e empresas
+3. **Dashboard Candidatos**: 
+   - Visualização de perfil
+   - Listagem de vagas disponíveis
+   - Gráficos de competências
+4. **Dashboard Empresas**:
+   - Gestão de vagas
+   - Visualização de candidatos
+   - Análises e métricas
+5. **Navegação SPA**: Roteamento sem recarregamento de página
+
+## 🚧 Próximos Passos
+
+- [ ] **Integração Backend-Frontend**: Conectar as duas implementações
+- [ ] **API REST**: Criar endpoints para comunicação
+- [ ] **Banco de Dados**: Implementar persistência real
+- [ ] **Sistema de Matching**: Algoritmo de compatibilidade
+- [ ] **Autenticação JWT**: Sistema de autenticação robusto
+- [ ] **Deploy**: Preparar para produção
 
 ## 🎯 Objetivo do Projeto
 
-O Linketinder visa criar uma ponte entre candidatos em busca de oportunidades e empresas procurando talentos, automatizando e facilitando o processo de recrutamento através de um sistema de matching baseado em competências e requisitos.
+O Linketinder visa criar uma ponte entre candidatos e empresas através de:
+- Interface intuitiva e moderna (frontend web)
+- Sistema robusto de gerenciamento (backend CLI)
+- Futuro sistema de matching inteligente
+- Experiência completa de recrutamento
 
-## 📝 Notas de Desenvolvimento
+## 📝 Notas Técnicas
 
-- O projeto utiliza listas estáticas em memória para armazenamento temporário
-- A arquitetura foi pensada para facilitar futuras implementações de persistência
-- Interface de linha de comando para simplicidade inicial
+- **Backend**: Utiliza listas estáticas em memória
+- **Frontend**: Usa localStorage para persistência local
+- **Arquitetura**: Preparada para futura integração via API
+- **Compatibilidade**: Frontend responsivo para diferentes dispositivos
 
 ## 🤝 Contribuições
 
-Sinta-se à vontade para contribuir com melhorias, correções de bugs ou novas funcionalidades através de pull requests.
+Sinta-se à vontade para contribuir com:
+- Melhorias na interface
+- Novas funcionalidades
+- Correções de bugs
+- Integração backend-frontend
 
 ## 📄 Licença
 
