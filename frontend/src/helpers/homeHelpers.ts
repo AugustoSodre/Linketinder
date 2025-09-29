@@ -1,3 +1,4 @@
+import { listarCandidatos, listarVagas } from "../components/listar"
 import { listCandidatos, listEmpresas } from "../storage/lists"
 
 export function createHomeListeners(currentUser: any){
@@ -42,19 +43,6 @@ export function createHomeListeners(currentUser: any){
         }
     })
 
-}
-
-export function generateCompetenciasList(currentUser: any): string{
-
-    let text = `<ul id="competencias" class="skills">`
-
-    currentUser.competencias.forEach((c: any) => {
-        text += `<li class="skill" id="skill-${c}">${c}</li>`
-    })
-
-    text += `</ul>`
-
-    return text
 }
 
 export function renderHomeHeaderHTML(): string{
@@ -206,92 +194,42 @@ export function renderHomeRightProfileHTML(currentUser: any){
     return text
 }
 
-export function renderHomeListaVagas(): string{
+export function renderHomeListaVagas(currentUser: any): string{
     let text = ""
-    let vagaAtual
 
     text += `
     <div class="list-vagas" id="list-vagas-container">
         <h2 for="vagas">Vagas</h2>
     `
     
-    for(const empresa of listEmpresas){
-        vagaAtual = (empresa as any).vaga
-
-        text += `<div class="vaga-div" id="vaga-empresa">`
-
-        text += `
-        <label for="nome-empresa">Nome da Empresa:</label>
-        <p id="nome-empresa">Anônimo</p>
-        `
-
-        text += `
-        <label for="nome-vaga">Título da Vaga:</label>
-        <p id="nome-vaga">${vagaAtual.nome}</p>
-        `
-
-        text +=`
-        <label for="descricao-vaga">Descrição da Vaga:</label>
-        <p id="descricao-vaga">${vagaAtual.descricao}</p>
-        `
-
-        text += `
-            <div class="profile-item" id="vaga-competencias">
-                <label for="competencias">Competências:</label>
-                <ul id="competencias-vaga" class="skills">
-        `
-
-        vagaAtual.competencias.forEach((c: any) => {
-            text += `<li class="skill" id="skill-${c}">${c}</li>`
-        })
-
-        text += `
-                </ul>
-            </div>
-        </div>
-        
-    
-        `
-
-
-    }
+    text += listarVagas(currentUser)
     
     return text
 
 }
 
-export function renderHomeListaCandidatos(): string{
+export function renderHomeListaCandidatos(currentUser: any): string{
     let text: string = `
     <div class="list-candidatos" id="list-candidatos-container">
     <h2 for="candidatos">Candidatos Disponíveis</h2>
     `;
 
-    for(const c of listCandidatos){
-        const candidato = (c as any)
-        text += `
-        <div class="candidato-div">
-            <label for="nome">Nome:</label>
-            <p id="nome-candidato">Anonimo</p>
-
-            <label for="descricao">Descrição:</label>
-            <p id="descricao-candidato">${candidato.descricao}</p>
-
-            <div class="profile-item" id="candidato-competencias">
-                <label for="competencias">Competências:</label>
-                <ul id="competencias-candidato" class="skills">
-            `
-        text+= generateCompetenciasList(candidato)
-
-        text +=
-                `
-                </ul>
-            </div>
-        </div>
-        `
-
-    }
+    text += listarCandidatos(currentUser)
 
     text += `</div>`;
 
     return text;
+}
+
+export function generateCompetenciasList(currentUser: any): string{
+
+    let text = `<ul id="competencias" class="skills">`
+
+    currentUser.competencias.forEach((c: any) => {
+        text += `<li class="skill" id="skill-${c}">${c}</li>`
+    })
+
+    text += `</ul>`
+
+    return text
 }

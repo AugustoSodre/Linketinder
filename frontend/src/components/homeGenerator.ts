@@ -14,7 +14,7 @@ export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
 
     text += renderHomeRightProfileHTML(currentUser)
 
-    text += renderHomeListaVagas()
+    text += renderHomeListaVagas(currentUser)
 
     text +=
     `   </div>
@@ -37,7 +37,7 @@ export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
 
     text += renderHomeRightProfileHTML(currentUser)
 
-    text += renderHomeListaCandidatos()
+    text += renderHomeListaCandidatos(currentUser)
 
     //Render Grafico()
     
