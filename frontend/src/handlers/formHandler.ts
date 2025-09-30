@@ -2,7 +2,7 @@ import { Candidato } from "../models/Candidato"
 import { Empresa } from "../models/Empresa"
 import { Vaga } from "../models/Vaga"
 import { listCandidatos, listEmpresas } from "../storage/lists"
-import { getValidCEP, getValidCPF, getValidDescricao, getValidDescricaoVaga, getValidEmail, getValidEstado, getValidIdade, getValidNome, getValidNomeVaga, getValidPais } from "../validators/formValidator"
+import { getValidCEP, getValidCNPJ, getValidCPF, getValidDescricao, getValidDescricaoVaga, getValidEmail, getValidEstado, getValidIdade, getValidLoginIdentification, getValidNome, getValidNomeVaga, getValidPais } from "../validators/formValidator"
 
 export function handleFormCandidato(listCompetenciasCandidato: string[]){
     const nome = getValidNome()
@@ -34,7 +34,7 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
     const cep = getValidCEP()
     const descricao = getValidDescricao()
     const pais = getValidPais()
-    const cnpj = (document.getElementById("cnpj") as HTMLInputElement)?.value
+    const cnpj = getValidCNPJ()
     const competencias = listCompetenciasEmpresa
 
     const nomeVaga = getValidNomeVaga()
@@ -64,37 +64,44 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
 }
 
 export function handleFormLoginCandidato(){
-    const cpfInput: string = (document.getElementById("cpf-login-candidato") as HTMLInputElement)?.value ?? ""
+    const cpfInput= getValidLoginIdentification("cpf-login-candidato")
 
-    for (const c of listCandidatos) {
-        // a lista nn possui instancias de vdd, elas são todos objetos JSON do Localstorage, 
-        // logo cpf eh so um atributo do JSON
+    if(cpfInput){
+        for (const c of listCandidatos) {
+            // a lista nn possui instancias de vdd, elas são todos objetos JSON do Localstorage, 
+            // logo cpf eh so um atributo do JSON
 
-        const cpf = (c as any)?.cpf ?? ""
+            const cpf = (c as any)?.cpf ?? ""
 
-        if (cpf === cpfInput) {
-            localStorage.setItem("currentUser", JSON.stringify(c))
-            window.location.reload()
-            return
+            if (cpf === cpfInput) {
+                localStorage.setItem("currentUser", JSON.stringify(c))
+                window.location.reload()
+                return
+            }
         }
+
+        alert("CPF não encontrado!")
     }
 
-    alert("CPF não encontrado!")
+    
     
 }
 
 export function handleFormLoginEmpresa(){
-    const cnpjInput: string = (document.getElementById("cnpj-login-empresa") as HTMLInputElement)?.value ?? ""
+    const cnpjInput = getValidLoginIdentification("cnpj-login-empresa")
 
-    for (const c of listEmpresas) {
-        const cnpj = (c as any)?.cnpj ?? ""
+    if(cnpjInput){
+        for (const c of listEmpresas) {
+            const cnpj = (c as any)?.cnpj ?? ""
 
-        if (cnpj === cnpjInput) {
-            localStorage.setItem("currentUser", JSON.stringify(c))
-            window.location.reload()
-            return
+            if (cnpj === cnpjInput) {
+                localStorage.setItem("currentUser", JSON.stringify(c))
+                window.location.reload()
+                return
+            }
         }
-    }
 
-    alert("CNPJ não encontrado!")
+        alert("CNPJ não encontrado!")
+    }
+    
 }

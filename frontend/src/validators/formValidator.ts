@@ -167,3 +167,35 @@ export function getValidDescricaoVaga(): string | null{
 		return null
 	}
 }
+
+export function getValidLoginIdentification(idHTML: string): string | null{
+	let identification = (document.getElementById(idHTML) as HTMLInputElement)?.value
+
+	if(idHTML == "cnpj-login-empresa"){
+		const regexCustom = /^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}$/
+		if(regexCustom.test(identification)){
+			identification = identification.replaceAll(".", "")
+			identification = identification.replaceAll("-", "")
+			identification = identification.replaceAll("/", "")
+		} else {
+			alert("CNPJ Inválido! Tente novamente!")
+			return null
+		}
+
+	} 
+	else if(idHTML == "cpf-login-candidato"){
+		const regexCustom = /^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/
+
+		if(regexCustom.test(identification)){
+			identification = identification.replaceAll(".", "")
+			identification = identification.replaceAll("-", "")
+		} else {
+			alert("CPF Inválido! Tente novamente!")
+			return null
+		}
+	}
+
+	return identification
+
+	
+}
