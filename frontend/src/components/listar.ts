@@ -1,4 +1,4 @@
-import { generateCompetenciasList } from "../helpers/homeHelpers"
+import { generateCompetenciasList } from "../helpers/homeHelper"
 import { listCandidatos, listEmpresas } from "../storage/lists"
 
 export function listarVagas(currentUser: any): string{
