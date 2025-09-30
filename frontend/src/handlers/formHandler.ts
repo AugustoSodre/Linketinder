@@ -2,50 +2,64 @@ import { Candidato } from "../models/Candidato"
 import { Empresa } from "../models/Empresa"
 import { Vaga } from "../models/Vaga"
 import { listCandidatos, listEmpresas } from "../storage/lists"
+import { getValidCEP, getValidCPF, getValidDescricao, getValidDescricaoVaga, getValidEmail, getValidEstado, getValidIdade, getValidNome, getValidNomeVaga, getValidPais } from "../validators/formValidator"
 
 export function handleFormCandidato(listCompetenciasCandidato: string[]){
-    const nome = (document.getElementById("nome") as HTMLInputElement)?.value
-    const email = (document.getElementById("email") as HTMLInputElement)?.value
-    const estado = (document.getElementById("estado") as HTMLInputElement)?.value
-    const cep = (document.getElementById("cep") as HTMLInputElement)?.value
-    const descricao = (document.getElementById("descricao") as HTMLInputElement)?.value
-    const idade = parseInt((document.getElementById("idade") as HTMLInputElement)?.value ?? "")
-    const cpf = (document.getElementById("cpf") as HTMLInputElement)?.value
+    const nome = getValidNome()
+    const email = getValidEmail()
+    const estado = getValidEstado()
+    const cep = getValidCEP()
+    const descricao = getValidDescricao()
     const competencias = listCompetenciasCandidato
- 
-    const newCandidato = new Candidato(nome, email, estado, cep, descricao, competencias, idade, cpf)
+    const idade = getValidIdade()
+    const cpf = getValidCPF();
+    
+    if(nome && email && estado && cep && descricao && idade && cpf && competencias){
+        const newCandidato = new Candidato(nome, email, estado, cep, descricao, competencias, idade, cpf)
 
-    listCandidatos.push(newCandidato)
+        listCandidatos.push(newCandidato)
 
-    localStorage.setItem("listCandidatos", JSON.stringify(listCandidatos))
+        localStorage.setItem("listCandidatos", JSON.stringify(listCandidatos))
 
-    window.location.reload()
+        window.location.reload()
+    }
+    
 
 }
 
 export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompetenciasVaga: string[]){
-    const nome = (document.getElementById("nome") as HTMLInputElement)?.value
-    const email = (document.getElementById("email") as HTMLInputElement)?.value
-    const estado = (document.getElementById("estado") as HTMLInputElement)?.value
-    const cep = (document.getElementById("cep") as HTMLInputElement)?.value
-    const descricao = (document.getElementById("descricao") as HTMLInputElement)?.value
-    const pais = (document.getElementById("pais") as HTMLInputElement)?.value
+    const nome = getValidNome()
+    const email = getValidEmail()
+    const estado = getValidEstado()
+    const cep = getValidCEP()
+    const descricao = getValidDescricao()
+    const pais = getValidPais()
     const cnpj = (document.getElementById("cnpj") as HTMLInputElement)?.value
     const competencias = listCompetenciasEmpresa
 
-    const vaga = new Vaga(
-        (document.getElementById("nome-vaga") as HTMLInputElement)?.value,
-        (document.getElementById("descricao-vaga") as HTMLInputElement)?.value,
+    const nomeVaga = getValidNomeVaga()
+    const descricaoVaga = getValidDescricaoVaga()
+
+    let vaga = null
+
+    if(nomeVaga && descricaoVaga && listCompetenciasVaga){
+        vaga = new Vaga(
+        nomeVaga,
+        descricaoVaga,
         listCompetenciasVaga
     )
+    }
 
-    const newEmpresa = new Empresa(nome, email, estado, cep, descricao, competencias, pais, cnpj, vaga)
+    if(nome && email && estado && cep && descricao && competencias && pais && cnpj && vaga){
+        const newEmpresa = new Empresa(nome, email, estado, cep, descricao, competencias, pais, cnpj, vaga)
 
-    listEmpresas.push(newEmpresa)
+        listEmpresas.push(newEmpresa)
 
-    localStorage.setItem("listEmpresas", JSON.stringify(listEmpresas))
+        localStorage.setItem("listEmpresas", JSON.stringify(listEmpresas))
 
-    window.location.reload()
+        window.location.reload()
+    }
+
 
 }
 
