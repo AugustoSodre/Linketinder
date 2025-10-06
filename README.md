@@ -22,6 +22,11 @@ O Linketinder é uma aplicação desenvolvida em Groovy e TypeScript que conecta
 - **HTML5/CSS3** - Interface e estilização
 - **JavaScript ES6+** - Funcionalidades interativas
 
+### Banco de Dados (PostgreSQL)
+- **PostgreSQL 15+** - Sistema de gerenciamento de banco de dados relacional
+- **pgAdmin 4** - Interface gráfica para administração do PostgreSQL
+- **dbdiagram.io** - Ferramenta de modelagem e documentação do banco de dados
+
 ### Ferramentas de Desenvolvimento
 - **IntelliJ IDEA** - IDE de desenvolvimento
 
@@ -100,6 +105,9 @@ Linketinder/
 │   ├── package.json
 │   └── tsconfig.json
 ├── build.gradle
+├── scriptEstruturaBasica.sql     
+├── scriptPopulacaoInicialDados.sql 
+├── MER-Inicial.png               
 └── README.md
 ```
 
@@ -119,6 +127,25 @@ O frontend utiliza uma arquitetura de Single Page Application (SPA):
 - **Handlers**: Lógica de manipulação de eventos
 - **Storage**: Gerenciamento de dados em localStorage
 
+### Banco de Dados (PostgreSQL)
+O banco de dados foi modelado seguindo as melhores práticas de normalização e integridade referencial:
+
+#### Estrutura do Banco
+- **7 Tabelas principais**: competencia, candidato, empresa, vaga, competencia_candidato, competencia_vaga, competencia_empresa
+- **Normalização**: Atende até a 4ª Forma Normal (4FN)
+- **Relacionamentos**: N:N entre entidades através de tabelas associativas
+- **Integridade**: Chaves estrangeiras com CASCADE para manter consistência
+
+#### Modelo Entidade-Relacionamento (MER)
+
+![MER-Inicial](MER-Inicial.png)
+
+**Principais entidades e relacionamentos:**
+- **Candidato** possui múltiplas competências (N:N via competencia_candidato)
+- **Empresa** possui múltiplas competências (N:N via competencia_empresa)
+- **Vaga** pertence a uma empresa (N:1) e requer múltiplas competências (N:N via competencia_vaga)
+- **Competência** é compartilhada entre candidatos, empresas e vagas
+
 ## ⚙️ Funcionalidades
 
 ### Backend (CLI Groovy)
@@ -135,6 +162,13 @@ O frontend utiliza uma arquitetura de Single Page Application (SPA):
 - ✅ Gráficos e visualizações
 - ✅ Armazenamento local (localStorage)
 - ✅ Roteamento SPA
+
+### Banco de Dados (PostgreSQL)
+- ✅ Estrutura normalizada até 4FN
+- ✅ Relacionamentos N:N com tabelas associativas
+- ✅ Integridade referencial com constraints
+- ✅ Scripts automatizados de criação e população
+- ✅ Suporte a múltiplas competências por entidade
 
 ## 🛠️ Como Executar
 
@@ -177,6 +211,63 @@ npm run build
 npm run preview
 ```
 
+### Banco de Dados (PostgreSQL)
+
+**Pré-requisitos:**
+- PostgreSQL 15+ instalado
+- pgAdmin 4 (opcional, para interface gráfica)
+- Acesso ao terminal PostgreSQL (psql)
+
+**Configuração inicial:**
+
+1. **Criar o banco de dados:**
+```bash
+# Via terminal psql
+psql -U postgres
+CREATE DATABASE linketinder;
+\q
+```
+
+2. **Executar script de estrutura:**
+```bash
+# Via terminal
+psql -U postgres -d linketinder -f scriptEstruturaBasica.sql
+
+# Ou via pgAdmin 4
+# Abra o Query Tool e execute o conteúdo do arquivo scriptEstruturaBasica.sql
+```
+
+3. **Popular com dados iniciais:**
+```bash
+# Via terminal
+psql -U postgres -d linketinder -f scriptPopulacaoInicialDados.sql
+
+# Ou via pgAdmin 4
+# Execute o conteúdo do arquivo scriptPopulacaoInicialDados.sql
+```
+
+**Estrutura criada:**
+- 7 tabelas relacionadas
+- 5 candidatos (personagens de The Office)
+- 5 empresas
+- 5 vagas de emprego
+- 6 competências técnicas
+- Relacionamentos configurados entre todas as entidades
+
+**Verificar instalação:**
+```sql
+-- Conectar ao banco
+psql -U postgres -d linketinder
+
+-- Verificar tabelas criadas
+\dt
+
+-- Consultar dados
+SELECT * FROM candidato;
+SELECT * FROM empresa;
+SELECT * FROM vaga;
+```
+
 ## 🌐 Acesso à Aplicação
 
 ### Backend
@@ -187,6 +278,13 @@ npm run preview
 - **Tipo**: Aplicação web (SPA)
 - **URL de desenvolvimento**: `http://localhost:5173` (após `npm run dev`)
 - **Funcionalidades**: Interface completa com login, cadastros e visualizações
+
+### Banco de Dados
+- **Tipo**: PostgreSQL
+- **Porta padrão**: 5432
+- **Nome do banco**: linketinder
+- **Acesso via pgAdmin**: `http://localhost:5050` (se configurado)
+- **Acesso via psql**: `psql -U postgres -d linketinder`
 
 ## 📋 Funcionalidades Detalhadas
 
@@ -203,13 +301,25 @@ npm run preview
    - Análises e métricas
 5. **Navegação SPA**: Roteamento sem recarregamento de página
 
+### Recursos do Banco de Dados:
+1. **Tabela Candidato**: Armazena informações pessoais e profissionais
+2. **Tabela Empresa**: Dados cadastrais das empresas recrutadoras
+3. **Tabela Vaga**: Descrição das oportunidades de trabalho
+4. **Tabela Competência**: Catálogo de habilidades técnicas
+5. **Tabelas Associativas**: Relacionam competências com candidatos, empresas e vagas
+6. **Constraints de Integridade**: Garantem consistência dos dados
+7. **Cascata de Operações**: Atualizações e deleções propagadas automaticamente
+
 ## 🚧 Próximos Passos
 
 - [ ] **Integração Backend-Frontend**: Conectar as duas implementações
 - [ ] **API REST**: Criar endpoints para comunicação
-- [ ] **Banco de Dados**: Implementar persistência real
-- [ ] **Sistema de Matching**: Algoritmo de compatibilidade
+- [ ] **Conexão com PostgreSQL**: Migrar do armazenamento em memória/localStorage para banco real
+- [ ] **DAO Layer**: Implementar camada de acesso a dados
+- [ ] **Connection Pool**: Configurar pool de conexões eficiente
+- [ ] **Sistema de Matching**: Algoritmo de compatibilidade baseado em competências
 - [ ] **Autenticação JWT**: Sistema de autenticação robusto
+- [ ] **Queries Otimizadas**: Implementar índices e otimizar consultas
 - [ ] **Deploy**: Preparar para produção
 
 ## 🎯 Objetivo do Projeto
@@ -217,14 +327,17 @@ npm run preview
 O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 - Interface intuitiva e moderna (frontend web)
 - Sistema robusto de gerenciamento (backend CLI)
-- Futuro sistema de matching inteligente
+- Banco de dados estruturado e normalizado
+- Futuro sistema de matching inteligente baseado em competências
 - Experiência completa de recrutamento
 
 ## 📝 Notas Técnicas
 
-- **Backend**: Utiliza listas estáticas em memória
-- **Frontend**: Usa localStorage para persistência local
-- **Arquitetura**: Preparada para futura integração via API
+- **Backend**: Utiliza listas estáticas em memória (migração para PostgreSQL planejada)
+- **Frontend**: Usa localStorage para persistência local (migração para API planejada)
+- **Banco de Dados**: PostgreSQL com estrutura normalizada até 4FN
+- **Modelagem**: Desenvolvida em dbdiagram.io e exportada para SQL
+- **Arquitetura**: Preparada para futura integração via API REST
 - **Compatibilidade**: Frontend responsivo para diferentes dispositivos
 
 ## 🤝 Contribuições
@@ -232,6 +345,7 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 Sinta-se à vontade para contribuir com:
 - Melhorias na interface
 - Novas funcionalidades
+- Otimizações no banco de dados
 - Correções de bugs
 - Integração backend-frontend
 
