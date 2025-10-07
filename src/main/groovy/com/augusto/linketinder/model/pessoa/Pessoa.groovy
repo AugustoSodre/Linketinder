@@ -1,6 +1,6 @@
 package com.augusto.linketinder.model.pessoa
 
-import com.augusto.linketinder.model.lista.EnumCompetencias
+import com.augusto.linketinder.model.Competencia
 
 trait Pessoa {
     String id
@@ -9,7 +9,8 @@ trait Pessoa {
     String estado
     String cep
     String descricao
-    List<EnumCompetencias> competencias
+    List<Competencia> competencias
+    String senha
 
     //Implementar metodo 'curtir'
     def curtir(){}
