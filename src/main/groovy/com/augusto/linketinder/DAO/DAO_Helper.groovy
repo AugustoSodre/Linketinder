@@ -3,6 +3,7 @@ package com.augusto.linketinder.DAO
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.model.pessoa.Empresa
 
 import java.sql.Connection
 import java.sql.PreparedStatement
@@ -165,6 +166,40 @@ class DAO_Helper {
             statement.setInt(2, c.id)
             println(listaComp[i].id)
             println(c.id)
+            statement.executeUpdate()
+        }
+
+    }
+
+    static void conectarCompEmpresa(Empresa e){
+        def sql = "INSERT INTO competencia_empresa(id_competencia, id_empresa) VALUES (?, ?)"
+        Connection conn = DAO.connection()
+
+        def listaComp = e.competencias
+
+        for(int i = 0; i < listaComp.size(); i++){
+            PreparedStatement statement = conn.prepareStatement(sql)
+            statement.setInt(1, listaComp[i].id)
+            statement.setInt(2, e.id)
+            println(listaComp[i].id)
+            println(e.id)
+            statement.executeUpdate()
+        }
+
+    }
+
+    static void conectarCompVaga(Vaga v){
+        def sql = "INSERT INTO competencia_vaga(id_competencia, id_vaga) VALUES (?, ?)"
+        Connection conn = DAO.connection()
+
+        def listaComp = v.competencias
+
+        for(int i = 0; i < listaComp.size(); i++){
+            PreparedStatement statement = conn.prepareStatement(sql)
+            statement.setInt(1, listaComp[i].id)
+            statement.setInt(2, v.id)
+            println(listaComp[i].id)
+            println(v.id)
             statement.executeUpdate()
         }
 

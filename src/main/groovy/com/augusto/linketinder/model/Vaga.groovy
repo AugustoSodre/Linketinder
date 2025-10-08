@@ -7,7 +7,7 @@ class Vaga {
     String descricao
     String cidade
     String estado
-    List<Competencia> listaCompetencias
+    List<Competencia> competencias
 
     Vaga(int id, int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> listaComp){
         this.id = id
@@ -16,15 +16,16 @@ class Vaga {
         this.descricao = descricao
         this.cidade = cidade
         this.estado = estado
-        this.listaCompetencias = listaComp
+        this.competencias = listaComp
     }
 
-    Vaga(int id_empresa, String titulo, String descricao, String cidade, String estado){
+    Vaga(int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> competencias){
         this.id_empresa = id_empresa
         this.titulo = titulo
         this.descricao = descricao
         this.cidade = cidade
         this.estado = estado
+        this.competencias = competencias
     }
 
     @Override
@@ -36,7 +37,7 @@ class Vaga {
             descricao    = ${descricao}
             cidade       = ${cidade}
             estado       = ${estado}
-            competencias = ${listaCompetencias?.join(", \n")}
+            competencias = ${competencias?.join(", \n")}
         }""".stripIndent()
     }
 }

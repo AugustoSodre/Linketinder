@@ -11,7 +11,7 @@ class Empresa implements Pessoa{
     String cnpj
     List<Vaga> listaVaga
 
-    Empresa(int id, String nome, String email, String estado, String cep, String pais, String cnpj,String descricao, List<Competencia> competencias, List<Vaga> listaVaga) {
+    Empresa(int id, String nome, String email, String estado, String cep, String pais, String cnpj,String descricao, List<Competencia> competencias, List<Vaga> listaVaga, String senha) {
         this.id = id
         this.nome = nome
         this.email = email
@@ -22,6 +22,19 @@ class Empresa implements Pessoa{
         this.descricao = descricao
         this.competencias = competencias
         this.listaVaga = listaVaga
+        this.senha = senha
+    }
+
+    Empresa(String nome, String email, String estado, String cep, String pais, String cnpj,String descricao, List<Competencia> competencias, String senha) {
+        this.nome = nome
+        this.email = email
+        this.estado = estado
+        this.cep = cep
+        this.pais = pais
+        this.cnpj = cnpj
+        this.descricao = descricao
+        this.competencias = competencias
+        this.senha = senha
     }
 
     @Override

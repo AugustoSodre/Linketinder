@@ -5,12 +5,7 @@ import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato
 import com.augusto.linketinder.model.pessoa.Empresa
 
-import javax.swing.plaf.nimbus.State
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.PreparedStatement
-import java.sql.ResultSet
-import java.sql.Statement
+import java.sql.*
 
 class DAO {
 
@@ -22,100 +17,134 @@ class DAO {
         return DriverManager.getConnection(url, user, password)
     }
 
-    //Create (C)
+    // CREATE (C)
+
     void insert(Candidato c) {
-        def sql = "INSERT INTO candidato(nome, email, estado, cep, idade, cpf, descricao, senha) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        def sql = """
+            INSERT INTO candidato(nome, email, estado, cep, idade, cpf, descricao, senha)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """
         try {
             Connection conn = connection()
-            PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-            statement.setString(1, c.nome)
-            statement.setString(2, c.email)
-            statement.setString(3, c.estado)
-            statement.setString(4, c.cep)
-            statement.setInt(5, c.idade)
-            statement.setString(6, c.cpf)
-            statement.setString(7, c.descricao)
-            statement.setString(8, c.senha)
-            statement.executeUpdate()
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
-            ResultSet rs = statement.getGeneratedKeys()
-            if (rs.next()) {
-                int generatedId = rs.getInt(1)
-                c.setId(generatedId)
-            }
+            stmt.setString(1, c.nome)
+            stmt.setString(2, c.email)
+            stmt.setString(3, c.estado)
+            stmt.setString(4, c.cep)
+            stmt.setInt(5, c.idade)
+            stmt.setString(6, c.cpf)
+            stmt.setString(7, c.descricao)
+            stmt.setString(8, c.senha)
+
+            stmt.executeUpdate()
+
+            ResultSet rs = stmt.getGeneratedKeys()
+            if (rs.next()) c.id = rs.getInt(1)
 
             DAO_Helper.conectarCompCandidato(c)
+            println("Candidato inserido com sucesso! (id=${c.id})")
 
+            rs.close()
+            stmt.close()
+            conn.close()
 
-            println("Candidato inserido com sucesso!")
-
-        } catch (Exception err) {
-            println(err.stackTrace)
+        } catch (Exception e) {
+            println "Erro ao inserir candidato: ${e.message}"
         }
-
     }
 
     void insert(Empresa e) {
-        def sql = "INSERT INTO empresa(nome, email, estado, cep, pais, cnpj, descricao, senha) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        def sql = """
+            INSERT INTO empresa(nome, email, estado, cep, pais, cnpj, descricao, senha)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        """
         try {
             Connection conn = connection()
-            PreparedStatement statement = conn.prepareStatement(sql)
-            statement.setString(1, e.nome)
-            statement.setString(2, e.email)
-            statement.setString(3, e.estado)
-            statement.setString(4, e.cep)
-            statement.setString(5, e.pais)
-            statement.setString(6, e.cnpj)
-            statement.setString(7, e.descricao)
-            statement.setString(8, e.senha)
-            statement.executeUpdate()
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
-            println("Empresa inserida com sucesso!")
+            stmt.setString(1, e.nome)
+            stmt.setString(2, e.email)
+            stmt.setString(3, e.estado)
+            stmt.setString(4, e.cep)
+            stmt.setString(5, e.pais)
+            stmt.setString(6, e.cnpj)
+            stmt.setString(7, e.descricao)
+            stmt.setString(8, e.senha)
+
+            stmt.executeUpdate()
+
+            ResultSet rs = stmt.getGeneratedKeys()
+            if (rs.next()) e.id = rs.getInt(1)
+
+            DAO_Helper.conectarCompEmpresa(e)
+            println("Empresa inserida com sucesso! (id=${e.id})")
+
+            rs.close()
+            stmt.close()
+            conn.close()
 
         } catch (Exception err) {
-            println(err.stackTrace)
+            println "Erro ao inserir empresa: ${err.message}"
         }
     }
 
     void insert(Vaga v) {
-        def sql = "INSERT INTO vaga(id_empresa, titulo, descricao, cidade, estado) " +
-                "VALUES (?, ?, ?, ?, ?)"
+        def sql = """
+            INSERT INTO vaga(id_empresa, titulo, descricao, cidade, estado)
+            VALUES (?, ?, ?, ?, ?)
+        """
         try {
             Connection conn = connection()
-            PreparedStatement statement = conn.prepareStatement(sql)
-            statement.setInt(1, v.id_empresa)
-            statement.setString(2, v.titulo)
-            statement.setString(3, v.descricao)
-            statement.setString(4, v.cidade)
-            statement.setString(5, v.estado)
-            statement.executeUpdate()
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
-            println("Vaga inserida com sucesso!")
+            stmt.setInt(1, v.id_empresa)
+            stmt.setString(2, v.titulo)
+            stmt.setString(3, v.descricao)
+            stmt.setString(4, v.cidade)
+            stmt.setString(5, v.estado)
 
-        } catch (Exception err) {
-            println(err.stackTrace)
+            stmt.executeUpdate()
+
+            ResultSet rs = stmt.getGeneratedKeys()
+            if (rs.next()) v.id = rs.getInt(1)
+
+            DAO_Helper.conectarCompVaga(v)
+            println("Vaga inserida com sucesso! (id=${v.id})")
+
+            rs.close()
+            stmt.close()
+            conn.close()
+
+        } catch (Exception e) {
+            println "Erro ao inserir vaga: ${e.message}"
         }
     }
 
     void insert(Competencia comp) {
-        def sql = "INSERT INTO competencia(nome) " +
-                "VALUES (?)"
+        def sql = "INSERT INTO competencia(nome) VALUES (?)"
         try {
             Connection conn = connection()
-            PreparedStatement statement = conn.prepareStatement(sql)
-            statement.setString(1, comp.nome)
-            statement.executeUpdate()
+            PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
-            println("Competencia inserida com sucesso!")
+            stmt.setString(1, comp.nome)
+            stmt.executeUpdate()
 
-        } catch (Exception err) {
-            println(err.stackTrace)
+            ResultSet rs = stmt.getGeneratedKeys()
+            if (rs.next()) comp.id = rs.getInt(1)
+
+            println("Competência inserida com sucesso! (id=${comp.id})")
+
+            rs.close()
+            stmt.close()
+            conn.close()
+
+        } catch (Exception e) {
+            println "Erro ao inserir competência: ${e.message}"
         }
     }
 
-    //Read (R)
+    // READ (R)
     List<Candidato> listCandidatos() {
         def listaCandidato = []
         def sql = "SELECT * FROM candidato"
@@ -166,7 +195,8 @@ class DAO {
                                 resultSet.getString("cnpj"),
                                 resultSet.getString("descricao"),
                                 DAO_Helper.getListaCompCandidato(resultSet.getInt("id")),
-                                DAO_Helper.getListaVagaEmpresa(resultSet.getInt("id"))
+                                DAO_Helper.getListaVagaEmpresa(resultSet.getInt("id")),
+                                resultSet.getString("senha")
                         )
                 )
             }
@@ -228,43 +258,42 @@ class DAO {
         }
     }
 
-    //Update (U)
-    void update(String tabela, String campo, String novoAtributo, int id){
-        def sql = "UPDATE ? SET ? = ? WHERE id = ?"
-
-        try{
+    // UPDATE (U)
+    void update(String tabela, String campo, String novoAtributo, int id) {
+        def sql = "UPDATE ${tabela} SET ${campo} = ? WHERE id = ?"
+        try {
             Connection conn = connection()
-            PreparedStatement preparedStatement = conn.prepareStatement(sql)
-            preparedStatement.setString(1, tabela)
-            preparedStatement.setString(2, campo)
-            preparedStatement.setString(3, novoAtributo)
-            preparedStatement.setInt(4, id)
+            PreparedStatement stmt = conn.prepareStatement(sql)
+            stmt.setString(1, novoAtributo)
+            stmt.setInt(2, id)
 
-            int linhas = preparedStatement.executeUpdate()
-            linhas > 0 ? println("Objeto atualizado!") : println("Objeto não atualizado.")
-        } catch (Exception e){
-            println(e.stackTrace)
-        }
+            int linhas = stmt.executeUpdate()
+            println(linhas > 0 ? "Objeto atualizado!" : "Nenhum registro atualizado.")
 
-    }
-
-    //Delete (D)
-    void delete(String tabela, int id){
-        def sql = "DELETE FROM ? WHERE id = ?"
-
-        try{
-            Connection conn = connection()
-            PreparedStatement preparedStatement = conn.prepareStatement(sql)
-            preparedStatement.setString(1, tabela)
-            preparedStatement.setInt(2, id)
-            int linhas = preparedStatement.executeUpdate()
-            linhas > 0 ? println("Objeto removido!") : println("Objeto não encontrado.")
-        } catch (Exception e){
-            println(e.stackTrace)
+            stmt.close()
+            conn.close()
+        } catch (Exception e) {
+            println "Erro ao atualizar: ${e.message}"
         }
     }
 
+    // DELETE (D)
+    void delete(String tabela, int id) {
+        def sql = "DELETE FROM ${tabela} WHERE id = ?"
+        try {
+            Connection conn = connection()
+            PreparedStatement stmt = conn.prepareStatement(sql)
+            stmt.setInt(1, id)
 
+            int linhas = stmt.executeUpdate()
+            println(linhas > 0 ? "Objeto removido!" : "Objeto não encontrado.")
+
+            stmt.close()
+            conn.close()
+        } catch (Exception e) {
+            println "Erro ao deletar: ${e.message}"
+        }
+    }
 
 
 }
