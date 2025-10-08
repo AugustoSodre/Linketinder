@@ -3,7 +3,7 @@ package com.augusto.linketinder.model.pessoa
 import com.augusto.linketinder.model.Competencia
 
 trait Pessoa {
-    String id
+    int id
     String nome
     String email
     String estado

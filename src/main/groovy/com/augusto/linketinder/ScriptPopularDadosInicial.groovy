@@ -1,15 +1,15 @@
 package com.augusto.linketinder
 
 import com.augusto.linketinder.model.lista.EnumCompetencias
-import com.augusto.linketinder.model.lista.ListaFisicaEstatica
-import com.augusto.linketinder.model.lista.ListaJuridicaEstatica
-import com.augusto.linketinder.model.pessoa.PessoaFisica
-import com.augusto.linketinder.model.pessoa.PessoaJuridica
+import com.augusto.linketinder.model.lista.ListaCandidatoEstatica
+import com.augusto.linketinder.model.lista.ListaEmpresaEstatica
+import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.model.pessoa.Empresa
 
 class ScriptPopularDadosInicial {
 
     //Dados pessoas Fisicas (Candidatos)
-    PessoaFisica p1 = new PessoaFisica(
+    Candidato p1 = new Candidato(
             nome: "Augusto",
             email: "augusto@hotmail.com",
             estado: "DF",
@@ -24,7 +24,7 @@ class ScriptPopularDadosInicial {
             idade: 21
     )
 
-    PessoaFisica p2 = new PessoaFisica(
+    Candidato p2 = new Candidato(
             nome: "Mariana",
             email: "mariana.silva@gmail.com",
             estado: "SP",
@@ -39,7 +39,7 @@ class ScriptPopularDadosInicial {
             idade: 28
     )
 
-    PessoaFisica p3 = new PessoaFisica(
+    Candidato p3 = new Candidato(
             nome: "Carlos",
             email: "carlos.dev@yahoo.com",
             estado: "RJ",
@@ -54,7 +54,7 @@ class ScriptPopularDadosInicial {
             idade: 35
     )
 
-    PessoaFisica p4 = new PessoaFisica(
+    Candidato p4 = new Candidato(
             nome: "Fernanda",
             email: "fernanda.teste@outlook.com",
             estado: "MG",
@@ -69,7 +69,7 @@ class ScriptPopularDadosInicial {
             idade: 26
     )
 
-    PessoaFisica p5 = new PessoaFisica(
+    Candidato p5 = new Candidato(
             nome: "Rafael",
             email: "rafael.react@protonmail.com",
             estado: "RS",
@@ -85,7 +85,7 @@ class ScriptPopularDadosInicial {
     )
 
     // Dados pessoas Juridicas (Empresas)
-    PessoaJuridica pj1 = new PessoaJuridica(
+    Empresa pj1 = new Empresa(
             nome: "Império do Boliche",
             email: "imperio.boliche@gmail.com",
             estado: "RS",
@@ -100,7 +100,7 @@ class ScriptPopularDadosInicial {
             pais: "Brasil"
     )
 
-    PessoaJuridica pj2 = new PessoaJuridica(
+    Empresa pj2 = new Empresa(
             nome: "Tech Solutions LTDA",
             email: "contato@techsolutions.com",
             estado: "SP",
@@ -115,7 +115,7 @@ class ScriptPopularDadosInicial {
             pais: "Brasil"
     )
 
-    PessoaJuridica pj3 = new PessoaJuridica(
+    Empresa pj3 = new Empresa(
             nome: "AgroDigital",
             email: "suporte@agrodigital.com.br",
             estado: "GO",
@@ -130,7 +130,7 @@ class ScriptPopularDadosInicial {
             pais: "Brasil"
     )
 
-    PessoaJuridica pj4 = new PessoaJuridica(
+    Empresa pj4 = new Empresa(
             nome: "EducaTech",
             email: "contato@educatech.org",
             estado: "DF",
@@ -145,7 +145,7 @@ class ScriptPopularDadosInicial {
             pais: "Brasil"
     )
 
-    PessoaJuridica pj5 = new PessoaJuridica(
+    Empresa pj5 = new Empresa(
             nome: "FinanBank",
             email: "rh@finanbank.com",
             estado: "RJ",
@@ -162,17 +162,17 @@ class ScriptPopularDadosInicial {
 
     void start(){
         //ListaFisica
-        ListaFisicaEstatica.lista.add(p1)
-        ListaFisicaEstatica.lista.add(p2)
-        ListaFisicaEstatica.lista.add(p3)
-        ListaFisicaEstatica.lista.add(p4)
-        ListaFisicaEstatica.lista.add(p5)
+        ListaCandidatoEstatica.lista.add(p1)
+        ListaCandidatoEstatica.lista.add(p2)
+        ListaCandidatoEstatica.lista.add(p3)
+        ListaCandidatoEstatica.lista.add(p4)
+        ListaCandidatoEstatica.lista.add(p5)
 
         //ListaJuridica
-        ListaJuridicaEstatica.lista.add(pj1)
-        ListaJuridicaEstatica.lista.add(pj2)
-        ListaJuridicaEstatica.lista.add(pj3)
-        ListaJuridicaEstatica.lista.add(pj4)
-        ListaJuridicaEstatica.lista.add(pj5)
+        ListaEmpresaEstatica.lista.add(pj1)
+        ListaEmpresaEstatica.lista.add(pj2)
+        ListaEmpresaEstatica.lista.add(pj3)
+        ListaEmpresaEstatica.lista.add(pj4)
+        ListaEmpresaEstatica.lista.add(pj5)
     }
 }

@@ -1,13 +1,13 @@
 package com.augusto.linketinder.view.menu
 
 import com.augusto.linketinder.control.MenuController
-import com.augusto.linketinder.view.create.CadastroFisicoView
+import com.augusto.linketinder.view.create.CadastroCandidatoView
 import com.augusto.linketinder.view.delete.DeleteView
 
 import com.augusto.linketinder.view.read.ReadView
-import com.augusto.linketinder.view.update.UpdateFisicoView
+import com.augusto.linketinder.view.update.UpdateCandidatoView
 
-class MenuFisico {
+class MenuCandidato {
 
     void showMenuFisico(){
         println()
@@ -26,13 +26,13 @@ class MenuFisico {
         //Chamar Controller para input
         switch(new MenuController().getIntInput()){
             case 1:
-                new CadastroFisicoView().show()
+                new CadastroCandidatoView().show()
                 break
             case 2:
                 new ReadView().showFisico()
                 break
             case 3:
-                new UpdateFisicoView().show()
+                new UpdateCandidatoView().show()
                 break
             case 4:
                 new DeleteView().showDeleteFisico()

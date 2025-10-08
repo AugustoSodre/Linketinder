@@ -1,9 +1,9 @@
 package com.augusto.linketinder.control
 
-import com.augusto.linketinder.model.lista.ListaFisicaEstatica
-import com.augusto.linketinder.model.lista.ListaJuridicaEstatica
+import com.augusto.linketinder.model.lista.ListaCandidatoEstatica
+import com.augusto.linketinder.model.lista.ListaEmpresaEstatica
 import com.augusto.linketinder.model.pessoa.Pessoa
-import com.augusto.linketinder.model.pessoa.PessoaFisica
+import com.augusto.linketinder.model.pessoa.Candidato
 
 class DeleteController {
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
@@ -26,17 +26,17 @@ class DeleteController {
         }
 
         //Percorrendo a lista me busca da pessoa com ID
-        if(tipo.getClass() == PessoaFisica){
+        if(tipo.getClass() == Candidato){
             int index = -1
 
-            ListaFisicaEstatica.getLista().eachWithIndex { it, i ->
+            ListaCandidatoEstatica.getLista().eachWithIndex { it, i ->
                 if(it.getId().equals(id) ){
                     index = i
                 }
             }
 
             try{
-                ListaFisicaEstatica.getLista().remove(index)
+                ListaCandidatoEstatica.getLista().remove(index)
                 println("Pessoa removida com sucesso!")
                 return
             } catch (Exception ignored){
@@ -47,14 +47,14 @@ class DeleteController {
         } else{
             int index = -1
 
-            ListaJuridicaEstatica.getLista().eachWithIndex { it, i ->
+            ListaEmpresaEstatica.getLista().eachWithIndex { it, i ->
                 if(it.getId().equals(id)){
                     index = i
                 }
             }
 
             try{
-                ListaJuridicaEstatica.getLista().remove(index)
+                ListaEmpresaEstatica.getLista().remove(index)
                 println("Pessoa removida com sucesso!")
                 return
             } catch (Exception ignored){

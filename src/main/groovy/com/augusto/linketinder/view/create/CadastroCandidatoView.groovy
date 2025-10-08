@@ -2,10 +2,9 @@ package com.augusto.linketinder.view.create
 
 import com.augusto.linketinder.control.CadastroController
 import com.augusto.linketinder.model.lista.EnumCompetencias
-import com.augusto.linketinder.model.lista.ListaFisicaEstatica
-import com.augusto.linketinder.model.pessoa.PessoaFisica
+import com.augusto.linketinder.model.pessoa.Candidato
 
-class CadastroFisicoView {
+class CadastroCandidatoView {
 
     CadastroController cadastroController = new CadastroController()
 
@@ -13,7 +12,7 @@ class CadastroFisicoView {
         println "Cadastro do Candidato"
         println()
 
-        PessoaFisica pessoa = new PessoaFisica()
+        Candidato pessoa = new Candidato()
 
         print("Digite o Nome do Candidato: ")
         pessoa.nome = cadastroController.getNomeInput()

@@ -2,10 +2,9 @@ package com.augusto.linketinder.view.create
 
 import com.augusto.linketinder.control.CadastroController
 import com.augusto.linketinder.model.lista.EnumCompetencias
-import com.augusto.linketinder.model.lista.ListaJuridicaEstatica
-import com.augusto.linketinder.model.pessoa.PessoaJuridica
+import com.augusto.linketinder.model.pessoa.Empresa
 
-class CadastroJuridicoView {
+class CadastroEmpresaView {
 
     CadastroController cadastroController = new CadastroController()
 
@@ -13,7 +12,7 @@ class CadastroJuridicoView {
         println "Cadastro da Pessoa Jurídica"
         println()
 
-        PessoaJuridica pessoa = new PessoaJuridica()
+        Empresa pessoa = new Empresa()
 
         print("Digite o Nome da Empresa: ")
         pessoa.nome = cadastroController.getNomeInput()

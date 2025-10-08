@@ -1,10 +1,10 @@
 package com.augusto.linketinder.control;
 
 import com.augusto.linketinder.model.lista.EnumCompetencias;
-import com.augusto.linketinder.model.lista.ListaFisicaEstatica;
-import com.augusto.linketinder.model.lista.ListaJuridicaEstatica;
-import com.augusto.linketinder.model.pessoa.PessoaFisica;
-import com.augusto.linketinder.model.pessoa.PessoaJuridica;
+import com.augusto.linketinder.model.lista.ListaCandidatoEstatica;
+import com.augusto.linketinder.model.lista.ListaEmpresaEstatica;
+import com.augusto.linketinder.model.pessoa.Candidato;
+import com.augusto.linketinder.model.pessoa.Empresa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -337,21 +337,21 @@ class CadastroControllerTest {
     @Test
     void testInsertPessoaFisica() {
         //Arrange
-        PessoaFisica pessoaFisica = new PessoaFisica();
+        Candidato pessoaFisica = new Candidato();
         cadastroController.insertPessoa(pessoaFisica);
 
         //Act + Assert
-        assertEquals(ListaFisicaEstatica.getLista().getLast(), pessoaFisica);
+        assertEquals(ListaCandidatoEstatica.getLista().getLast(), pessoaFisica);
     }
 
     @Test
     void testInsertPessoaJuridica() {
         //Arrange
-        PessoaJuridica pessoaJuridica = new PessoaJuridica();
-        cadastroController.insertPessoa(pessoaJuridica);
+        Empresa empresa = new Empresa();
+        cadastroController.insertPessoa(empresa);
 
         //Act + Assert
-        assertEquals(ListaJuridicaEstatica.getLista().getLast(), pessoaJuridica);
+        assertEquals(ListaEmpresaEstatica.getLista().getLast(), empresa);
     }
 
 

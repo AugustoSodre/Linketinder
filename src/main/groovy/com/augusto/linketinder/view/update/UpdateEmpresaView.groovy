@@ -1,6 +1,6 @@
 package com.augusto.linketinder.view.update
 
-class UpdateJuridicoView {
+class UpdateEmpresaView {
 
     void show(){
         println "Update Juridico"

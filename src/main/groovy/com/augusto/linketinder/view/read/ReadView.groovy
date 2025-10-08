@@ -1,14 +1,14 @@
 package com.augusto.linketinder.view.read
 
-import com.augusto.linketinder.model.lista.ListaFisicaEstatica
-import com.augusto.linketinder.model.lista.ListaJuridicaEstatica
-import com.augusto.linketinder.model.pessoa.PessoaFisica
-import com.augusto.linketinder.model.pessoa.PessoaJuridica
+import com.augusto.linketinder.model.lista.ListaCandidatoEstatica
+import com.augusto.linketinder.model.lista.ListaEmpresaEstatica
+import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.model.pessoa.Empresa
 
 class ReadView {
 
     void showFisico(){
-        for (final PessoaFisica p in ListaFisicaEstatica.getLista()) {
+        for (final Candidato p in ListaCandidatoEstatica.getLista()) {
             println()
             println(p.toString())
             println()
@@ -16,7 +16,7 @@ class ReadView {
     }
 
     void showJuridico() {
-        for (final PessoaJuridica pj in ListaJuridicaEstatica.getLista()) {
+        for (final Empresa pj in ListaEmpresaEstatica.getLista()) {
             println()
             println(pj.toString())
             println()

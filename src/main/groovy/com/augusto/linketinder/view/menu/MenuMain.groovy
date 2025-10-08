@@ -22,11 +22,11 @@ class MenuMain {
         switch (new MenuController().getIntInput()){
             case 1:
                 limpaTela()
-                new MenuJuridico().showMenuJuridico()
+                new MenuEmpresa().showMenuJuridico()
                 break
             case 2:
                 limpaTela()
-                new MenuFisico().showMenuFisico()
+                new MenuCandidato().showMenuFisico()
                 break
             case 0:
                 return true

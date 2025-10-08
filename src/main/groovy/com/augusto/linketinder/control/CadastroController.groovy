@@ -1,11 +1,11 @@
 package com.augusto.linketinder.control
 
 import com.augusto.linketinder.model.lista.EnumCompetencias
-import com.augusto.linketinder.model.lista.ListaFisicaEstatica
-import com.augusto.linketinder.model.lista.ListaJuridicaEstatica
+import com.augusto.linketinder.model.lista.ListaCandidatoEstatica
+import com.augusto.linketinder.model.lista.ListaEmpresaEstatica
 import com.augusto.linketinder.model.pessoa.Pessoa
-import com.augusto.linketinder.model.pessoa.PessoaFisica
-import com.augusto.linketinder.model.pessoa.PessoaJuridica
+import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.model.pessoa.Empresa
 
 class CadastroController {
 
@@ -227,10 +227,10 @@ class CadastroController {
     }
 
     void insertPessoa(Pessoa pessoa){
-        if(pessoa.getClass() == PessoaFisica){
-            ListaFisicaEstatica.getLista().add(pessoa as PessoaFisica)
+        if(pessoa.getClass() == Candidato){
+            ListaCandidatoEstatica.getLista().add(pessoa as Candidato)
         } else{
-            ListaJuridicaEstatica.getLista().add(pessoa as PessoaJuridica)
+            ListaEmpresaEstatica.getLista().add(pessoa as Empresa)
         }
     }
 }

@@ -8,7 +8,7 @@ class Candidato implements Pessoa {
     String cpf
     int idade
 
-    Candidato(String id,
+    Candidato(int id,
               String nome,
               String email,
               String estado,
