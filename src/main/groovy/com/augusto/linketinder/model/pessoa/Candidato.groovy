@@ -8,6 +8,8 @@ class Candidato implements Pessoa {
     String cpf
     int idade
 
+    Candidato(){}
+
     Candidato(int id,
               String nome,
               String email,

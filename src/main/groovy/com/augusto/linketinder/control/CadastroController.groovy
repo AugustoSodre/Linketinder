@@ -1,5 +1,6 @@
 package com.augusto.linketinder.control
 
+import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.lista.EnumCompetencias
 import com.augusto.linketinder.model.lista.ListaCandidatoEstatica
 import com.augusto.linketinder.model.lista.ListaEmpresaEstatica
@@ -121,14 +122,14 @@ class CadastroController {
         return getStringInput(maxTentativas)
     }
 
-    List<EnumCompetencias> getCompetenciasInput(int maxTentativas = MAX_TENTATIVAS_PADRAO) {
-        List<EnumCompetencias> tempList = []
+    List<Competencia> getCompetenciasInput(List<Competencia> listaComp, int maxTentativas = MAX_TENTATIVAS_PADRAO) {
+        List<Competencia> tempList = []
         int tentativasInvalidas = 0
 
         while (tentativasInvalidas < maxTentativas) {
             println()
             println("Competências selecionadas:")
-            tempList.each {println("- " + it.toString())}
+            tempList.each {println("- " + it.nome)}
             println()
             print("Digite uma competência para adicionar [0 para sair]: ")
 
@@ -142,9 +143,9 @@ class CadastroController {
             if (opcao == 0) break
 
             if (opcao > 0 && opcao <= EnumCompetencias.values().length) {
-                EnumCompetencias comp = EnumCompetencias.values()[opcao - 1]
+                Competencia comp = listaComp[opcao - 1]
                 if (!tempList.contains(comp)) {
-                    tempList << comp
+                    tempList.add(comp)
                     tentativasInvalidas = 0 // Reset contador após sucesso
                 } else {
                     println("Competência já foi selecionada.")
@@ -224,6 +225,10 @@ class CadastroController {
             }
         }
         throw new RuntimeException("Máximo de tentativas excedido para idade")
+    }
+
+    String getSenhaInput(int maxTentativas = MAX_TENTATIVAS_PADRAO) {
+        return getStringInput();
     }
 
     void insertPessoa(Pessoa pessoa){

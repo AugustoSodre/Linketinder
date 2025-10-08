@@ -9,7 +9,7 @@ import com.augusto.linketinder.view.update.UpdateCandidatoView
 
 class MenuCandidato {
 
-    void showMenuFisico(){
+    void showMenuCandidato(){
         println()
         println("-" * 25)
         println "Candidatos"
@@ -29,13 +29,13 @@ class MenuCandidato {
                 new CadastroCandidatoView().show()
                 break
             case 2:
-                new ReadView().showFisico()
+                new ReadView().showCandidatos()
                 break
             case 3:
                 new UpdateCandidatoView().show()
                 break
             case 4:
-                new DeleteView().showDeleteFisico()
+                new DeleteView().showDeleteCandidato()
                 break
             case 0:
                 break

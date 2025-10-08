@@ -26,7 +26,7 @@ class MenuMain {
                 break
             case 2:
                 limpaTela()
-                new MenuCandidato().showMenuFisico()
+                new MenuCandidato().showMenuCandidato()
                 break
             case 0:
                 return true

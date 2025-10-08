@@ -6,17 +6,10 @@ import com.augusto.linketinder.model.pessoa.Empresa
 
 class DeleteView {
 
-    void showDeleteFisico(){
+    void showDeleteCandidato(){
         println "Deletar Candidato!"
         println()
         print("Digite o ID do Candidato: ")
         new DeleteController().delete(new Candidato())
-    }
-
-    void showDeleteJuridico(){
-        println "Deletar Empresa!"
-        println()
-        print("Digite o ID da Empresa: ")
-        new DeleteController().delete(new Empresa())
     }
 }
