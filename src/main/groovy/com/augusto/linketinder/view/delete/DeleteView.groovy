@@ -12,4 +12,11 @@ class DeleteView {
         print("Digite o ID do Candidato: ")
         new DeleteController().delete(new Candidato())
     }
+
+    void showDeleteEmpresa(){
+        println "Deletar Empresa!"
+        println()
+        print("Digite o ID da Empresa: ")
+        new DeleteController().delete(new Empresa())
+    }
 }

@@ -1,6 +1,8 @@
 package com.augusto.linketinder.view.create
 
+import com.augusto.linketinder.DAO.DAO
 import com.augusto.linketinder.control.CadastroController
+import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.lista.EnumCompetencias
 import com.augusto.linketinder.model.pessoa.Empresa
 
@@ -37,15 +39,27 @@ class CadastroEmpresaView {
 
         println()
         println("Competências disponíveis:")
-        EnumCompetencias.values().eachWithIndex { comp, idx ->
-            println("${idx + 1} - ${comp}")
+        int cont = 1
+        DAO dao = new DAO()
+        List<Competencia> listaComp = dao.listCompetencia()
+        for(c in listaComp){
+            println("${cont} " + c.nome)
+            cont++
         }
-        pessoa.competencias = cadastroController.getCompetenciasInput()
+        pessoa.competencias = cadastroController.getCompetenciasInput(listaComp)
+
+        print("Digite a senha do Candidato: ")
+        pessoa.senha = cadastroController.getSenhaInput()
 
         // Adiciona pessoa ao final do processo
-        cadastroController.insertPessoa(pessoa)
+        try {
+            dao.insert(pessoa)
+            println()
+            println("Empresa adicionada com sucesso!")
+        } catch (Exception err){
+            println("Erro ao adicionar empresa!")
+        }
 
-        println()
-        println("Empresa adicionada com sucesso!")
+
     }
 }

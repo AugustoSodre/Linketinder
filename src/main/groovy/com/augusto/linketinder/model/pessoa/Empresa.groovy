@@ -11,6 +11,8 @@ class Empresa implements Pessoa{
     String cnpj
     List<Vaga> listaVaga
 
+    Empresa(){}
+
     Empresa(int id, String nome, String email, String estado, String cep, String pais, String cnpj,String descricao, List<Competencia> competencias, List<Vaga> listaVaga, String senha) {
         this.id = id
         this.nome = nome

@@ -52,8 +52,12 @@ class CadastroCandidatoView {
         pessoa.senha = cadastroController.getSenhaInput()
 
         //Adiciona pessoa ao final do processo
-        dao.insert(pessoa)
-
-        println("Candidato adicionada com sucesso!")
+        try {
+            dao.insert(pessoa)
+            println()
+            println("Candidato adicionado com sucesso!")
+        } catch (Exception e){
+            println("Erro ao adicionar candidato!")
+        }
     }
 }

@@ -29,13 +29,13 @@ class MenuEmpresa {
                 new CadastroEmpresaView().show()
                 break
             case 2:
-                new ReadView().showJuridico()
+                new ReadView().showEmpresas()
                 break
             case 3:
                 new UpdateEmpresaView().show()
                 break
             case 4:
-                new DeleteView().showDeleteJuridico()
+                new DeleteView().showDeleteEmpresa()
                 break
             case 0:
                 break

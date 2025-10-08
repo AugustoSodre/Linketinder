@@ -11,16 +11,15 @@ class ReadView {
     DAO dao = new DAO()
 
     void showCandidatos(){
-        List<Candidato> listaCandidato = dao.listCandidatos()
-        for (final Candidato p in listaCandidato) {
+        for (final Candidato p in dao.listCandidatos()) {
             println()
             println(p.toString())
             println()
         }
     }
 
-    void showJuridico() {
-        for (final Empresa pj in ListaEmpresaEstatica.getLista()) {
+    void showEmpresas() {
+        for (final Empresa pj in dao.listEmpresas()) {
             println()
             println(pj.toString())
             println()
