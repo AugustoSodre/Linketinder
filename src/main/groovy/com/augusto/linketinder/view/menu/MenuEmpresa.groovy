@@ -5,6 +5,7 @@ import com.augusto.linketinder.view.create.CadastroEmpresaView
 import com.augusto.linketinder.view.delete.DeleteView
 
 import com.augusto.linketinder.view.read.ReadView
+import com.augusto.linketinder.view.update.UpdateView
 
 class MenuEmpresa {
 
@@ -31,7 +32,7 @@ class MenuEmpresa {
                 new ReadView().showEmpresas()
                 break
             case 3:
-//                new UpdateEmpresaView().show()
+                new UpdateView().showUpdateEmpresa()
                 break
             case 4:
                 new DeleteView().showDeleteEmpresa()

@@ -259,12 +259,19 @@ class DAO {
     }
 
     // UPDATE (U)
-    void update(String tabela, String campo, String novoAtributo, int id) {
+    void update(String tabela, String campo, def novoAtributo, int id) {
         def sql = "UPDATE ${tabela} SET ${campo} = ? WHERE id = ?"
         try {
             Connection conn = connection()
             PreparedStatement stmt = conn.prepareStatement(sql)
-            stmt.setString(1, novoAtributo)
+            
+            if(novoAtributo instanceof String){
+                stmt.setString(1, novoAtributo as String)
+                println(novoAtributo)
+            }
+            else if(novoAtributo instanceof Integer){
+                stmt.setInt(1, novoAtributo as int)
+            }
             stmt.setInt(2, id)
 
             int linhas = stmt.executeUpdate()
