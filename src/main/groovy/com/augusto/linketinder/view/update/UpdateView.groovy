@@ -34,4 +34,34 @@ class UpdateView {
         updateController.updateEmpresa()
     }
 
+    void showUpdateVaga(){
+        println "Atualização de Vaga"
+        println()
+
+        List lista = dao.listVagas()
+
+        if (!lista || lista.size() == 0) {
+            println("Nenhuma vaga cadastrada.")
+            return
+        }
+
+        updateController.updateVaga()
+    }
+
+    void showUpdateComp(){
+        println "Atualização de Competência"
+        println()
+
+        List lista = dao.listCompetencia()
+
+        if (!lista || lista.size() == 0) {
+            println("Nenhuma competência cadastrada.")
+            return
+        }
+
+        updateController.updateComp()
+    }
+
+
+
 }

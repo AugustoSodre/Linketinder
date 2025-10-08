@@ -39,19 +39,19 @@ INSERT INTO empresa (nome, email, estado, cep, pais, cnpj, descricao, senha)
 VALUES ('Base Investimentos', 'base@investimentos.com', 'DF', '70670707', 'BR', '56789012000105', 'Startup de construção civil.', '123456');
 
 -- Inserindo 5 Vagas (agora com id_empresa referenciando as empresas criadas)
-INSERT INTO vaga (id_empresa, titulo, descricao, local) 
+INSERT INTO vaga (id_empresa, nome, descricao, local)
 VALUES (1, 'Desenvolvedor Frontend', 'Buscamos desenvolvedor para criar interfaces incríveis com React.', 'Scranton, PA');
 
-INSERT INTO vaga (id_empresa, titulo, descricao, local) 
+INSERT INTO vaga (id_empresa, nome, descricao, local)
 VALUES (2, 'Analista de BI', 'Profissional para análise de dados e criação de dashboards no PowerBI.', 'Stamford, CT');
 
-INSERT INTO vaga (id_empresa, titulo, descricao, local) 
+INSERT INTO vaga (id_empresa, nome, descricao, local)
 VALUES (3, 'Desenvolvedor Full-Stack', 'Vaga para desenvolvedor com experiência em Angular e Django.', 'New York, NY');
 
-INSERT INTO vaga (id_empresa, titulo, descricao, local) 
+INSERT INTO vaga (id_empresa, nome, descricao, local)
 VALUES (4, 'Engenheiro DevOps', 'Profissional para gerenciar infraestrutura Linux e deployments.', 'Scranton, PA');
 
-INSERT INTO vaga (id_empresa, titulo, descricao, local) 
+INSERT INTO vaga (id_empresa, nome, descricao, local)
 VALUES (5, 'Desenvolvedor Backend', 'Desenvolvedor experiente em Springboot e Django.', 'Philadelphia, PA');
 
 -- Associando competências aos candidatos

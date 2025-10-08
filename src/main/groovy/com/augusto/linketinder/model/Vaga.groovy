@@ -3,7 +3,7 @@ package com.augusto.linketinder.model
 class Vaga {
     int id
     int id_empresa
-    String titulo
+    String nome
     String descricao
     String cidade
     String estado
@@ -11,19 +11,19 @@ class Vaga {
 
     Vaga(){}
 
-    Vaga(int id, int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> listaComp) {
+    Vaga(int id, int id_empresa, String nome, String descricao, String cidade, String estado, List<Competencia> listaComp) {
         this.id = id
         this.id_empresa = id_empresa
-        this.titulo = titulo
+        this.nome = nome
         this.descricao = descricao
         this.cidade = cidade
         this.estado = estado
         this.competencias = listaComp
     }
 
-    Vaga(int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> competencias) {
+    Vaga(int id_empresa, String nome, String descricao, String cidade, String estado, List<Competencia> competencias) {
         this.id_empresa = id_empresa
-        this.titulo = titulo
+        this.nome = nome
         this.descricao = descricao
         this.cidade = cidade
         this.estado = estado
@@ -36,7 +36,7 @@ class Vaga {
         Vaga {
             id           = ${id}
             id_empresa   = ${id_empresa}
-            titulo       = ${titulo}
+            nome       = ${nome}
             descricao    = ${descricao}
             cidade       = ${cidade}
             estado       = ${estado}

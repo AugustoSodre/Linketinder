@@ -1,12 +1,12 @@
 package com.augusto.linketinder
 
+import com.augusto.linketinder.DAO.DAO
+
 class sandbox {
 
     static void main(String[] args){
-        int inteiro = 0
+        DAO dao = new DAO()
 
-        if(inteiro instanceof Integer){
-            print("eh inteiro")
-        }
+        print(dao.listCompObject("empresa"))
     }
 }

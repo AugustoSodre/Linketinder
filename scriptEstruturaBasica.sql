@@ -32,7 +32,7 @@ CREATE TABLE empresa (
 CREATE TABLE vaga (
   id SERIAL PRIMARY KEY,
   id_empresa INTEGER NOT NULL,
-  titulo VARCHAR(255) NOT NULL,
+  nome VARCHAR(255) NOT NULL,
   descricao TEXT NOT NULL,
   local VARCHAR(255) NOT NULL,
   CONSTRAINT fk_vaga_empresa 

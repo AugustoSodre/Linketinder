@@ -135,7 +135,7 @@ class DAO_Helper {
                         new Vaga(
                                 resultSet.getInt("id"),
                                 resultSet.getInt("id_empresa"),
-                                resultSet.getString("titulo"),
+                                resultSet.getString("nome"),
                                 resultSet.getString("descricao"),
                                 resultSet.getString("cidade"),
                                 resultSet.getString("estado"),

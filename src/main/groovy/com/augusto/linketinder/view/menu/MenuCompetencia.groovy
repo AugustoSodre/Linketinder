@@ -5,6 +5,7 @@ import com.augusto.linketinder.view.create.CadastroCompView
 import com.augusto.linketinder.view.create.CadastroVagaView
 import com.augusto.linketinder.view.delete.DeleteView
 import com.augusto.linketinder.view.read.ReadView
+import com.augusto.linketinder.view.update.UpdateView
 
 class MenuCompetencia {
 
@@ -31,7 +32,7 @@ class MenuCompetencia {
                 new ReadView().showComp()
                 break
             case 3:
-//                new UpdateCandidatoView().show()
+                new UpdateView().showUpdateComp()
                 break
             case 4:
                 new DeleteView().showDeleteComp()

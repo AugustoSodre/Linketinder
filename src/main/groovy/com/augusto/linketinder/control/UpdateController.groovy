@@ -1,6 +1,8 @@
 package com.augusto.linketinder.control
 
 import com.augusto.linketinder.DAO.DAO
+import com.augusto.linketinder.model.Competencia
+import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato
 import com.augusto.linketinder.model.pessoa.Empresa
 
@@ -29,14 +31,14 @@ class UpdateController {
 
         // Campos disponíveis para atualização
         def campos = [
-                nome: 'nome',
-                email: 'email',
-                estado: 'estado',
-                cep: 'cep',
-                idade: 'idade',
-                cpf: 'cpf',
-                descricao: 'descricao',
-                senha: 'senha'
+                'nome': 'nome',
+                'email': 'email',
+                'estado': 'estado',
+                'cep': 'cep',
+                'idade': 'idade',
+                'cpf': 'cpf',
+                'descrição': 'descricao',
+                'senha': 'senha'
         ]
 
         println "Campos disponíveis para atualização:"
@@ -132,14 +134,14 @@ class UpdateController {
 
         // Campos disponíveis para atualização
         def campos = [
-                nome: 'nome',
-                email: 'email',
-                estado: 'estado',
-                cep: 'cep',
-                pais: 'pais',
-                cnpj: 'cnpj',
-                descricao: 'descricao',
-                senha: 'senha'
+                'nome': 'nome',
+                'email': 'email',
+                'estado': 'estado',
+                'cep': 'cep',
+                'país': 'pais',
+                'cnpj': 'cnpj',
+                'descrição': 'descricao',
+                'senha': 'senha'
         ]
 
         println "Campos disponíveis para atualização:"
@@ -212,8 +214,169 @@ class UpdateController {
         try{
             dao.update('empresa', coluna, novoValor, id)
         } catch (Exception e){
-            println "Erro ao atualizar candidato: ${e.message}"
+            println "Erro ao atualizar empresa: ${e.message}"
         }
     }
 
+    void updateVaga(){
+        List<Vaga> listaVagas = dao.listVagas()
+        int id = -1
+        int opcao = -1
+
+        while (!listaVagas.id.contains(id)){
+            try{
+                print "Digite o número da vaga [0 para cancelar]: "
+                opcao = cadastroController.getIntInput()
+                id = opcao
+            } catch (Exception e){
+                println "Operação cancelada ou input inválido."
+                return
+            }
+        }
+
+        if(opcao == 0){return}
+
+        // Campos disponíveis para atualização
+        def campos = [
+                'ID da empresa': 'id_empresa',
+                'nome': 'nome',
+                'descrição': 'descricao',
+                'cidade': 'cidade',
+                'estado': 'estado'
+        ]
+
+        println "Campos disponíveis para atualização:"
+        int idx = 1
+        campos.each { k, v -> println "${idx++} - ${k}" }
+
+        print "Digite o número do campo a ser atualizado [0 para cancelar]: "
+        int campoOpc = -1
+        try{
+            campoOpc = cadastroController.getIntInput()
+        } catch (Exception e){
+            println "Operação cancelada ou input inválido."
+            return
+        }
+
+        if (campoOpc == 0) return
+        if (campoOpc < 1 || campoOpc > campos.size()){
+            println "Opção inválida de campo."
+            return
+        }
+
+        String campoSelecionado = campos.keySet().toList()[campoOpc - 1]
+        String coluna = campos[campoSelecionado]
+
+        // Get new value with validation according to field
+        def novoValor
+        try{
+            switch (coluna) {
+                case 'id_empresa':
+                    print "Digite o novo ID da Empresa: "
+                    novoValor = cadastroController.getIntInput()
+                    break
+                case 'nome':
+                    print "Digite o novo título: "
+                    novoValor = cadastroController.getNomeInput()
+                    break
+                case 'descricao':
+                    print "Digite a nova descrição: "
+                    novoValor = cadastroController.getDescricaoInput()
+                    break
+                case 'cidade':
+                    print "Digite a nova cidade: "
+                    novoValor = cadastroController.getNomeInput()
+                    break
+                case 'estado':
+                    print "Digite o novo estado (UF): "
+                    novoValor = cadastroController.getEstadoInput()
+                    break
+                default:
+                    println "Campo não suportado."
+                    return
+            }
+        } catch (Exception e){
+            println "Limite de tentativas excedido ou input inválido."
+            return
+        }
+
+        try{
+            dao.update('vaga', coluna, novoValor, id)
+        } catch (Exception e){
+            println "Erro ao atualizar vaga: ${e.message}"
+        }
+    }
+
+    void updateComp(){
+        List<Competencia> listaComp = dao.listCompetencia()
+        int id = -1
+        int opcao = -1
+
+        // Campos disponíveis para atualização
+        def campos = [
+                'nome': 'nome',
+                'relacionamento com candidato': 'cc',
+                'relacionamento com empresa': 'ce',
+                'relacionamento com vaga': 'cv',
+        ]
+
+        println "Campos disponíveis para atualização:"
+        int idx = 1
+        campos.each { k, v -> println "${idx++} - ${k}" }
+
+        print "Digite o número do campo a ser atualizado [0 para cancelar]: "
+        int campoOpc = -1
+        try{
+            campoOpc = cadastroController.getIntInput()
+        } catch (Exception e){
+            println "Operação cancelada ou input inválido."
+            return
+        }
+
+        if (campoOpc == 0) return
+
+        if (campoOpc < 1 || campoOpc > campos.size()){
+            println "Opção inválida de campo."
+            return
+        }
+
+        String campoSelecionado = campos.keySet().toList()[campoOpc - 1]
+        String coluna = campos[campoSelecionado]
+
+        // Get new value with validation according to field
+        def novoValor
+        try{
+            switch (coluna) {
+                case 'nome':
+                    print "Digite o novo nome da Competência: "
+                    novoValor = cadastroController.getIntInput()
+                    try{
+                        dao.update('vaga', coluna, novoValor, id)
+                    } catch (Exception e){
+                        println "Erro ao atualizar vaga: ${e.message}"
+                    }
+                    break
+
+                case 'cc':
+                    new UpdateController_Helper().hadnleCompObjeto("candidato")
+                    break
+
+                case 'ce':
+                    new UpdateController_Helper().hadnleCompObjeto("empresa")
+                    break
+
+                case 'cv':
+                    new UpdateController_Helper().hadnleCompObjeto("vaga")
+                    break
+
+                default:
+                    println "Campo não suportado."
+                    return
+            }
+        } catch (Exception e){
+            println "Limite de tentativas excedido ou input inválido."
+        }
+
+
+    }
 }

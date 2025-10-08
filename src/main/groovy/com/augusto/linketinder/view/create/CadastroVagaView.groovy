@@ -20,7 +20,7 @@ class CadastroVagaView {
         vaga.id_empresa = cadastroController.getIntInput()
 
         print("Digite o Título da Vaga: ")
-        vaga.titulo = cadastroController.getNomeInput()
+        vaga.nome = cadastroController.getNomeInput()
 
         print("Digite a Descrição da Vaga: ")
         vaga.descricao = cadastroController.getDescricaoInput()

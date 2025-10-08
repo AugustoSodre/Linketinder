@@ -91,7 +91,7 @@ class DAO {
 
     void insert(Vaga v) {
         def sql = """
-            INSERT INTO vaga(id_empresa, titulo, descricao, cidade, estado)
+            INSERT INTO vaga(id_empresa, nome, descricao, cidade, estado)
             VALUES (?, ?, ?, ?, ?)
         """
         try {
@@ -99,7 +99,7 @@ class DAO {
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
 
             stmt.setInt(1, v.id_empresa)
-            stmt.setString(2, v.titulo)
+            stmt.setString(2, v.nome)
             stmt.setString(3, v.descricao)
             stmt.setString(4, v.cidade)
             stmt.setString(5, v.estado)
@@ -141,6 +141,27 @@ class DAO {
 
         } catch (Exception e) {
             println "Erro ao inserir competência: ${e.message}"
+        }
+    }
+
+    void insertCompObject(String tabela, int id_competencia, int id_objeto){
+        def sql = "INSERT INTO competencia_${tabela}(id_competencia, id_${tabela}) VALUES (?, ?)"
+
+        try {
+            Connection conn = connection()
+            PreparedStatement stmt = conn.prepareStatement(sql)
+
+            stmt.setInt(1, id_competencia)
+            stmt.setInt(2, id_objeto)
+            stmt.executeUpdate()
+
+            println("Operação realizada com sucesso!")
+
+            stmt.close()
+            conn.close()
+
+        } catch (Exception e) {
+            println "Erro ao inserir competência-${tabela}: ${e.message}"
         }
     }
 
@@ -220,7 +241,7 @@ class DAO {
                         new Vaga(
                                 resultSet.getInt("id"),
                                 resultSet.getInt("id_empresa"),
-                                resultSet.getString("titulo"),
+                                resultSet.getString("nome"),
                                 resultSet.getString("descricao"),
                                 resultSet.getString("cidade"),
                                 resultSet.getString("estado"),
@@ -257,6 +278,39 @@ class DAO {
             println(err.stackTrace)
         }
     }
+
+    String listCompObject(String tabela){
+        String sql = "SELECT cc.id_competencia, comp.nome AS nome_competencia, cc.id_${tabela}, ${tabela}.nome as nome_${tabela} \n" +
+                "FROM competencia_${tabela} cc\n" +
+                "JOIN competencia comp ON cc.id_competencia = comp.id\n" +
+                "JOIN ${tabela} ON cc.id_${tabela} = ${tabela}.id\n" +
+                "ORDER BY comp.id, ${tabela}.id"
+
+        String text = "*competência*                  *${tabela}*\n"
+        try {
+            Connection conn = connection()
+            Statement statement = conn.createStatement()
+            ResultSet resultSet = statement.executeQuery(sql)
+            while (resultSet.next()) {
+                text += resultSet.getInt("id_competencia")
+                text += " - "
+                text += resultSet.getString("nome_competencia")
+                text += "               "
+                text += resultSet.getInt("id_${tabela}")
+                text += " - "
+                text += resultSet.getString("nome_${tabela}")
+                text += "\n"
+            }
+            return text
+
+        } catch (Exception err) {
+            println(err.stackTrace)
+        }
+
+        return ""
+
+    }
+
 
     // UPDATE (U)
     void update(String tabela, String campo, def novoAtributo, int id) {
@@ -300,6 +354,25 @@ class DAO {
         } catch (Exception e) {
             println "Erro ao deletar: ${e.message}"
         }
+    }
+
+    void deleteCompObjeto(String tabela, int id_competencia, int id_objeto){
+        def sql = "DELETE FROM competencia_${tabela} WHERE id_competencia = ? AND id_${tabela} = ?"
+        try {
+            Connection conn = connection()
+            PreparedStatement stmt = conn.prepareStatement(sql)
+            stmt.setInt(1, id_competencia)
+            stmt.setInt(2, id_objeto)
+
+            int linhas = stmt.executeUpdate()
+            println(linhas > 0 ? "Objeto removido!" : "Objeto não encontrado.")
+
+            stmt.close()
+            conn.close()
+        } catch (Exception e) {
+            println "Erro ao deletar: ${e.message}"
+        }
+
     }
 
 
