@@ -40,7 +40,7 @@ class Candidato implements Pessoa {
             int idade,
             String descricao,
             List<Competencia> competencias
-            ) {
+    ) {
         this.id = id
         this.nome = nome
         this.email = email

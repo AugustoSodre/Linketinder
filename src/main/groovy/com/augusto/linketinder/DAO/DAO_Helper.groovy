@@ -11,7 +11,7 @@ import java.sql.ResultSet
 
 class DAO_Helper {
 
-    static List<Competencia> getListaCompCandidato(int idCandidato){
+    static List<Competencia> getListaCompCandidato(int idCandidato) {
         def sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
                 "INNER JOIN\n" +
                 "competencia_candidato cc ON comp.id = cc.id_competencia\n" +
@@ -19,7 +19,7 @@ class DAO_Helper {
                 "candidato c ON cc.id_candidato = ?\n" +
                 "GROUP BY comp.id, comp.nome"
 
-        try{
+        try {
             def listaCompCandidato = []
             Connection conn = DAO.connection()
             PreparedStatement preparedStatement = conn.prepareStatement(sql)
@@ -27,7 +27,7 @@ class DAO_Helper {
 
             ResultSet resultSet = preparedStatement.executeQuery()
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 listaCompCandidato.add(
                         new Competencia(
                                 resultSet.getInt("id"),
@@ -39,7 +39,7 @@ class DAO_Helper {
             return listaCompCandidato
 
 
-        } catch (Exception err){
+        } catch (Exception err) {
             println(err.stackTrace)
             println(err.getMessage())
             return null
@@ -47,7 +47,7 @@ class DAO_Helper {
 
     }
 
-    static List<Competencia> getListaCompEmprsa(int idEmpresa){
+    static List<Competencia> getListaCompEmprsa(int idEmpresa) {
         def sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
                 "INNER JOIN\n" +
                 "competencia_empresa ce ON comp.id = ce.id_competencia\n" +
@@ -55,7 +55,7 @@ class DAO_Helper {
                 "empresa e ON ce.id_empresa = ?\n" +
                 "GROUP BY comp.id, comp.nome"
 
-        try{
+        try {
             def listaCompEmpresa = []
             Connection conn = DAO.connection()
             PreparedStatement preparedStatement = conn.prepareStatement(sql)
@@ -63,7 +63,7 @@ class DAO_Helper {
 
             ResultSet resultSet = preparedStatement.executeQuery()
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 listaCompEmpresa.add(
                         new Competencia(
                                 resultSet.getInt("id"),
@@ -75,7 +75,7 @@ class DAO_Helper {
             return listaCompEmpresa
 
 
-        } catch (Exception err){
+        } catch (Exception err) {
             println(err.stackTrace)
             println(err.getMessage())
             return null
@@ -83,7 +83,7 @@ class DAO_Helper {
 
     }
 
-    static List<Competencia> getListaCompVaga(int idVaga){
+    static List<Competencia> getListaCompVaga(int idVaga) {
         def sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
                 "INNER JOIN\n" +
                 "competencia_vaga cv ON comp.id = cv.id_competencia\n" +
@@ -91,7 +91,7 @@ class DAO_Helper {
                 "vaga v ON cv.id_vaga = ?\n" +
                 "GROUP BY comp.id, comp.nome"
 
-        try{
+        try {
             def listaCompVaga = []
             Connection conn = DAO.connection()
             PreparedStatement preparedStatement = conn.prepareStatement(sql)
@@ -99,7 +99,7 @@ class DAO_Helper {
 
             ResultSet resultSet = preparedStatement.executeQuery()
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 listaCompVaga.add(
                         new Competencia(
                                 resultSet.getInt("id"),
@@ -111,7 +111,7 @@ class DAO_Helper {
             return listaCompVaga
 
 
-        } catch (Exception err){
+        } catch (Exception err) {
             println(err.stackTrace)
             println(err.getMessage())
             return null
@@ -119,10 +119,10 @@ class DAO_Helper {
 
     }
 
-    static List<Vaga> getListaVagaEmpresa(int idEmpresa){
+    static List<Vaga> getListaVagaEmpresa(int idEmpresa) {
         def sql = "SELECT * FROM vaga WHERE id_empresa = ?"
 
-        try{
+        try {
             def listaVagas = []
             Connection conn = DAO.connection()
             PreparedStatement preparedStatement = conn.prepareStatement(sql)
@@ -130,7 +130,7 @@ class DAO_Helper {
 
             ResultSet resultSet = preparedStatement.executeQuery()
 
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 listaVagas.add(
                         new Vaga(
                                 resultSet.getInt("id"),
@@ -147,20 +147,20 @@ class DAO_Helper {
             return listaVagas
 
 
-        } catch (Exception err){
+        } catch (Exception err) {
             println(err.stackTrace)
             println(err.getMessage())
             return null
         }
     }
 
-    static void conectarCompCandidato(Candidato c){
+    static void conectarCompCandidato(Candidato c) {
         def sql = "INSERT INTO competencia_candidato(id_competencia, id_candidato) VALUES (?, ?)"
         Connection conn = DAO.connection()
 
         def listaComp = c.competencias
 
-        for(int i = 0; i < listaComp.size(); i++){
+        for (int i = 0; i < listaComp.size(); i++) {
             PreparedStatement statement = conn.prepareStatement(sql)
             statement.setInt(1, listaComp[i].id)
             statement.setInt(2, c.id)
@@ -171,13 +171,13 @@ class DAO_Helper {
 
     }
 
-    static void conectarCompEmpresa(Empresa e){
+    static void conectarCompEmpresa(Empresa e) {
         def sql = "INSERT INTO competencia_empresa(id_competencia, id_empresa) VALUES (?, ?)"
         Connection conn = DAO.connection()
 
         def listaComp = e.competencias
 
-        for(int i = 0; i < listaComp.size(); i++){
+        for (int i = 0; i < listaComp.size(); i++) {
             PreparedStatement statement = conn.prepareStatement(sql)
             statement.setInt(1, listaComp[i].id)
             statement.setInt(2, e.id)
@@ -188,13 +188,13 @@ class DAO_Helper {
 
     }
 
-    static void conectarCompVaga(Vaga v){
+    static void conectarCompVaga(Vaga v) {
         def sql = "INSERT INTO competencia_vaga(id_competencia, id_vaga) VALUES (?, ?)"
         Connection conn = DAO.connection()
 
         def listaComp = v.competencias
 
-        for(int i = 0; i < listaComp.size(); i++){
+        for (int i = 0; i < listaComp.size(); i++) {
             PreparedStatement statement = conn.prepareStatement(sql)
             statement.setInt(1, listaComp[i].id)
             statement.setInt(2, v.id)

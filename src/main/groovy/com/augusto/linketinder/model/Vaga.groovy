@@ -9,7 +9,7 @@ class Vaga {
     String estado
     List<Competencia> competencias
 
-    Vaga(int id, int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> listaComp){
+    Vaga(int id, int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> listaComp) {
         this.id = id
         this.id_empresa = id_empresa
         this.titulo = titulo
@@ -19,7 +19,7 @@ class Vaga {
         this.competencias = listaComp
     }
 
-    Vaga(int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> competencias){
+    Vaga(int id_empresa, String titulo, String descricao, String cidade, String estado, List<Competencia> competencias) {
         this.id_empresa = id_empresa
         this.titulo = titulo
         this.descricao = descricao
@@ -29,7 +29,7 @@ class Vaga {
     }
 
     @Override
-    String toString(){
+    String toString() {
         return """\
         Vaga {
             id           = ${id}

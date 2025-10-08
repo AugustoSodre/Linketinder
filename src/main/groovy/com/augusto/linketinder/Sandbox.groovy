@@ -9,7 +9,7 @@ import com.augusto.linketinder.model.pessoa.Empresa
 
 class Sandbox {
 
-    static void main(String[] args){
+    static void main(String[] args) {
         DAO dao = new DAO()
         Competencia comp1 = new Competencia(9, "TypeScript")
 //        dao.insert(comp1)
