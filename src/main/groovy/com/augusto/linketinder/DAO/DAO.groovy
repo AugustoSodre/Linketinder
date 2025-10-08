@@ -215,7 +215,7 @@ class DAO {
                                 resultSet.getString("pais"),
                                 resultSet.getString("cnpj"),
                                 resultSet.getString("descricao"),
-                                DAO_Helper.getListaCompCandidato(resultSet.getInt("id")),
+                                DAO_Helper.getListaCompEmpresa(resultSet.getInt("id")),
                                 DAO_Helper.getListaVagaEmpresa(resultSet.getInt("id")),
                                 resultSet.getString("senha")
                         )

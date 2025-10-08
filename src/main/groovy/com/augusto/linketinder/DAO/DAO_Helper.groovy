@@ -47,7 +47,7 @@ class DAO_Helper {
 
     }
 
-    static List<Competencia> getListaCompEmprsa(int idEmpresa) {
+    static List<Competencia> getListaCompEmpresa(int idEmpresa) {
         def sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
                 "INNER JOIN\n" +
                 "competencia_empresa ce ON comp.id = ce.id_competencia\n" +
