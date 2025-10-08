@@ -3,7 +3,6 @@ package com.augusto.linketinder.view.create
 import com.augusto.linketinder.DAO.DAO
 import com.augusto.linketinder.control.CadastroController
 import com.augusto.linketinder.model.Competencia
-import com.augusto.linketinder.model.lista.EnumCompetencias
 import com.augusto.linketinder.model.pessoa.Candidato
 
 class CadastroCandidatoView {
