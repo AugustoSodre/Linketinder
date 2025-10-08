@@ -32,15 +32,23 @@ class Vaga {
 
     @Override
     String toString() {
+        def competenciasStr = competencias?.collect {
+            "                    ${it.toString().stripIndent()}"
+        }?.join(",\n") ?: "                    Nenhuma"
+
         return """\
-        Vaga {
-            id           = ${id}
-            id_empresa   = ${id_empresa}
-            nome       = ${nome}
-            descricao    = ${descricao}
-            cidade       = ${cidade}
-            estado       = ${estado}
-            competencias = ${competencias?.join(", \n")}
-        }""".stripIndent()
+                Vaga {
+                    id           = ${id}
+                    id_empresa   = ${id_empresa}
+                    nome         = ${nome}
+                    descricao    = ${descricao}
+                    cidade       = ${cidade}
+                    estado       = ${estado}
+                    competencias = [
+${competenciasStr}
+                    ]
+                }""".stripIndent()
     }
+
+
 }

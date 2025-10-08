@@ -16,7 +16,7 @@ class UpdateController {
         int id = -1
         int opcao = -1
 
-        while(listaCandidatos.id.contains(id)){
+        while(listaCandidatos.id.contains(id) && opcao != 0){
             try{
                 print "Digite o número do candidato [0 para cancelar]: "
                 opcao = cadastroController.getIntInput()
@@ -119,7 +119,7 @@ class UpdateController {
         List<Empresa> listaEmpresas = dao.listEmpresas()
         int id = -1
         int opcao = -1
-        while (!listaEmpresas.id.contains(id)){
+        while (!listaEmpresas.id.contains(id) && opcao != 0){
             try{
                 print "Digite o número da empresa [0 para cancelar]: "
                 opcao = cadastroController.getIntInput()
@@ -223,7 +223,7 @@ class UpdateController {
         int id = -1
         int opcao = -1
 
-        while (!listaVagas.id.contains(id)){
+        while (!listaVagas.id.contains(id) && opcao != 0){
             try{
                 print "Digite o número da vaga [0 para cancelar]: "
                 opcao = cadastroController.getIntInput()
@@ -348,8 +348,10 @@ class UpdateController {
         try{
             switch (coluna) {
                 case 'nome':
+                    print "Digite o ID da Competência: "
+                    id = cadastroController.getIntInput()
                     print "Digite o novo nome da Competência: "
-                    novoValor = cadastroController.getIntInput()
+                    novoValor = cadastroController.getNomeInput()
                     try{
                         dao.update('vaga', coluna, novoValor, id)
                     } catch (Exception e){

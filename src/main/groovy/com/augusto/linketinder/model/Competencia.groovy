@@ -18,11 +18,12 @@ class Competencia {
     }
 
     @Override
-    String toString(){
+    String toString() {
         return """\
-        Competencia {
-            id    = ${id}
-            nome  = ${nome}
-        }""".stripIndent()
+            Competencia {
+                id    = ${id}
+                nome  = ${nome}
+            }""".stripIndent()
     }
+
 }

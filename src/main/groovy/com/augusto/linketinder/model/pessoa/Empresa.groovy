@@ -41,6 +41,14 @@ class Empresa implements Pessoa{
 
     @Override
     String toString() {
+        def competenciasStr = competencias?.collect {
+            "                ${it.toString().stripIndent()}"
+        }?.join(",\n") ?: "                Nenhuma"
+
+        def vagasStr = listaVaga?.collect {
+            "                ${it.toString().stripIndent()}"
+        }?.join(",\n") ?: "                Nenhuma"
+
         return """\
         PessoaJuridica {
             id          = ${id}
@@ -51,8 +59,15 @@ class Empresa implements Pessoa{
             descricao   = ${descricao}
             cnpj        = ${cnpj}
             pais        = ${pais}
-            competencias= ${competencias?.join(", \n")}
-            vagas       = ${listaVaga?.join(", ")}
+            competencias= [
+${competenciasStr}
+            ]
+            vagas       = [
+${vagasStr}
+            ]
         }""".stripIndent()
     }
+
+
+
 }

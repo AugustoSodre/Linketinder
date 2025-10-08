@@ -56,6 +56,8 @@ class Candidato implements Pessoa {
 
     @Override
     String toString() {
+        def competenciasStr = competencias?.collect { "            ${it.toString().stripIndent()}" }?.join(",\n") ?: "Nenhuma"
+
         return """\
         PessoaFisica {
             id          = ${id}
@@ -66,8 +68,11 @@ class Candidato implements Pessoa {
             descricao   = ${descricao}
             cpf         = ${cpf}
             idade       = ${idade}
-            competencias= ${competencias?.join(", ")}
+            competencias= [
+${competenciasStr}
+            ]
         }""".stripIndent()
     }
+
 
 }
