@@ -1,4 +1,46 @@
 package com.augusto.linketinder.view.menu
 
+import com.augusto.linketinder.control.MenuController
+import com.augusto.linketinder.view.create.CadastroCompView
+import com.augusto.linketinder.view.create.CadastroVagaView
+import com.augusto.linketinder.view.delete.DeleteView
+import com.augusto.linketinder.view.read.ReadView
+
 class MenuCompetencia {
+
+    void showMenuComp() {
+        println()
+        println("-" * 25)
+        println "Competências"
+        println()
+        println "Opções:"
+        println "1. Cadastrar Competência"
+        println "2. Mostrar Competências"
+        println "3. Alterar Competência"
+        println "4. Deletar Competência"
+        println "0. Sair"
+        println()
+        println("-" * 25)
+
+        //Chamar Controller para input
+        switch (new MenuController().getIntInput()) {
+            case 1:
+                new CadastroCompView().show()
+                break
+            case 2:
+                new ReadView().showComp()
+                break
+            case 3:
+//                new UpdateCandidatoView().show()
+                break
+            case 4:
+                new DeleteView().showDeleteComp()
+                break
+            case 0:
+                break
+            default:
+                println "Input inválido"
+        }
+    }
+
 }

@@ -15,7 +15,7 @@ class MenuMain {
         println "1. Gerenciar Empresas"
         println "2. Gerenciar Candidatos"
         println "3. Gerenciar Vagas"
-
+        println "4. Gerenciar Competências"
         println "0. Sair"
         println()
         println("-" * 25)
@@ -33,6 +33,10 @@ class MenuMain {
             case 3:
                 limpaTela()
                 new MenuVaga().showMenuVaga()
+                break
+            case 4:
+                limpaTela()
+                new MenuCompetencia().showMenuComp()
                 break
             case 0:
                 return true

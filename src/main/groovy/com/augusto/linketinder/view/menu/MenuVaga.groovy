@@ -11,7 +11,7 @@ class MenuVaga {
     void showMenuVaga() {
         println()
         println("-" * 25)
-        println "Candidatos"
+        println "Vagas"
         println()
         println "Opções:"
         println "1. Cadastrar Vaga"

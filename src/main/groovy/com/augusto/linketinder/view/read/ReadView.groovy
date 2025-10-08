@@ -1,6 +1,7 @@
 package com.augusto.linketinder.view.read
 
 import com.augusto.linketinder.DAO.DAO
+import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato
 import com.augusto.linketinder.model.pessoa.Empresa
@@ -32,4 +33,13 @@ class ReadView {
             println()
         }
     }
+
+    void showComp(){
+        for (Competencia comp in dao.listCompetencia()){
+            println()
+            println(comp.toString())
+            println()
+        }
+    }
+
 }

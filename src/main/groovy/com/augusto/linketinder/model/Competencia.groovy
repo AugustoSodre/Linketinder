@@ -6,6 +6,8 @@ class Competencia {
     int id
     String nome
 
+    Competencia(){}
+
     Competencia(int id, String nome){
         this.id = id
         this.nome = nome
