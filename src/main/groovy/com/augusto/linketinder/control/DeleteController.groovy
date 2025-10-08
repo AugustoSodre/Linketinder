@@ -3,10 +3,7 @@ package com.augusto.linketinder.control
 import com.augusto.linketinder.DAO.DAO
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
-import com.augusto.linketinder.model.lista.ListaCandidatoEstatica
-import com.augusto.linketinder.model.lista.ListaEmpresaEstatica
 import com.augusto.linketinder.model.pessoa.Empresa
-import com.augusto.linketinder.model.pessoa.Pessoa
 import com.augusto.linketinder.model.pessoa.Candidato
 
 class DeleteController {

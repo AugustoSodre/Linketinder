@@ -1,46 +1,45 @@
 package com.augusto.linketinder.view.menu
 
 import com.augusto.linketinder.control.MenuController
-import com.augusto.linketinder.view.create.CadastroEmpresaView
+import com.augusto.linketinder.view.create.CadastroCandidatoView
+import com.augusto.linketinder.view.create.CadastroVagaView
 import com.augusto.linketinder.view.delete.DeleteView
-
 import com.augusto.linketinder.view.read.ReadView
 
-class MenuEmpresa {
+class MenuVaga {
 
-    void showMenuEmpresa(){
+    void showMenuVaga() {
         println()
         println("-" * 25)
-        println "Empregadores"
+        println "Candidatos"
         println()
         println "Opções:"
-        println "1. Cadastrar Empregador"
-        println "2. Mostrar Empregadores"
-        println "3. Alterar Empregador"
-        println "4. Deletar Empregador"
+        println "1. Cadastrar Vaga"
+        println "2. Mostrar Vagas"
+        println "3. Alterar Vaga"
+        println "4. Deletar Vaga"
         println "0. Sair"
         println()
         println("-" * 25)
 
         //Chamar Controller para input
-        switch(new MenuController().getIntInput()){
+        switch (new MenuController().getIntInput()) {
             case 1:
-                new CadastroEmpresaView().show()
+                new CadastroVagaView().show()
                 break
             case 2:
-                new ReadView().showEmpresas()
+                new ReadView().showVagas()
                 break
             case 3:
-//                new UpdateEmpresaView().show()
+//                new UpdateCandidatoView().show()
                 break
             case 4:
-                new DeleteView().showDeleteEmpresa()
+                new DeleteView().showDeleteVaga()
                 break
             case 0:
                 break
             default:
                 println "Input inválido"
         }
-
     }
 }

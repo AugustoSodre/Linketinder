@@ -5,7 +5,6 @@ import com.augusto.linketinder.view.create.CadastroCandidatoView
 import com.augusto.linketinder.view.delete.DeleteView
 
 import com.augusto.linketinder.view.read.ReadView
-import com.augusto.linketinder.view.update.UpdateCandidatoView
 
 class MenuCandidato {
 
@@ -32,7 +31,7 @@ class MenuCandidato {
                 new ReadView().showCandidatos()
                 break
             case 3:
-                new UpdateCandidatoView().show()
+//                new UpdateCandidatoView().show()
                 break
             case 4:
                 new DeleteView().showDeleteCandidato()

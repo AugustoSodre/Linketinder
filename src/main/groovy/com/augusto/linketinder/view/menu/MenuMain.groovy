@@ -12,8 +12,10 @@ class MenuMain {
         println "Linketinder!"
         println()
         println "Opções:"
-        println "1. Gerenciar Empregadores"
+        println "1. Gerenciar Empresas"
         println "2. Gerenciar Candidatos"
+        println "3. Gerenciar Vagas"
+
         println "0. Sair"
         println()
         println("-" * 25)
@@ -22,11 +24,15 @@ class MenuMain {
         switch (new MenuController().getIntInput()){
             case 1:
                 limpaTela()
-                new MenuEmpresa().showMenuJuridico()
+                new MenuEmpresa().showMenuEmpresa()
                 break
             case 2:
                 limpaTela()
                 new MenuCandidato().showMenuCandidato()
+                break
+            case 3:
+                limpaTela()
+                new MenuVaga().showMenuVaga()
                 break
             case 0:
                 return true

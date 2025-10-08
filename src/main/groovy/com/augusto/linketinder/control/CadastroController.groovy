@@ -1,12 +1,6 @@
 package com.augusto.linketinder.control
 
 import com.augusto.linketinder.model.Competencia
-import com.augusto.linketinder.model.lista.EnumCompetencias
-import com.augusto.linketinder.model.lista.ListaCandidatoEstatica
-import com.augusto.linketinder.model.lista.ListaEmpresaEstatica
-import com.augusto.linketinder.model.pessoa.Pessoa
-import com.augusto.linketinder.model.pessoa.Candidato
-import com.augusto.linketinder.model.pessoa.Empresa
 
 class CadastroController {
 
@@ -142,7 +136,7 @@ class CadastroController {
 
             if (opcao == 0) break
 
-            if (opcao > 0 && opcao <= EnumCompetencias.values().length) {
+            if (opcao > 0 && opcao <= listaComp.size()) {
                 Competencia comp = listaComp[opcao - 1]
                 if (!tempList.contains(comp)) {
                     tempList.add(comp)
@@ -231,11 +225,4 @@ class CadastroController {
         return getStringInput();
     }
 
-    void insertPessoa(Pessoa pessoa){
-        if(pessoa.getClass() == Candidato){
-            ListaCandidatoEstatica.getLista().add(pessoa as Candidato)
-        } else{
-            ListaEmpresaEstatica.getLista().add(pessoa as Empresa)
-        }
-    }
 }
