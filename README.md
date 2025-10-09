@@ -34,32 +34,40 @@ O Linketinder é uma aplicação desenvolvida em Groovy e TypeScript que conecta
 
 ```
 Linketinder/
-├── src/                          # Backend Groovy
-│   ├── main/
-│   │   └── groovy/
-│   │       └── com/augusto/linketinder/
-│   │           ├── control/
-│   │           │   ├── CadastroController.groovy
-│   │           │   ├── DeleteController.groovy
-│   │           │   └── MenuController.groovy
-│   │           ├── model/
-│   │           │   ├── lista/
-│   │           │   │   ├── EnumCompetencias.groovy
-│   │           │   │   ├── ListaFisicaEstatica.groovy
-│   │           │   │   └── ListaJuridicaEstatica.groovy
-│   │           │   └── pessoa/
-│   │           │       ├── Pessoa.groovy
-│   │           │       ├── PessoaFisica.groovy
-│   │           │       └── PessoaJuridica.groovy
-│   │           └── view/
-│   │               ├── create/
-│   │               ├── delete/
-│   │               ├── menu/
-│   │               ├── read/
-│   │               └── update/
-│   │       ├── App.groovy
-│   │       └── ScriptPopularDadosInicial.groovy
-│   └── test/
+├── backend/                      # Backend Groovy
+│   ├── src/
+│   │   ├── main/
+│   │   │   └── groovy/
+│   │   │       └── com/augusto/linketinder/
+│   │   │           ├── control/
+│   │   │           │   ├── CadastroController.groovy
+│   │   │           │   ├── DeleteController.groovy
+│   │   │           │   ├── MenuController.groovy
+│   │   │           │   ├── UpdateController.groovy
+│   │   │           │   └── UpdateController_Helper.groovy
+│   │   │           ├── DAO/
+│   │   │           │   ├── DAO.groovy
+│   │   │           │   └── DAO_Helper.groovy
+│   │   │           ├── model/
+│   │   │           │   ├── Competencia.groovy
+│   │   │           │   ├── Vaga.groovy
+│   │   │           │   └── pessoa/
+│   │   │           │       ├── Candidato.groovy
+│   │   │           │       ├── Empresa.groovy
+│   │   │           │       └── Pessoa.groovy
+│   │   │           └── view/
+│   │   │               ├── create/
+│   │   │               ├── delete/
+│   │   │               ├── menu/
+│   │   │               ├── read/
+│   │   │               └── update/
+│   │   │           └── App.groovy
+│   │   └── test/
+│   │       └── groovy/
+│   ├── build.gradle
+│   ├── gradlew
+│   ├── gradlew.bat
+│   └── settings.gradle
 ├── frontend/                     # Frontend TypeScript
 │   ├── src/
 │   │   ├── components/
@@ -72,7 +80,7 @@ Linketinder/
 │   │   │   └── formHandler.ts
 │   │   ├── helpers/
 │   │   │   ├── formHelper.ts
-│   │   │   └── homeHelpers.ts
+│   │   │   └── homeHelper.ts
 │   │   ├── models/
 │   │   │   ├── Candidato.ts
 │   │   │   ├── Empresa.ts
@@ -98,16 +106,17 @@ Linketinder/
 │   │   │   ├── homeEmpresa.html
 │   │   │   ├── login.html
 │   │   │   └── menu.html
+│   │   ├── validators/
+│   │   │   └── formValidator.ts
 │   │   ├── main.ts
 │   │   └── router.ts
-│   ├── public/
 │   ├── index.html
 │   ├── package.json
 │   └── tsconfig.json
-├── build.gradle
-├── scriptEstruturaBasica.sql     
-├── scriptPopulacaoInicialDados.sql 
-├── MER-Inicial.png               
+├── database/                     # Banco de Dados PostgreSQL
+│   ├── MER-Inicial.png
+│   ├── scriptEstruturaBasica.sql
+│   └── scriptPopulacaoInicialDados.sql
 └── README.md
 ```
 
@@ -138,7 +147,7 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 
 #### Modelo Entidade-Relacionamento (MER)
 
-![MER-Inicial](MER-Inicial.png)
+![MER-Inicial](database/MER-Inicial.png)
 
 **Principais entidades e relacionamentos:**
 - **Candidato** possui múltiplas competências (N:N via competencia_candidato)
@@ -180,7 +189,13 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 
 **Execução:**
 ```bash
+# Navegue até a pasta backend
+cd backend
+
 # Via Gradle
+./gradlew run
+
+# Ou
 gradle run
 
 # Via IntelliJ IDEA
@@ -332,11 +347,13 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 
 ## 📝 Notas Técnicas
 
-- **Backend**: Utiliza Banco de Dados conectado em PostgreSQL
+- **Arquitetura**: Projeto modularizado com separação clara entre backend, frontend e database
+- **Backend**: Utiliza Banco de Dados conectado em PostgreSQL com arquitetura MVC
 - **Frontend**: Usa localStorage para persistência local (migração para API planejada)
 - **Banco de Dados**: PostgreSQL com estrutura normalizada até 4FN
 - **Modelagem**: Desenvolvida em dbdiagram.io e exportada para SQL
-- **Arquitetura**: Preparada para futura integração via API REST
+- **Build System**: Gradle para o backend, Vite para o frontend
+- **Testes**: Estrutura preparada para testes unitários em Groovy
 - **Compatibilidade**: Frontend responsivo para diferentes dispositivos
 
 ## 🤝 Contribuições
