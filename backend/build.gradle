@@ -1,5 +1,6 @@
 plugins {
     id 'groovy'
+    id 'application'
 }
 
 group = 'org.example'
@@ -15,6 +16,10 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
 
     implementation("org.postgresql:postgresql:42.7.7")
+}
+
+application {
+    mainClass = 'com.augusto.linketinder.App'
 }
 
 test {
