@@ -314,7 +314,6 @@ SELECT * FROM vaga;
 
 - [ ] **Integração Backend-Frontend**: Conectar as duas implementações
 - [ ] **API REST**: Criar endpoints para comunicação
-- [ ] **Conexão com PostgreSQL**: Migrar do armazenamento em memória/localStorage para banco real
 - [ ] **DAO Layer**: Implementar camada de acesso a dados
 - [ ] **Connection Pool**: Configurar pool de conexões eficiente
 - [ ] **Sistema de Matching**: Algoritmo de compatibilidade baseado em competências
@@ -333,7 +332,7 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 
 ## 📝 Notas Técnicas
 
-- **Backend**: Utiliza listas estáticas em memória (migração para PostgreSQL planejada)
+- **Backend**: Utiliza Banco de Dados conectado em PostgreSQL
 - **Frontend**: Usa localStorage para persistência local (migração para API planejada)
 - **Banco de Dados**: PostgreSQL com estrutura normalizada até 4FN
 - **Modelagem**: Desenvolvida em dbdiagram.io e exportada para SQL
