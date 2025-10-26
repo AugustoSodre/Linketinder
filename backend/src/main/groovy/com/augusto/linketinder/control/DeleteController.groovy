@@ -16,20 +16,20 @@ class DeleteController {
     private final DAO_Vaga vagaDao = new DAO_Vaga()
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
-    void delete(def o){
+    void delete(def objeto){
         int id = getIdInput()
 
         try {
-            if(o instanceof Candidato){
+            if(objeto instanceof Candidato){
                 candidatoDao.delete(id)
 
-            } else if(o instanceof Empresa){
+            } else if(objeto instanceof Empresa){
                 empresaDao.delete(id)
 
-            } else if(o instanceof Vaga){
+            } else if(objeto instanceof Vaga){
                 vagaDao.delete(id)
 
-            } else if(o instanceof Competencia){
+            } else if(objeto instanceof Competencia){
                 competenciaDao.removeAllRelationsFromCompetencia(id)
                 competenciaDao.delete(id)
 

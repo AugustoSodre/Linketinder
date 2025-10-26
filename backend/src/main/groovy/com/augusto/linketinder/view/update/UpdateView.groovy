@@ -4,7 +4,7 @@ import com.augusto.linketinder.DAO.DAO_Candidato
 import com.augusto.linketinder.DAO.DAO_Competencia
 import com.augusto.linketinder.DAO.DAO_Empresa
 import com.augusto.linketinder.DAO.DAO_Vaga
-import com.augusto.linketinder.control.UpdateController
+import com.augusto.linketinder.control.update.UpdateController
 
 class UpdateView {
 
