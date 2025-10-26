@@ -5,23 +5,10 @@ import com.augusto.linketinder.control.CadastroController
 
 import java.sql.SQLException
 
-class UpdateController_Helper {
+class HelperUpdateController {
 
-    private final DAO_Competencia competenciaDao
-    private final CadastroController cadastroController
-
-    UpdateController_Helper() {
-        this(new DAO_Competencia(), new CadastroController())
-    }
-
-    UpdateController_Helper(CadastroController cadastroController) {
-        this(new DAO_Competencia(), cadastroController)
-    }
-
-    UpdateController_Helper(DAO_Competencia competenciaDao, CadastroController cadastroController) {
-        this.competenciaDao = competenciaDao
-        this.cadastroController = cadastroController
-    }
+    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final CadastroController cadastroController = new CadastroController()
 
     void handleCompObjeto(String objeto) {
         int opcao = getOpcao(objeto)

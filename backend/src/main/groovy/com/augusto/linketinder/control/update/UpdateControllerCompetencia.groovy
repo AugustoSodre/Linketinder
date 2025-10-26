@@ -1,26 +1,12 @@
 package com.augusto.linketinder.control.update
 
 import com.augusto.linketinder.DAO.DAO_Competencia
-import com.augusto.linketinder.control.CadastroController
 import com.augusto.linketinder.model.Competencia
 
 class UpdateControllerCompetencia extends BaseUpdateController {
 
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
-    private final UpdateController_Helper helper
-
-    UpdateControllerCompetencia() {
-        this(new CadastroController())
-    }
-
-    UpdateControllerCompetencia(CadastroController cadastroController) {
-        this(cadastroController, new UpdateController_Helper(cadastroController))
-    }
-
-    UpdateControllerCompetencia(CadastroController cadastroController, UpdateController_Helper helper) {
-        super(cadastroController)
-        this.helper = helper
-    }
+    private final HelperUpdateController helper = new HelperUpdateController()
 
     void updateCompetencia() {
         List<String> opcoes = [

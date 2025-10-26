@@ -1,20 +1,11 @@
 package com.augusto.linketinder.control.update
 
 import com.augusto.linketinder.DAO.DAO_Empresa
-import com.augusto.linketinder.control.CadastroController
 import com.augusto.linketinder.model.pessoa.Empresa
 
 class UpdateControllerEmpresa extends BaseUpdateController {
 
     private final DAO_Empresa empresaDao = new DAO_Empresa()
-
-    UpdateControllerEmpresa() {
-        super()
-    }
-
-    UpdateControllerEmpresa(CadastroController cadastroController) {
-        super(cadastroController)
-    }
 
     void updateEmpresa() {
         List<Empresa> empresas = empresaDao.listAll()

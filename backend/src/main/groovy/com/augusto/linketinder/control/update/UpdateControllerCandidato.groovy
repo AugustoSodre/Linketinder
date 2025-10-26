@@ -8,14 +8,6 @@ class UpdateControllerCandidato extends BaseUpdateController {
 
     private final DAO_Candidato candidatoDao = new DAO_Candidato()
 
-    UpdateControllerCandidato() {
-        super()
-    }
-
-    UpdateControllerCandidato(CadastroController cadastroController) {
-        super(cadastroController)
-    }
-
     void updateCandidato() {
         List<Candidato> candidatos = candidatoDao.listAll()
         int candidatoId = solicitarId(

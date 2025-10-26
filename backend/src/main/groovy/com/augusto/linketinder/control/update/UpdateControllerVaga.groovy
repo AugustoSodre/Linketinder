@@ -8,14 +8,6 @@ class UpdateControllerVaga extends BaseUpdateController {
 
     private final DAO_Vaga vagaDao = new DAO_Vaga()
 
-    UpdateControllerVaga() {
-        super()
-    }
-
-    UpdateControllerVaga(CadastroController cadastroController) {
-        super(cadastroController)
-    }
-
     void updateVaga() {
         List<Vaga> vagas = vagaDao.listAll()
         int vagaId = solicitarId(

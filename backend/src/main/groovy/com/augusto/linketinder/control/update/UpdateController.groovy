@@ -4,33 +4,10 @@ import com.augusto.linketinder.control.CadastroController
 
 class UpdateController {
 
-    private final UpdateControllerCandidato candidatoController
-    private final UpdateControllerEmpresa empresaController
-    private final UpdateControllerVaga vagaController
-    private final UpdateControllerCompetencia competenciaController
-
-    UpdateController() {
-        this(new CadastroController())
-    }
-
-    UpdateController(CadastroController cadastroController) {
-        this(
-                new UpdateControllerCandidato(cadastroController),
-                new UpdateControllerEmpresa(cadastroController),
-                new UpdateControllerVaga(cadastroController),
-                new UpdateControllerCompetencia(cadastroController)
-        )
-    }
-
-    UpdateController(UpdateControllerCandidato candidatoController,
-                     UpdateControllerEmpresa empresaController,
-                     UpdateControllerVaga vagaController,
-                     UpdateControllerCompetencia competenciaController) {
-        this.candidatoController = candidatoController
-        this.empresaController = empresaController
-        this.vagaController = vagaController
-        this.competenciaController = competenciaController
-    }
+    private final UpdateControllerCandidato candidatoController = new UpdateControllerCandidato()
+    private final UpdateControllerEmpresa empresaController = new UpdateControllerEmpresa()
+    private final UpdateControllerVaga vagaController = new UpdateControllerVaga()
+    private final UpdateControllerCompetencia competenciaController = new UpdateControllerCompetencia()
 
     void updateCandidato() {
         candidatoController.updateCandidato()
