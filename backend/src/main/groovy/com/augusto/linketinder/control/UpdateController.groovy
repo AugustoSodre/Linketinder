@@ -1,6 +1,9 @@
 package com.augusto.linketinder.control
 
-import com.augusto.linketinder.DAO.DAO
+import com.augusto.linketinder.DAO.DAO_Candidato
+import com.augusto.linketinder.DAO.DAO_Competencia
+import com.augusto.linketinder.DAO.DAO_Empresa
+import com.augusto.linketinder.DAO.DAO_Vaga
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato
@@ -8,15 +11,18 @@ import com.augusto.linketinder.model.pessoa.Empresa
 
 class UpdateController {
 
-    DAO dao = new DAO()
+    private final DAO_Candidato candidatoDao = new DAO_Candidato()
+    private final DAO_Empresa empresaDao = new DAO_Empresa()
+    private final DAO_Vaga vagaDao = new DAO_Vaga()
+    private final DAO_Competencia competenciaDao = new DAO_Competencia()
     CadastroController cadastroController = new CadastroController()
 
     void updateCandidato(){
-        List<Candidato> listaCandidatos = dao.listCandidatos()
+        List<Candidato> listaCandidatos = candidatoDao.listAll()
         int id = -1
         int opcao = -1
 
-        while(listaCandidatos.id.contains(id) && opcao != 0){
+        while(!listaCandidatos*.id.contains(opcao) && opcao != 0){
             try{
                 print "Digite o número do candidato [0 para cancelar]: "
                 opcao = cadastroController.getIntInput()
@@ -109,17 +115,17 @@ class UpdateController {
         }
 
         try{
-            dao.update('candidato', coluna, novoValor, id)
+            candidatoDao.updateField(id, coluna, novoValor)
         } catch (Exception e){
             println "Erro ao atualizar candidato: ${e.message}"
         }
     }
 
     void updateEmpresa(){
-        List<Empresa> listaEmpresas = dao.listEmpresas()
+        List<Empresa> listaEmpresas = empresaDao.listAll()
         int id = -1
         int opcao = -1
-        while (!listaEmpresas.id.contains(id) && opcao != 0){
+        while (!listaEmpresas*.id.contains(opcao) && opcao != 0){
             try{
                 print "Digite o número da empresa [0 para cancelar]: "
                 opcao = cadastroController.getIntInput()
@@ -212,18 +218,18 @@ class UpdateController {
         }
 
         try{
-            dao.update('empresa', coluna, novoValor, id)
+            empresaDao.updateField(id, coluna, novoValor)
         } catch (Exception e){
             println "Erro ao atualizar empresa: ${e.message}"
         }
     }
 
     void updateVaga(){
-        List<Vaga> listaVagas = dao.listVagas()
+        List<Vaga> listaVagas = vagaDao.listAll()
         int id = -1
         int opcao = -1
 
-        while (!listaVagas.id.contains(id) && opcao != 0){
+        while (!listaVagas*.id.contains(opcao) && opcao != 0){
             try{
                 print "Digite o número da vaga [0 para cancelar]: "
                 opcao = cadastroController.getIntInput()
@@ -301,14 +307,14 @@ class UpdateController {
         }
 
         try{
-            dao.update('vaga', coluna, novoValor, id)
+            vagaDao.updateField(id, coluna, novoValor)
         } catch (Exception e){
             println "Erro ao atualizar vaga: ${e.message}"
         }
     }
 
     void updateComp(){
-        List<Competencia> listaComp = dao.listCompetencia()
+        List<Competencia> listaComp = competenciaDao.listAll()
         int id = -1
         int opcao = -1
 
@@ -353,22 +359,22 @@ class UpdateController {
                     print "Digite o novo nome da Competência: "
                     novoValor = cadastroController.getNomeInput()
                     try{
-                        dao.update('vaga', coluna, novoValor, id)
+                        competenciaDao.updateName(id, novoValor)
                     } catch (Exception e){
-                        println "Erro ao atualizar vaga: ${e.message}"
+                        println "Erro ao atualizar competência: ${e.message}"
                     }
                     break
 
                 case 'cc':
-                    new UpdateController_Helper().hadnleCompObjeto("candidato")
+                    new UpdateController_Helper().handleCompObjeto("candidato")
                     break
 
                 case 'ce':
-                    new UpdateController_Helper().hadnleCompObjeto("empresa")
+                    new UpdateController_Helper().handleCompObjeto("empresa")
                     break
 
                 case 'cv':
-                    new UpdateController_Helper().hadnleCompObjeto("vaga")
+                    new UpdateController_Helper().handleCompObjeto("vaga")
                     break
 
                 default:

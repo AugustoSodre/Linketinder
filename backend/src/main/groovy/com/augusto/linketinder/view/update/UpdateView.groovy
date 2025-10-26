@@ -1,18 +1,24 @@
 package com.augusto.linketinder.view.update
 
-import com.augusto.linketinder.DAO.DAO
+import com.augusto.linketinder.DAO.DAO_Candidato
+import com.augusto.linketinder.DAO.DAO_Competencia
+import com.augusto.linketinder.DAO.DAO_Empresa
+import com.augusto.linketinder.DAO.DAO_Vaga
 import com.augusto.linketinder.control.UpdateController
 
 class UpdateView {
 
     UpdateController updateController = new UpdateController()
-    DAO dao = new DAO()
+    private final DAO_Candidato candidatoDao = new DAO_Candidato()
+    private final DAO_Empresa empresaDao = new DAO_Empresa()
+    private final DAO_Vaga vagaDao = new DAO_Vaga()
+    private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
     void showUpdateCandidato(){
         println "Atualização de Candidato"
         println()
 
-        List lista = dao.listCandidatos()
+        List lista = candidatoDao.listAll()
         if (!lista || lista.size() == 0) {
             println("Nenhum candidato cadastrado.")
             return
@@ -25,7 +31,7 @@ class UpdateView {
         println "Atualização de Empresa"
         println()
 
-        List lista = dao.listEmpresas()
+        List lista = empresaDao.listAll()
         if (!lista || lista.size() == 0) {
             println("Nenhuma empresa cadastrada.")
             return
@@ -38,7 +44,7 @@ class UpdateView {
         println "Atualização de Vaga"
         println()
 
-        List lista = dao.listVagas()
+        List lista = vagaDao.listAll()
 
         if (!lista || lista.size() == 0) {
             println("Nenhuma vaga cadastrada.")
@@ -52,7 +58,7 @@ class UpdateView {
         println "Atualização de Competência"
         println()
 
-        List lista = dao.listCompetencia()
+        List lista = competenciaDao.listAll()
 
         if (!lista || lista.size() == 0) {
             println("Nenhuma competência cadastrada.")

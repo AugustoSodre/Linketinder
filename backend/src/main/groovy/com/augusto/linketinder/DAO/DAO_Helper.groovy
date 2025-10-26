@@ -8,201 +8,155 @@ import com.augusto.linketinder.model.pessoa.Empresa
 import java.sql.Connection
 import java.sql.PreparedStatement
 import java.sql.ResultSet
+import java.sql.SQLException
+import java.util.Collections
 
 class DAO_Helper {
 
     static List<Competencia> getListaCompCandidato(int idCandidato) {
-        def sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
+        final String sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
                 "INNER JOIN\n" +
                 "competencia_candidato cc ON comp.id = cc.id_competencia\n" +
                 "INNER JOIN\n" +
                 "candidato c ON cc.id_candidato = ?\n" +
                 "GROUP BY comp.id, comp.nome"
 
-        try {
-            def listaCompCandidato = []
-            Connection conn = DAO.connection()
-            PreparedStatement preparedStatement = conn.prepareStatement(sql)
-            preparedStatement.setInt(1, idCandidato)
-
-            ResultSet resultSet = preparedStatement.executeQuery()
-
-            while (resultSet.next()) {
-                listaCompCandidato.add(
-                        new Competencia(
-                                resultSet.getInt("id"),
-                                resultSet.getString("nome")
-                        )
-                )
-            }
-
-            return listaCompCandidato
-
-
-        } catch (Exception err) {
-            println(err.stackTrace)
-            println(err.getMessage())
-            return null
-        }
-
+        return fetchList(sql, idCandidato, { ResultSet resultSet ->
+            new Competencia(
+                    resultSet.getInt("id"),
+                    resultSet.getString("nome")
+            )
+        }, "Erro ao buscar competências do candidato ${idCandidato}")
     }
 
     static List<Competencia> getListaCompEmpresa(int idEmpresa) {
-        def sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
+        final String sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
                 "INNER JOIN\n" +
                 "competencia_empresa ce ON comp.id = ce.id_competencia\n" +
                 "INNER JOIN\n" +
                 "empresa e ON ce.id_empresa = ?\n" +
                 "GROUP BY comp.id, comp.nome"
 
-        try {
-            def listaCompEmpresa = []
-            Connection conn = DAO.connection()
-            PreparedStatement preparedStatement = conn.prepareStatement(sql)
-            preparedStatement.setInt(1, idEmpresa)
-
-            ResultSet resultSet = preparedStatement.executeQuery()
-
-            while (resultSet.next()) {
-                listaCompEmpresa.add(
-                        new Competencia(
-                                resultSet.getInt("id"),
-                                resultSet.getString("nome")
-                        )
-                )
-            }
-
-            return listaCompEmpresa
-
-
-        } catch (Exception err) {
-            println(err.stackTrace)
-            println(err.getMessage())
-            return null
-        }
-
+        return fetchList(sql, idEmpresa, { ResultSet resultSet ->
+            new Competencia(
+                    resultSet.getInt("id"),
+                    resultSet.getString("nome")
+            )
+        }, "Erro ao buscar competências da empresa ${idEmpresa}")
     }
 
     static List<Competencia> getListaCompVaga(int idVaga) {
-        def sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
+        final String sql = "SELECT comp.id, comp.nome FROM competencia comp\n" +
                 "INNER JOIN\n" +
                 "competencia_vaga cv ON comp.id = cv.id_competencia\n" +
                 "INNER JOIN\n" +
                 "vaga v ON cv.id_vaga = ?\n" +
                 "GROUP BY comp.id, comp.nome"
 
-        try {
-            def listaCompVaga = []
-            Connection conn = DAO.connection()
-            PreparedStatement preparedStatement = conn.prepareStatement(sql)
-            preparedStatement.setInt(1, idVaga)
-
-            ResultSet resultSet = preparedStatement.executeQuery()
-
-            while (resultSet.next()) {
-                listaCompVaga.add(
-                        new Competencia(
-                                resultSet.getInt("id"),
-                                resultSet.getString("nome")
-                        )
-                )
-            }
-
-            return listaCompVaga
-
-
-        } catch (Exception err) {
-            println(err.stackTrace)
-            println(err.getMessage())
-            return null
-        }
-
+        return fetchList(sql, idVaga, { ResultSet resultSet ->
+            new Competencia(
+                    resultSet.getInt("id"),
+                    resultSet.getString("nome")
+            )
+        }, "Erro ao buscar competências da vaga ${idVaga}")
     }
 
     static List<Vaga> getListaVagaEmpresa(int idEmpresa) {
-        def sql = "SELECT * FROM vaga WHERE id_empresa = ?"
+        final String sql = "SELECT * FROM vaga WHERE id_empresa = ?"
 
-        try {
-            def listaVagas = []
-            Connection conn = DAO.connection()
-            PreparedStatement preparedStatement = conn.prepareStatement(sql)
-            preparedStatement.setInt(1, idEmpresa)
-
-            ResultSet resultSet = preparedStatement.executeQuery()
-
-            while (resultSet.next()) {
-                listaVagas.add(
-                        new Vaga(
-                                resultSet.getInt("id"),
-                                resultSet.getInt("id_empresa"),
-                                resultSet.getString("nome"),
-                                resultSet.getString("descricao"),
-                                resultSet.getString("cidade"),
-                                resultSet.getString("estado"),
-                                getListaCompVaga(resultSet.getInt("id"))
-                        )
-                )
-            }
-
-            return listaVagas
-
-
-        } catch (Exception err) {
-            println(err.stackTrace)
-            println(err.getMessage())
-            return null
-        }
+        return fetchList(sql, idEmpresa, { ResultSet resultSet ->
+            new Vaga(
+                    resultSet.getInt("id"),
+                    resultSet.getInt("id_empresa"),
+                    resultSet.getString("nome"),
+                    resultSet.getString("descricao"),
+                    resultSet.getString("cidade"),
+                    resultSet.getString("estado"),
+                    getListaCompVaga(resultSet.getInt("id"))
+            )
+        }, "Erro ao buscar vagas da empresa ${idEmpresa}")
     }
 
     static void conectarCompCandidato(Candidato c) {
-        def sql = "INSERT INTO competencia_candidato(id_competencia, id_candidato) VALUES (?, ?)"
-        Connection conn = DAO.connection()
-
-        def listaComp = c.competencias
-
-        for (int i = 0; i < listaComp.size(); i++) {
-            PreparedStatement statement = conn.prepareStatement(sql)
-            statement.setInt(1, listaComp[i].id)
-            statement.setInt(2, c.id)
-            println(listaComp[i].id)
-            println(c.id)
-            statement.executeUpdate()
-        }
-
+        relacionarCompetencias(
+                "INSERT INTO competencia_candidato(id_competencia, id_candidato) VALUES (?, ?)",
+                c?.id ?: -1,
+                c?.competencias ?: Collections.emptyList(),
+                "Erro ao vincular competências ao candidato ${c?.id ?: "desconhecido"}"
+        )
     }
 
     static void conectarCompEmpresa(Empresa e) {
-        def sql = "INSERT INTO competencia_empresa(id_competencia, id_empresa) VALUES (?, ?)"
-        Connection conn = DAO.connection()
-
-        def listaComp = e.competencias
-
-        for (int i = 0; i < listaComp.size(); i++) {
-            PreparedStatement statement = conn.prepareStatement(sql)
-            statement.setInt(1, listaComp[i].id)
-            statement.setInt(2, e.id)
-            println(listaComp[i].id)
-            println(e.id)
-            statement.executeUpdate()
-        }
-
+        relacionarCompetencias(
+                "INSERT INTO competencia_empresa(id_competencia, id_empresa) VALUES (?, ?)",
+                e?.id ?: -1,
+                e?.competencias ?: Collections.emptyList(),
+                "Erro ao vincular competências à empresa ${e?.id ?: "desconhecida"}"
+        )
     }
 
     static void conectarCompVaga(Vaga v) {
-        def sql = "INSERT INTO competencia_vaga(id_competencia, id_vaga) VALUES (?, ?)"
-        Connection conn = DAO.connection()
-
-        def listaComp = v.competencias
-
-        for (int i = 0; i < listaComp.size(); i++) {
-            PreparedStatement statement = conn.prepareStatement(sql)
-            statement.setInt(1, listaComp[i].id)
-            statement.setInt(2, v.id)
-            println(listaComp[i].id)
-            println(v.id)
-            statement.executeUpdate()
-        }
-
+        relacionarCompetencias(
+                "INSERT INTO competencia_vaga(id_competencia, id_vaga) VALUES (?, ?)",
+                v?.id ?: -1,
+                v?.competencias ?: Collections.emptyList(),
+                "Erro ao vincular competências à vaga ${v?.id ?: "desconhecida"}"
+        )
     }
 
+
+    private static <T> List<T> fetchList(String sql, int referenceId, Closure<T> mapper, String errorMessage) {
+        try {
+            return DAO.withConnection { Connection conn ->
+                PreparedStatement stmt = null
+                ResultSet rs = null
+                try {
+                    stmt = conn.prepareStatement(sql)
+                    stmt.setInt(1, referenceId)
+                    rs = stmt.executeQuery()
+                    List<T> items = []
+                    while (rs.next()) {
+                        items << mapper.call(rs)
+                    }
+                    items
+                } finally {
+                    DAO.closeQuietly(rs)
+                    DAO.closeQuietly(stmt)
+                }
+            } ?: Collections.emptyList()
+        } catch (SQLException ex) {
+            logSqlError(errorMessage, ex)
+            return Collections.emptyList()
+        }
+    }
+
+    private static void relacionarCompetencias(String sql, int referenciaId, List<Competencia> competencias, String errorMessage) {
+        if (referenciaId <= 0 || competencias == null || competencias.isEmpty()) {
+            return
+        }
+
+        try {
+            DAO.withConnection { Connection conn ->
+                PreparedStatement stmt = null
+                try {
+                    stmt = conn.prepareStatement(sql)
+                    competencias.each { Competencia competencia ->
+                        stmt.setInt(1, competencia.id)
+                        stmt.setInt(2, referenciaId)
+                        stmt.addBatch()
+                    }
+                    stmt.executeBatch()
+                } finally {
+                    DAO.closeQuietly(stmt)
+                }
+            }
+            println("Competências vinculadas com sucesso.")
+        } catch (SQLException ex) {
+            logSqlError(errorMessage, ex)
+        }
+    }
+
+    private static void logSqlError(String message, Exception exception) {
+        System.err.println("${message}. Detalhes: ${exception.message}")
+    }
 }

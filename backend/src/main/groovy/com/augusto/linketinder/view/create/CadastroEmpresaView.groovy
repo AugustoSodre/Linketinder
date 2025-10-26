@@ -1,6 +1,7 @@
 package com.augusto.linketinder.view.create
 
-import com.augusto.linketinder.DAO.DAO
+import com.augusto.linketinder.DAO.DAO_Competencia
+import com.augusto.linketinder.DAO.DAO_Empresa
 import com.augusto.linketinder.control.CadastroController
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Empresa
@@ -8,6 +9,8 @@ import com.augusto.linketinder.model.pessoa.Empresa
 class CadastroEmpresaView {
 
     CadastroController cadastroController = new CadastroController()
+    private final DAO_Empresa empresaDao = new DAO_Empresa()
+    private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
     void show() {
         println "Cadastro da Pessoa Jurídica"
@@ -39,8 +42,7 @@ class CadastroEmpresaView {
         println()
         println("Competências disponíveis:")
         int cont = 1
-        DAO dao = new DAO()
-        List<Competencia> listaComp = dao.listCompetencia()
+        List<Competencia> listaComp = competenciaDao.listAll()
         for(c in listaComp){
             println("${cont} " + c.nome)
             cont++
@@ -52,7 +54,7 @@ class CadastroEmpresaView {
 
         // Adiciona pessoa ao final do processo
         try {
-            dao.insert(pessoa)
+            empresaDao.insert(pessoa)
             println()
             println("Empresa adicionada com sucesso!")
         } catch (Exception err){

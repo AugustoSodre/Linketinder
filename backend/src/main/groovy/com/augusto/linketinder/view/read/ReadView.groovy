@@ -1,6 +1,9 @@
 package com.augusto.linketinder.view.read
 
-import com.augusto.linketinder.DAO.DAO
+import com.augusto.linketinder.DAO.DAO_Candidato
+import com.augusto.linketinder.DAO.DAO_Competencia
+import com.augusto.linketinder.DAO.DAO_Empresa
+import com.augusto.linketinder.DAO.DAO_Vaga
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato
@@ -8,10 +11,13 @@ import com.augusto.linketinder.model.pessoa.Empresa
 
 class ReadView {
 
-    DAO dao = new DAO()
+    private final DAO_Candidato candidatoDao = new DAO_Candidato()
+    private final DAO_Empresa empresaDao = new DAO_Empresa()
+    private final DAO_Vaga vagaDao = new DAO_Vaga()
+    private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
     void showCandidatos(){
-        for (final Candidato p in dao.listCandidatos()) {
+        for (final Candidato p in candidatoDao.listAll()) {
             println()
             println(p.toString())
             println()
@@ -19,7 +25,7 @@ class ReadView {
     }
 
     void showEmpresas() {
-        for (final Empresa pj in dao.listEmpresas()) {
+        for (final Empresa pj in empresaDao.listAll()) {
             println()
             println(pj.toString())
             println()
@@ -27,7 +33,7 @@ class ReadView {
     }
 
     void showVagas(){
-        for (final Vaga v in dao.listVagas()) {
+        for (final Vaga v in vagaDao.listAll()) {
             println()
             println(v.toString())
             println()
@@ -35,7 +41,7 @@ class ReadView {
     }
 
     void showComp(){
-        for (Competencia comp in dao.listCompetencia()){
+        for (Competencia comp in competenciaDao.listAll()){
             println()
             println(comp.toString())
             println()
