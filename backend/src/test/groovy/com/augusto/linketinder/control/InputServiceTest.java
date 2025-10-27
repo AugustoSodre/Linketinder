@@ -1,5 +1,6 @@
 package com.augusto.linketinder.control;
 
+import com.augusto.linketinder.model.Competencia;
 import com.augusto.linketinder.service.InputService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,38 +9,30 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class InputServiceTest {
 
-    InputService inputService;
-
-    public InputService getCadastroController() {
-        return inputService;
-    }
-
-    void mockBufferedReader(String input){
-        getCadastroController().setBr(new BufferedReader(new StringReader(input)));
-    }
+    private InputService inputService;
 
     @BeforeEach
     void setUp() {
         inputService = new InputService();
     }
 
+    private void mockBufferedReader(String input) {
+        inputService.setBr(new BufferedReader(new StringReader(input)));
+    }
 
     // --- Testes para getStringInput()
     @Test
     void testEmptyGetStringInput() {
-        //Arrange
-        String input = ("o\n").repeat(6);
-        mockBufferedReader(input);
-
-        //Act + Assert
+        mockBufferedReader(("o\n").repeat(6));
         assertThrows(RuntimeException.class, () -> inputService.getEstadoInput());
     }
-
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -52,19 +45,13 @@ class InputServiceTest {
             ",",
             "?",
             "{"
-
     })
     void testRegularGetStringInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getStringInput();
-
-        //Assert
-        assertTrue(!result.isEmpty() && result.equals(input));
+        String result = inputService.getStringInput();
+        assertFalse(result.isEmpty());
+        assertEquals(input, result);
     }
-
 
     // --- Testes para getNomeInput()
     @ParameterizedTest
@@ -75,279 +62,171 @@ class InputServiceTest {
             "Calos Almeida",
             "Lucas Gonçalves",
             "Jose12Gameplays",
-            "12345",
+            "12345"
     })
     void testValidGetNomeInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getNomeInput();
-
-        //Assert
+        String result = inputService.getNomeInput();
         assertEquals(input.trim(), result);
     }
-
 
     // --- Testes para getEmailInput()
     @Test
     void testValidGetEmailInput() {
-        //Arrange
         mockBufferedReader("jose@hotmail.com\n");
-
-        //Act
-        String result = getCadastroController().getEmailInput();
-
-        //Assert
+        String result = inputService.getEmailInput();
         assertEquals("jose@hotmail.com", result);
     }
 
-
     // --- Testes para getEstadoInput()
     @ParameterizedTest
-    @ValueSource(strings = {
-            "AC",
-            "ba",
-            "dF",
-            "Sp"
-})
+    @ValueSource(strings = {"AC", "ba", "dF", "Sp"})
     void testValidGetEstadoInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getEstadoInput();
-
-        //Assert
+        String result = inputService.getEstadoInput();
         assertEquals(input.toUpperCase(), result);
     }
 
     @Test
     void testInvalidGetEstadoInput() {
-        //Arrange
-        String input = ("o\n").repeat(6);
-        mockBufferedReader(input);
-
-        //Act + Assert
+        mockBufferedReader(("o\n").repeat(6));
         assertThrows(RuntimeException.class, () -> inputService.getEstadoInput());
     }
 
-
     // --- Testes para getCepInput()
     @ParameterizedTest
-    @ValueSource(strings = {
-            "77777-777",
-            "12345678"
-    })
+    @ValueSource(strings = {"77777-777", "12345678"})
     void testValidGetCepInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getCepInput();
-
-        //Assert
+        String result = inputService.getCepInput();
         assertEquals(input, result);
     }
 
     @Test
     void testInvalidGetCepInput() {
-        //Arrange
-        String input = ("o\n").repeat(6);
-        mockBufferedReader(input);
-
-        //Act + Assert
+        mockBufferedReader(("o\n").repeat(6));
         assertThrows(RuntimeException.class, () -> inputService.getCepInput());
     }
 
     // --- Testes para getDescricaoInput()
     @ParameterizedTest
-    @ValueSource(strings = {
-            "Estudante",
-            "Grande Estudante"
-    })
+    @ValueSource(strings = {"Estudante", "Grande Estudante"})
     void testValidGetDescricaoInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getDescricaoInput();
-
-        //Assert
+        String result = inputService.getDescricaoInput();
         assertEquals(input.trim(), result);
     }
 
+    // --- Testes para getCompetenciasInput()
+    @Test
+    void testGetCompetenciasInputWithValidSelections() {
+        List<Competencia> competencias = Arrays.asList(
+                new Competencia(1, "Java"),
+                new Competencia(2, "Groovy"),
+                new Competencia(3, "SQL")
+        );
 
-    // // --- Testes para getCompetenciasInput()
-//    @Test
-//    void testGetCompetenciasInputWithValidSelections() {
-//        //Arrange
-//        mockBufferedReader("1\n2\n0\n");
-//
-//        //Act
-//        List<EnumCompetencias> result = inputService.getCompetenciasInput();
-//
-//        //Assert
-//        assertNotNull(result);
-//        assertFalse(result.isEmpty());
-//    }
+        mockBufferedReader("1\n2\n0\n");
 
-//    @Test
-//    void testGetCompetenciasInputExitImmediately() {
-//        //Arrange
-//        mockBufferedReader("0\n");
-//
-//        //Act
-//        List<EnumCompetencias> result = inputService.getCompetenciasInput();
-//
-//        //Assert
-//        assertNotNull(result);
-//        assertEquals(0, result.size());
-//    }
+        List<Competencia> result = inputService.getCompetenciasInput(competencias);
 
-//    @Test
-//    void testGetCompetenciasInputDuplicateSelection() {
-//        //Arrange
-//        mockBufferedReader("1\n1\n0\n");
-//
-//        //Act
-//        List<EnumCompetencias> result = inputService.getCompetenciasInput();
-//
-//        //Assert
-//        assertNotNull(result);
-//        assertTrue(result.size() == 1);
-//    }
+        assertEquals(2, result.size());
+        assertEquals(Arrays.asList(competencias.get(0), competencias.get(1)), result);
+    }
 
-//    @Test
-//    void testGetCompetenciasInputExceedsMaxTentativas() {
-//        //Arrange
-//        String invalidInput = "999\n".repeat(6);
-//        mockBufferedReader(invalidInput);
-//
-//        //Act + Assert
-//        assertThrows(RuntimeException.class, () -> inputService.getCompetenciasInput());
-//    }
+    @Test
+    void testGetCompetenciasInputExitImmediately() {
+        List<Competencia> competencias = Arrays.asList(
+                new Competencia(1, "Java"),
+                new Competencia(2, "Groovy")
+        );
 
+        mockBufferedReader("0\n");
+
+        List<Competencia> result = inputService.getCompetenciasInput(competencias);
+
+        assertNotNull(result);
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    void testGetCompetenciasInputDuplicateSelection() {
+        List<Competencia> competencias = Arrays.asList(
+                new Competencia(1, "Java"),
+                new Competencia(2, "Groovy")
+        );
+
+        mockBufferedReader("1\n1\n0\n");
+
+        List<Competencia> result = inputService.getCompetenciasInput(competencias);
+
+        assertEquals(1, result.size());
+        assertEquals(competencias.get(0), result.get(0));
+    }
+
+    @Test
+    void testGetCompetenciasInputExceedsMaxTentativas() {
+        List<Competencia> competencias = Arrays.asList(
+                new Competencia(1, "Java"),
+                new Competencia(2, "Groovy")
+        );
+
+        mockBufferedReader("5\n5\n5\n5\n5\n");
+
+        assertThrows(RuntimeException.class, () -> inputService.getCompetenciasInput(competencias));
+    }
 
     // --- Testes para getCpfInput()
     @ParameterizedTest
-    @ValueSource(strings = {
-            "123.456.789-10",
-            "00011122233"
-    })
+    @ValueSource(strings = {"123.456.789-10", "00011122233"})
     void testValidGetCpfInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getCpfInput();
-
-        //Assert
+        String result = inputService.getCpfInput();
         assertEquals(input.trim(), result);
     }
 
     @Test
     void testInvalidGetCpfInput() {
-        //Arrange
-        String input = ("o\n").repeat(6); // eh um formato invalido para CPF seguindo o REGEX
-        mockBufferedReader(input);
-
-        //Act + Assert
+        mockBufferedReader(("o\n").repeat(6));
         assertThrows(RuntimeException.class, () -> inputService.getCpfInput());
     }
 
-
     // --- Testes para getCnpjInput()
     @ParameterizedTest
-    @ValueSource(strings = {
-            "12345678912345",
-            "66.872.236/0001-26"
-    })
+    @ValueSource(strings = {"12345678912345", "66.872.236/0001-26"})
     void testValidGetCnpjInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getCnpjInput();
-
-        //Assert
+        String result = inputService.getCnpjInput();
         assertEquals(input.trim(), result);
     }
 
     @Test
     void testInvalidGetCnpjInput() {
-        //Arrange
-        String input = ("1234567.89/12345\n").repeat(6); // eh um formato invalido para CNPJ seguindo o REGEX
-        mockBufferedReader(input);
-
-        //Act + Assert
+        mockBufferedReader(("1234567.89/12345\n").repeat(6));
         assertThrows(RuntimeException.class, () -> inputService.getCnpjInput());
     }
 
-
-    //--- Testes para getPaisInput()
+    // --- Testes para getPaisInput()
     @ParameterizedTest
-    @ValueSource(strings = {
-            "Brasil",
-            "BR"
-    })
+    @ValueSource(strings = {"Brasil", "BR"})
     void testGetPaisInput(String input) {
-        //Arrange
         mockBufferedReader(input + "\n");
-
-        //Act
-        String result = getCadastroController().getPaisInput();
-
-        //Assert
+        String result = inputService.getPaisInput();
         assertEquals(input.trim(), result);
     }
 
-    //--- Testes para inputs de números inteiros
+    // --- Testes para inputs de números inteiros
     @Test
     void testGetIntInput() {
-        //Arrange
-        String input = "notanumber\n42\n";
-        mockBufferedReader(input);
-
-        //Act
+        mockBufferedReader("notanumber\n42\n");
         int result = inputService.getIntInput();
-
-        //Assert
         assertEquals(42, result);
     }
 
     @Test
     void testGetIdadeInput() {
-        //Arrange
-        mockBufferedReader("25");
-
-        //Act
+        mockBufferedReader("25\n");
         int idade = inputService.getIdadeInput();
-
-        //Assert
         assertEquals(25, idade);
     }
-
-    //--- Testes para adicionar Pessoa a lista respectiva
-//    @Test
-//    void testInsertPessoaFisica() {
-//        //Arrange
-//        Candidato pessoaFisica = new Candidato();
-//        inputService.insertPessoa(pessoaFisica);
-//
-//        //Act + Assert
-//        assertEquals(ListaCandidatoEstatica.getLista().getLast(), pessoaFisica);
-//    }
-//
-//    @Test
-//    void testInsertPessoaJuridica() {
-//        //Arrange
-//        Empresa empresa = new Empresa();
-//        inputService.insertPessoa(empresa);
-//
-//        //Act + Assert
-//        assertEquals(ListaEmpresaEstatica.getLista().getLast(), empresa);
-//    }
-
-
 }

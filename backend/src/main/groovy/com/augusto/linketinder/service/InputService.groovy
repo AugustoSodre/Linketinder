@@ -4,8 +4,12 @@ import com.augusto.linketinder.model.Competencia
 
 class InputService {
 
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
+    private BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
     private static final int MAX_TENTATIVAS_PADRAO = 5
+
+    void setBr(BufferedReader bufferedReader) {
+        this.br = bufferedReader
+    }
 
     String getStringInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
         int tentativas = 0
