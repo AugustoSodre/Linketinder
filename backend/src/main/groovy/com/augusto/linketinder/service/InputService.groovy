@@ -2,7 +2,7 @@ package com.augusto.linketinder.control
 
 import com.augusto.linketinder.model.Competencia
 
-class CadastroController {
+class InputService {
 
     BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
     private static final int MAX_TENTATIVAS_PADRAO = 5
