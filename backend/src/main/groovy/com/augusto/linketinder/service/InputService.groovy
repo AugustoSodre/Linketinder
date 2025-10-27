@@ -1,4 +1,4 @@
-package com.augusto.linketinder.control
+package com.augusto.linketinder.service
 
 import com.augusto.linketinder.model.Competencia
 

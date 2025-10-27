@@ -1,6 +1,7 @@
 package com.augusto.linketinder.view.menu
 
-import com.augusto.linketinder.control.MenuController
+
+import com.augusto.linketinder.service.InputService
 
 
 class MenuMain {
@@ -21,7 +22,7 @@ class MenuMain {
         println("-" * 25)
 
 
-        switch (new MenuController().getIntInput()){
+        switch (new InputService().getIntInput()){
             case 1:
                 limpaTela()
                 new MenuEmpresa().showMenuEmpresa()

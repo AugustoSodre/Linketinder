@@ -1,12 +1,11 @@
 package com.augusto.linketinder.view.create
 
 import com.augusto.linketinder.DAO.DAO_Competencia
-import com.augusto.linketinder.control.CadastroController
+import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
-import com.augusto.linketinder.model.Vaga
 
 class CadastroCompView {
-    CadastroController cadastroController = new CadastroController()
+    InputService inputService = new InputService()
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
     void show() {
@@ -16,7 +15,7 @@ class CadastroCompView {
         Competencia comp = new Competencia()
 
         print("Digite o nome da Competência: ")
-        comp.nome = cadastroController.getNomeInput()
+        comp.nome = inputService.getNomeInput()
 
         // Adiciona pessoa ao final do processo
         try {
@@ -24,7 +23,7 @@ class CadastroCompView {
             println()
             println("Competência adicionada com sucesso!")
         } catch (Exception err){
-            println("Erro ao adicionar Competência!")
+            println("Erro ao adicionar Competência! " + err.message)
         }
 
 

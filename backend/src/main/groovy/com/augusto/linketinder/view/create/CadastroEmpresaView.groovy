@@ -2,13 +2,13 @@ package com.augusto.linketinder.view.create
 
 import com.augusto.linketinder.DAO.DAO_Competencia
 import com.augusto.linketinder.DAO.DAO_Empresa
-import com.augusto.linketinder.control.CadastroController
+import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Empresa
 
 class CadastroEmpresaView {
 
-    CadastroController cadastroController = new CadastroController()
+    InputService inputService = new InputService()
     private final DAO_Empresa empresaDao = new DAO_Empresa()
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
@@ -19,25 +19,25 @@ class CadastroEmpresaView {
         Empresa pessoa = new Empresa()
 
         print("Digite o Nome da Empresa: ")
-        pessoa.nome = cadastroController.getNomeInput()
+        pessoa.nome = inputService.getNomeInput()
 
         print("Digite o Email da Empresa: ")
-        pessoa.email = cadastroController.getEmailInput()
+        pessoa.email = inputService.getEmailInput()
 
         print("Digite o Estado da Empresa: ")
-        pessoa.estado = cadastroController.getEstadoInput()
+        pessoa.estado = inputService.getEstadoInput()
 
         print("Digite o CEP da Empresa: ")
-        pessoa.cep = cadastroController.getCepInput()
+        pessoa.cep = inputService.getCepInput()
 
         print("Digite a Descrição da Empresa: ")
-        pessoa.descricao = cadastroController.getDescricaoInput()
+        pessoa.descricao = inputService.getDescricaoInput()
 
         print("Digite o CNPJ da Empresa: ")
-        pessoa.cnpj = cadastroController.getCnpjInput()
+        pessoa.cnpj = inputService.getCnpjInput()
 
         print("Digite o País da Empresa: ")
-        pessoa.pais = cadastroController.getPaisInput()
+        pessoa.pais = inputService.getPaisInput()
 
         println()
         println("Competências disponíveis:")
@@ -47,10 +47,10 @@ class CadastroEmpresaView {
             println("${cont} " + c.nome)
             cont++
         }
-        pessoa.competencias = cadastroController.getCompetenciasInput(listaComp)
+        pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
         print("Digite a senha do Candidato: ")
-        pessoa.senha = cadastroController.getSenhaInput()
+        pessoa.senha = inputService.getSenhaInput()
 
         // Adiciona pessoa ao final do processo
         try {
@@ -58,9 +58,8 @@ class CadastroEmpresaView {
             println()
             println("Empresa adicionada com sucesso!")
         } catch (Exception err){
-            println("Erro ao adicionar empresa!")
+            println("Erro ao adicionar empresa! " + err.message)
         }
-
 
     }
 }

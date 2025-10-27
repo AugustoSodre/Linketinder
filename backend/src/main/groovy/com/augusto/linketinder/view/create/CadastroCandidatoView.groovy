@@ -2,13 +2,13 @@ package com.augusto.linketinder.view.create
 
 import com.augusto.linketinder.DAO.DAO_Candidato
 import com.augusto.linketinder.DAO.DAO_Competencia
-import com.augusto.linketinder.control.CadastroController
+import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Candidato
 
 class CadastroCandidatoView {
 
-    CadastroController cadastroController = new CadastroController()
+    InputService inputService = new InputService()
     private final DAO_Candidato candidatoDao = new DAO_Candidato()
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
@@ -19,25 +19,25 @@ class CadastroCandidatoView {
         Candidato pessoa = new Candidato()
 
         print("Digite o Nome do Candidato: ")
-        pessoa.nome = cadastroController.getNomeInput()
+        pessoa.nome = inputService.getNomeInput()
 
         print("Digite o Email do Candidato: ")
-        pessoa.email = cadastroController.getEmailInput()
+        pessoa.email = inputService.getEmailInput()
 
         print("Digite o Estado do Candidato: ")
-        pessoa.estado = cadastroController.getEstadoInput()
+        pessoa.estado = inputService.getEstadoInput()
 
         print("Digite o CEP do Candidato: ")
-        pessoa.cep = cadastroController.getCepInput()
+        pessoa.cep = inputService.getCepInput()
 
         print("Digite a Descrição do Candidato: ")
-        pessoa.descricao = cadastroController.getDescricaoInput()
+        pessoa.descricao = inputService.getDescricaoInput()
 
         print("Digite o CPF do Candidato: ")
-        pessoa.cpf = cadastroController.getCpfInput()
+        pessoa.cpf = inputService.getCpfInput()
 
         print("Digite a idade do Candidato: ")
-        pessoa.idade = cadastroController.getIdadeInput()
+        pessoa.idade = inputService.getIdadeInput()
 
         println()
         println("Competências disponíveis:")
@@ -47,10 +47,10 @@ class CadastroCandidatoView {
             println("${cont} " + c.nome)
             cont++
         }
-        pessoa.competencias = cadastroController.getCompetenciasInput(listaComp)
+        pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
         print("Digite a senha do Candidato: ")
-        pessoa.senha = cadastroController.getSenhaInput()
+        pessoa.senha = inputService.getSenhaInput()
 
         //Adiciona pessoa ao final do processo
         try {

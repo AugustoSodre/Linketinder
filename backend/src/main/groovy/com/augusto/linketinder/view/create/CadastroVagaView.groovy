@@ -2,14 +2,13 @@ package com.augusto.linketinder.view.create
 
 import com.augusto.linketinder.DAO.DAO_Competencia
 import com.augusto.linketinder.DAO.DAO_Vaga
-import com.augusto.linketinder.control.CadastroController
+import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
-import com.augusto.linketinder.model.pessoa.Empresa
 
 class CadastroVagaView {
 
-    CadastroController cadastroController = new CadastroController()
+    InputService inputService = new InputService()
     private final DAO_Vaga vagaDao = new DAO_Vaga()
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
 
@@ -20,19 +19,19 @@ class CadastroVagaView {
         Vaga vaga = new Vaga()
 
         print("Digite o ID da Empresa: ")
-        vaga.id_empresa = cadastroController.getIntInput()
+        vaga.id_empresa = inputService.getIntInput()
 
         print("Digite o Título da Vaga: ")
-        vaga.nome = cadastroController.getNomeInput()
+        vaga.nome = inputService.getNomeInput()
 
         print("Digite a Descrição da Vaga: ")
-        vaga.descricao = cadastroController.getDescricaoInput()
+        vaga.descricao = inputService.getDescricaoInput()
 
         print("Digite a Cidade da Vaga: ")
-        vaga.cidade = cadastroController.getNomeInput()
+        vaga.cidade = inputService.getNomeInput()
 
         print("Digite o Estado da Vaga: ")
-        vaga.estado = cadastroController.getEstadoInput()
+        vaga.estado = inputService.getEstadoInput()
 
         println()
         println("Competências disponíveis:")
@@ -42,7 +41,7 @@ class CadastroVagaView {
             println("${cont} " + c.nome)
             cont++
         }
-        vaga.competencias = cadastroController.getCompetenciasInput(listaComp)
+        vaga.competencias = inputService.getCompetenciasInput(listaComp)
 
         // Adiciona pessoa ao final do processo
         try {
@@ -50,9 +49,8 @@ class CadastroVagaView {
             println()
             println("Vaga adicionada com sucesso!")
         } catch (Exception err){
-            println("Erro ao adicionar vaga!")
+            println("Erro ao adicionar vaga! " + err.message)
         }
-
 
     }
 }

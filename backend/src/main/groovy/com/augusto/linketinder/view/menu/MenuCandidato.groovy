@@ -1,6 +1,7 @@
 package com.augusto.linketinder.view.menu
 
-import com.augusto.linketinder.control.MenuController
+
+import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.view.create.CadastroCandidatoView
 import com.augusto.linketinder.view.delete.DeleteView
 
@@ -23,8 +24,8 @@ class MenuCandidato {
         println()
         println("-" * 25)
 
-        //Chamar Controller para input
-        switch(new MenuController().getIntInput()){
+        //Chamar Service para input
+        switch(new InputService().getIntInput()){
             case 1:
                 new CadastroCandidatoView().show()
                 break

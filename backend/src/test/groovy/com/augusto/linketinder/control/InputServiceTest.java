@@ -1,7 +1,6 @@
 package com.augusto.linketinder.control;
 
-import com.augusto.linketinder.model.pessoa.Candidato;
-import com.augusto.linketinder.model.pessoa.Empresa;
+import com.augusto.linketinder.service.InputService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -9,16 +8,15 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.BufferedReader;
 import java.io.StringReader;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class CadastroControllerTest {
+class InputServiceTest {
 
-    CadastroController cadastroController;
+    InputService inputService;
 
-    public CadastroController getCadastroController() {
-        return cadastroController;
+    public InputService getCadastroController() {
+        return inputService;
     }
 
     void mockBufferedReader(String input){
@@ -27,7 +25,7 @@ class CadastroControllerTest {
 
     @BeforeEach
     void setUp() {
-        cadastroController = new CadastroController();
+        inputService = new InputService();
     }
 
 
@@ -39,7 +37,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> cadastroController.getEstadoInput());
+        assertThrows(RuntimeException.class, () -> inputService.getEstadoInput());
     }
 
 
@@ -131,7 +129,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> cadastroController.getEstadoInput());
+        assertThrows(RuntimeException.class, () -> inputService.getEstadoInput());
     }
 
 
@@ -159,7 +157,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> cadastroController.getCepInput());
+        assertThrows(RuntimeException.class, () -> inputService.getCepInput());
     }
 
     // --- Testes para getDescricaoInput()
@@ -187,7 +185,7 @@ class CadastroControllerTest {
 //        mockBufferedReader("1\n2\n0\n");
 //
 //        //Act
-//        List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
+//        List<EnumCompetencias> result = inputService.getCompetenciasInput();
 //
 //        //Assert
 //        assertNotNull(result);
@@ -200,7 +198,7 @@ class CadastroControllerTest {
 //        mockBufferedReader("0\n");
 //
 //        //Act
-//        List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
+//        List<EnumCompetencias> result = inputService.getCompetenciasInput();
 //
 //        //Assert
 //        assertNotNull(result);
@@ -213,7 +211,7 @@ class CadastroControllerTest {
 //        mockBufferedReader("1\n1\n0\n");
 //
 //        //Act
-//        List<EnumCompetencias> result = cadastroController.getCompetenciasInput();
+//        List<EnumCompetencias> result = inputService.getCompetenciasInput();
 //
 //        //Assert
 //        assertNotNull(result);
@@ -227,7 +225,7 @@ class CadastroControllerTest {
 //        mockBufferedReader(invalidInput);
 //
 //        //Act + Assert
-//        assertThrows(RuntimeException.class, () -> cadastroController.getCompetenciasInput());
+//        assertThrows(RuntimeException.class, () -> inputService.getCompetenciasInput());
 //    }
 
 
@@ -255,7 +253,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> cadastroController.getCpfInput());
+        assertThrows(RuntimeException.class, () -> inputService.getCpfInput());
     }
 
 
@@ -283,7 +281,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act + Assert
-        assertThrows(RuntimeException.class, () -> cadastroController.getCnpjInput());
+        assertThrows(RuntimeException.class, () -> inputService.getCnpjInput());
     }
 
 
@@ -312,7 +310,7 @@ class CadastroControllerTest {
         mockBufferedReader(input);
 
         //Act
-        int result = cadastroController.getIntInput();
+        int result = inputService.getIntInput();
 
         //Assert
         assertEquals(42, result);
@@ -324,7 +322,7 @@ class CadastroControllerTest {
         mockBufferedReader("25");
 
         //Act
-        int idade = cadastroController.getIdadeInput();
+        int idade = inputService.getIdadeInput();
 
         //Assert
         assertEquals(25, idade);
@@ -335,7 +333,7 @@ class CadastroControllerTest {
 //    void testInsertPessoaFisica() {
 //        //Arrange
 //        Candidato pessoaFisica = new Candidato();
-//        cadastroController.insertPessoa(pessoaFisica);
+//        inputService.insertPessoa(pessoaFisica);
 //
 //        //Act + Assert
 //        assertEquals(ListaCandidatoEstatica.getLista().getLast(), pessoaFisica);
@@ -345,7 +343,7 @@ class CadastroControllerTest {
 //    void testInsertPessoaJuridica() {
 //        //Arrange
 //        Empresa empresa = new Empresa();
-//        cadastroController.insertPessoa(empresa);
+//        inputService.insertPessoa(empresa);
 //
 //        //Act + Assert
 //        assertEquals(ListaEmpresaEstatica.getLista().getLast(), empresa);

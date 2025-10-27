@@ -8,6 +8,7 @@ import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Empresa
 import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.service.InputService
 
 class DeleteController {
 
@@ -15,9 +16,10 @@ class DeleteController {
     private final DAO_Empresa empresaDao = new DAO_Empresa()
     private final DAO_Vaga vagaDao = new DAO_Vaga()
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final InputService inputService = new InputService()
 
     void delete(def objeto){
-        int id = getIdInput()
+        int id = inputService.getIntInput()
 
         try {
             if(objeto instanceof Candidato){
@@ -41,29 +43,4 @@ class DeleteController {
         }
     }
 
-    int getIdInput(){
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
-        String id = ""
-        while(true){
-            try{
-                id = br.readLine()
-
-                if(!id.isEmpty()){
-                    break
-                } else{
-                    println("Input inválido!")
-                }
-
-            }catch (Exception ignored){
-                println("Input inválido!")
-            }
-        }
-        try{
-            return Integer.parseInt(id)
-        } catch (Exception err){
-            println(err.stackTrace)
-            return -1
-        }
-
-    }
 }

@@ -317,6 +317,7 @@ class DAO_Competencia extends BaseDao {
             case "vaga":
                 return "competencia_vaga"
             default:
+                throw new SQLException("Objeto desconhecido!")
                 return null
         }
     }
@@ -330,6 +331,7 @@ class DAO_Competencia extends BaseDao {
             case "vaga":
                 return "id_vaga"
             default:
+                throw new SQLException("Objeto desconhecido!")
                 return null
         }
     }
