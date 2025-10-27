@@ -44,9 +44,9 @@ class DAO_Empresa extends BaseDao {
 			}
 
 		} finally {
-			closeQuietly(rs)
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(rs)
+			close(stmt)
+			close(conn)
 		}
 
 		competenciaDao.associateWithEmpresa(empresa.id, empresa.competencias)
@@ -82,9 +82,9 @@ class DAO_Empresa extends BaseDao {
 				)
 			}
 		} finally {
-			closeQuietly(rs)
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(rs)
+			close(stmt)
+			close(conn)
 		}
 
 		return empresas
@@ -108,8 +108,8 @@ class DAO_Empresa extends BaseDao {
 			stmt.setInt(2, id)
 			stmt.executeUpdate()
 		} finally {
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(stmt)
+			close(conn)
 		}
 	}
 
@@ -127,8 +127,8 @@ class DAO_Empresa extends BaseDao {
 			stmt.setInt(1, id)
 			stmt.executeUpdate()
 		} finally {
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(stmt)
+			close(conn)
 		}
 	}
 }

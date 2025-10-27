@@ -14,7 +14,7 @@ abstract class BaseDao {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)
     }
 
-    protected void closeQuietly(AutoCloseable resource) {
+    protected void close(AutoCloseable resource) {
         if (resource == null) {
             return
         }

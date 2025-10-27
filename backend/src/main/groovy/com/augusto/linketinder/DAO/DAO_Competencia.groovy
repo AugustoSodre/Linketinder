@@ -28,9 +28,9 @@ class DAO_Competencia extends BaseDao {
             }
 
         } finally {
-            closeQuietly(rs)
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(rs)
+            close(stmt)
+            close(conn)
         }
     }
 
@@ -50,9 +50,9 @@ class DAO_Competencia extends BaseDao {
                 competencias << buildCompetencia(rs)
             }
         } finally {
-            closeQuietly(rs)
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(rs)
+            close(stmt)
+            close(conn)
         }
 
         return competencias
@@ -152,9 +152,9 @@ class DAO_Competencia extends BaseDao {
                         .append("\n")
             }
         } finally {
-            closeQuietly(rs)
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(rs)
+            close(stmt)
+            close(conn)
         }
 
         return builder.toString()
@@ -171,8 +171,8 @@ class DAO_Competencia extends BaseDao {
             stmt.setInt(1, id)
             stmt.executeUpdate()
         } finally {
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(stmt)
+            close(conn)
         }
     }
 
@@ -188,8 +188,8 @@ class DAO_Competencia extends BaseDao {
             stmt.setInt(2, id)
             stmt.executeUpdate()
         } finally {
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(stmt)
+            close(conn)
         }
     }
 
@@ -213,9 +213,9 @@ class DAO_Competencia extends BaseDao {
                 competencias << buildCompetencia(rs)
             }
         } finally {
-            closeQuietly(rs)
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(rs)
+            close(stmt)
+            close(conn)
         }
 
         return competencias
@@ -238,8 +238,8 @@ class DAO_Competencia extends BaseDao {
             }
             stmt.executeBatch()
         } finally {
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(stmt)
+            close(conn)
         }
     }
 
@@ -252,8 +252,8 @@ class DAO_Competencia extends BaseDao {
             stmt.setInt(1, objetoId)
             stmt.executeUpdate()
         } finally {
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(stmt)
+            close(conn)
         }
     }
 
@@ -266,8 +266,8 @@ class DAO_Competencia extends BaseDao {
             stmt.setInt(1, competenciaId)
             stmt.executeUpdate()
         } finally {
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(stmt)
+            close(conn)
         }
     }
 
@@ -281,8 +281,8 @@ class DAO_Competencia extends BaseDao {
             stmt.setInt(2, objetoId)
             stmt.executeUpdate()
         } finally {
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(stmt)
+            close(conn)
         }
     }
 
@@ -296,8 +296,8 @@ class DAO_Competencia extends BaseDao {
             stmt.setInt(2, objetoId)
             stmt.executeUpdate()
         } finally {
-            closeQuietly(stmt)
-            closeQuietly(conn)
+            close(stmt)
+            close(conn)
         }
     }
 

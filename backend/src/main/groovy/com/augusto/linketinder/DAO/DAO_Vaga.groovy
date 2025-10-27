@@ -40,9 +40,9 @@ class DAO_Vaga extends BaseDao {
 			}
 
 		} finally {
-			closeQuietly(rs)
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(rs)
+			close(stmt)
+			close(conn)
 		}
 
 		competenciaDao.associateWithVaga(vaga.id, vaga.competencias)
@@ -64,9 +64,9 @@ class DAO_Vaga extends BaseDao {
 				vagas << buildVaga(rs)
 			}
 		} finally {
-			closeQuietly(rs)
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(rs)
+			close(stmt)
+			close(conn)
 		}
 
 		return vagas
@@ -89,9 +89,9 @@ class DAO_Vaga extends BaseDao {
 				vagas << buildVaga(rs)
 			}
 		} finally {
-			closeQuietly(rs)
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(rs)
+			close(stmt)
+			close(conn)
 		}
 
 		return vagas
@@ -115,8 +115,8 @@ class DAO_Vaga extends BaseDao {
 			stmt.setInt(2, id)
 			stmt.executeUpdate()
 		} finally {
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(stmt)
+			close(conn)
 		}
 	}
 
@@ -132,8 +132,8 @@ class DAO_Vaga extends BaseDao {
 			stmt.setInt(1, id)
 			stmt.executeUpdate()
 		} finally {
-			closeQuietly(stmt)
-			closeQuietly(conn)
+			close(stmt)
+			close(conn)
 		}
 	}
 
