@@ -48,6 +48,15 @@ class ValidateServiceTest {
 
     @Test
     void isCPFValid() {
+        assertFalse(validateService.isCPFValid(""));
+        assertFalse(validateService.isCPFValid("123"));
+        assertFalse(validateService.isCPFValid("abc"));
+        assertFalse(validateService.isCPFValid("abc123"));
+        assertTrue(validateService.isCPFValid("11122233344"));
+        assertTrue(validateService.isCPFValid("111.222.333-44"));
+        assertTrue(validateService.isCPFValid("111222.333-44"));
+        assertTrue(validateService.isCPFValid("111.222333-44"));
+        assertTrue(validateService.isCPFValid("111.222.33344"));
     }
 
     @Test

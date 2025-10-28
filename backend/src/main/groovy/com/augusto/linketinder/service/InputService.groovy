@@ -85,13 +85,13 @@ class InputService {
     }
 
     List<Competencia> getCompetenciasInput(List<Competencia> listaComp, int maxTentativas = MAX_TENTATIVAS_PADRAO) {
-        List<Competencia> tempList = []
+        List<Competencia> listCompetenciasSelecionadas = []
         int tentativasInvalidas = 0
 
         while (tentativasInvalidas < maxTentativas) {
             println()
             println("Competências selecionadas:")
-            tempList.each {println("- " + it.nome)}
+            listCompetenciasSelecionadas.each {println("- " + it.nome)}
             println()
             print("Digite uma competência para adicionar [0 para sair]: ")
 
@@ -106,8 +106,8 @@ class InputService {
 
             if (opcao > 0 && opcao <= listaComp.size()) {
                 Competencia comp = listaComp[opcao - 1]
-                if (!tempList.contains(comp)) {
-                    tempList.add(comp)
+                if (!listCompetenciasSelecionadas.contains(comp)) {
+                    listCompetenciasSelecionadas.add(comp)
                     tentativasInvalidas = 0 // Reset contador após sucesso
                 } else {
                     println("Competência já foi selecionada.")
@@ -123,7 +123,7 @@ class InputService {
             throw new RuntimeException("Máximo de tentativas excedido para competências")
         }
 
-        return tempList
+        return listCompetenciasSelecionadas
     }
 
     String getCpfInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
