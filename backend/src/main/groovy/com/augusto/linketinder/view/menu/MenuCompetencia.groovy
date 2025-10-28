@@ -22,7 +22,7 @@ class MenuCompetencia {
                 new UpdateView().showUpdateComp()
                 break
             case 4:
-                new DeleteView().showDeleteComp()
+                new DeleteView().showDeleteCompetencia()
                 break
             case 0:
                 break

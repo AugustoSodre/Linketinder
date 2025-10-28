@@ -10,6 +10,8 @@ import com.augusto.linketinder.model.pessoa.Empresa
 import com.augusto.linketinder.model.pessoa.Candidato
 import com.augusto.linketinder.service.InputService
 
+import java.sql.SQLException
+
 class DeleteController {
 
     private final DAO_Candidato candidatoDao = new DAO_Candidato()
@@ -18,28 +20,40 @@ class DeleteController {
     private final DAO_Competencia competenciaDao = new DAO_Competencia()
     private final InputService inputService = new InputService()
 
-    void delete(def objeto){
+    void deleteCandidato(){
         int id = inputService.getIntInput()
+        try{
+            candidatoDao.delete(id)
+        } catch (Exception e){
+            throw new SQLException("Error: " + e.message)
+        }
+    }
 
-        try {
-            if(objeto instanceof Candidato){
-                candidatoDao.delete(id)
+    void deleteEmpresa(){
+        int id = inputService.getIntInput()
+        try{
+            empresaDao.delete(id)
+        } catch (Exception e){
+            throw new SQLException("Error: " + e.message)
+        }
+    }
 
-            } else if(objeto instanceof Empresa){
-                empresaDao.delete(id)
+    void deleteVaga(){
+        int id = inputService.getIntInput()
+        try{
+            vagaDao.delete(id)
+        } catch (Exception e){
+            throw new SQLException("Error: " + e.message)
+        }
+    }
 
-            } else if(objeto instanceof Vaga){
-                vagaDao.delete(id)
-
-            } else if(objeto instanceof Competencia){
-                competenciaDao.removeAllRelationsFromCompetencia(id)
-                competenciaDao.delete(id)
-
-            }
-
-            println("Operação concluída.")
-        } catch (Exception e) {
-            println("Erro ao realizar exclusão: ${e.message}")
+    void deleteCompetencia(){
+        int id = inputService.getIntInput()
+        try{
+            competenciaDao.removeAllRelationsFromCompetencia(id)
+            competenciaDao.delete(id)
+        } catch (Exception e){
+            throw new SQLException("Error: " + e.message)
         }
     }
 

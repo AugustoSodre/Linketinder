@@ -1,10 +1,6 @@
 package com.augusto.linketinder.view.delete
 
 import com.augusto.linketinder.control.DeleteController
-import com.augusto.linketinder.model.Competencia
-import com.augusto.linketinder.model.Vaga
-import com.augusto.linketinder.model.pessoa.Candidato
-import com.augusto.linketinder.model.pessoa.Empresa
 
 class DeleteView {
 
@@ -12,27 +8,27 @@ class DeleteView {
         println "Deletar Candidato!"
         println()
         print("Digite o ID do Candidato: ")
-        new DeleteController().delete(new Candidato())
+        new DeleteController().deleteCandidato()
     }
 
     void showDeleteEmpresa(){
         println "Deletar Empresa!"
         println()
         print("Digite o ID da Empresa: ")
-        new DeleteController().delete(new Empresa())
+        new DeleteController().deleteEmpresa()
     }
 
     void showDeleteVaga(){
         println "Deletar Empresa!"
         println()
         print("Digite o ID da Vaga: ")
-        new DeleteController().delete(new Vaga())
+        new DeleteController().deleteVaga()
     }
 
-    void showDeleteComp(){
+    void showDeleteCompetencia(){
         println "Deletar Competência!"
         println()
         print("Digite o ID da Competência: ")
-        new DeleteController().delete(new Competencia())
+        new DeleteController().deleteCompetencia()
     }
 }
