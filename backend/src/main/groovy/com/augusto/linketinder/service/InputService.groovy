@@ -5,6 +5,7 @@ import com.augusto.linketinder.model.Competencia
 class InputService {
 
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
+    private ValidateService validateService = new ValidateService()
     private static final int MAX_TENTATIVAS_PADRAO = 5
 
     void setBr(BufferedReader bufferedReader) {
@@ -30,7 +31,6 @@ class InputService {
         throw new RuntimeException("Máximo de tentativas excedido para input de string")
     }
 
-    //Nome nao checado
     String getNomeInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
         return getStringInput(maxTentativas)
     }
@@ -41,10 +41,9 @@ class InputService {
 
         while(tentativas < maxTentativas){
             email = getStringInput()
-            if (email ==~ /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/){
+            if (validateService.isEmailValid(email)){
                 return email
             } else{
-                println "Email inválido! Tente novamente"
                 tentativas++
             }
         }
@@ -115,7 +114,6 @@ class InputService {
         throw new RuntimeException("Máximo de tentativas excedido para CEP")
     }
 
-    //Descricao nao checada
     String getDescricaoInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
         return getStringInput(maxTentativas)
     }
@@ -194,7 +192,6 @@ class InputService {
         throw new RuntimeException("Máximo de tentativas excedido para CNPJ")
     }
 
-    //Pais nao checado
     String getPaisInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
         return getStringInput(maxTentativas)
     }
@@ -213,20 +210,11 @@ class InputService {
     }
 
     int getIdadeInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        int tentativas = 0
-        while (tentativas < maxTentativas){
-            try{
-                return Integer.parseInt(br.readLine())
-            } catch (Exception ignored){
-                println("Input inválido")
-                tentativas++
-            }
-        }
-        throw new RuntimeException("Máximo de tentativas excedido para idade")
+        return getIntInput(maxTentativas)
     }
 
     String getSenhaInput(int maxTentativas = MAX_TENTATIVAS_PADRAO) {
-        return getStringInput();
+        return getStringInput(maxTentativas)
     }
 
 }
