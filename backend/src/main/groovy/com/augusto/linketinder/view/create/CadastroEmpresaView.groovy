@@ -54,17 +54,21 @@ class CadastroEmpresaView {
 
         println()
         println("Competências disponíveis:")
-        int cont = 1
         List<Competencia> listaComp = competenciaDao.listAll()
-        for(c in listaComp){
-            println("${cont} " + c.nome)
-            cont++
-        }
+        printCompetencia(listaComp)
         pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
         print("Digite a senha da Empresa: ")
         pessoa.senha = inputService.getSenhaInput()
 
         return pessoa
+    }
+
+    void printCompetencia(List<Competencia> listaComp){
+        int cont = 1
+        for(c in listaComp){
+            println("${cont} " + c.nome)
+            cont++
+        }
     }
 }

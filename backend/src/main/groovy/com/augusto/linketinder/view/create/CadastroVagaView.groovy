@@ -48,14 +48,19 @@ class CadastroVagaView {
 
         println()
         println("Competências disponíveis:")
-        int cont = 1
+
         List<Competencia> listaComp = competenciaDao.listAll()
+        printCompetencia(listaComp)
+        vaga.competencias = inputService.getCompetenciasInput(listaComp)
+
+        return vaga
+    }
+
+    void printCompetencia(List<Competencia> listaComp){
+        int cont = 1
         for(c in listaComp){
             println("${cont} " + c.nome)
             cont++
         }
-        vaga.competencias = inputService.getCompetenciasInput(listaComp)
-
-        return vaga
     }
 }
