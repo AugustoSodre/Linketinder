@@ -27,7 +27,6 @@ class InputServiceTest {
         inputService.setBr(new BufferedReader(new StringReader(input)));
     }
 
-    // --- Testes para getStringInput()
     @Test
     void testEmptyGetStringInput() {
         mockBufferedReader(("o\n").repeat(6));
@@ -53,7 +52,6 @@ class InputServiceTest {
         assertEquals(input, result);
     }
 
-    // --- Testes para getNomeInput()
     @ParameterizedTest
     @ValueSource(strings = {
             "Augusto",
@@ -70,7 +68,6 @@ class InputServiceTest {
         assertEquals(input.trim(), result);
     }
 
-    // --- Testes para getEmailInput()
     @Test
     void testValidGetEmailInput() {
         mockBufferedReader("jose@hotmail.com\n");
@@ -78,7 +75,6 @@ class InputServiceTest {
         assertEquals("jose@hotmail.com", result);
     }
 
-    // --- Testes para getEstadoInput()
     @ParameterizedTest
     @ValueSource(strings = {"AC", "ba", "dF", "Sp"})
     void testValidGetEstadoInput(String input) {
@@ -93,7 +89,6 @@ class InputServiceTest {
         assertThrows(RuntimeException.class, () -> inputService.getEstadoInput());
     }
 
-    // --- Testes para getCepInput()
     @ParameterizedTest
     @ValueSource(strings = {"77777-777", "12345678"})
     void testValidGetCepInput(String input) {
@@ -108,7 +103,6 @@ class InputServiceTest {
         assertThrows(RuntimeException.class, () -> inputService.getCepInput());
     }
 
-    // --- Testes para getDescricaoInput()
     @ParameterizedTest
     @ValueSource(strings = {"Estudante", "Grande Estudante"})
     void testValidGetDescricaoInput(String input) {
@@ -117,7 +111,6 @@ class InputServiceTest {
         assertEquals(input.trim(), result);
     }
 
-    // --- Testes para getCompetenciasInput()
     @Test
     void testGetCompetenciasInputWithValidSelections() {
         List<Competencia> competencias = Arrays.asList(
@@ -176,7 +169,6 @@ class InputServiceTest {
         assertThrows(RuntimeException.class, () -> inputService.getCompetenciasInput(competencias));
     }
 
-    // --- Testes para getCpfInput()
     @ParameterizedTest
     @ValueSource(strings = {"123.456.789-10", "00011122233"})
     void testValidGetCpfInput(String input) {
@@ -191,7 +183,6 @@ class InputServiceTest {
         assertThrows(RuntimeException.class, () -> inputService.getCpfInput());
     }
 
-    // --- Testes para getCnpjInput()
     @ParameterizedTest
     @ValueSource(strings = {"12345678912345", "66.872.236/0001-26"})
     void testValidGetCnpjInput(String input) {
@@ -206,7 +197,6 @@ class InputServiceTest {
         assertThrows(RuntimeException.class, () -> inputService.getCnpjInput());
     }
 
-    // --- Testes para getPaisInput()
     @ParameterizedTest
     @ValueSource(strings = {"Brasil", "BR"})
     void testGetPaisInput(String input) {
@@ -215,7 +205,6 @@ class InputServiceTest {
         assertEquals(input.trim(), result);
     }
 
-    // --- Testes para inputs de números inteiros
     @Test
     void testGetIntInput() {
         mockBufferedReader("notanumber\n42\n");

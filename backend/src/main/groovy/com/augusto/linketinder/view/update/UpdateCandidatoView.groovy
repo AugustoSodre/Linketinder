@@ -1,8 +1,18 @@
 package com.augusto.linketinder.view.update
 
+import com.augusto.linketinder.control.UpdateController
 import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.service.InputService
 
 class UpdateCandidatoView extends BaseUpdateView {
+
+    UpdateCandidatoView() {
+        super()
+    }
+
+    UpdateCandidatoView(UpdateController updateController, InputService inputService) {
+        super(updateController, inputService)
+    }
 
     void show() {
         println 'Atualização de Candidato'

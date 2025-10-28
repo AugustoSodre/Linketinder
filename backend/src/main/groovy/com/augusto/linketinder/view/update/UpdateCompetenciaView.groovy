@@ -1,8 +1,18 @@
 package com.augusto.linketinder.view.update
 
+import com.augusto.linketinder.control.UpdateController
 import com.augusto.linketinder.model.Competencia
+import com.augusto.linketinder.service.InputService
 
 class UpdateCompetenciaView extends BaseUpdateView {
+
+    UpdateCompetenciaView() {
+        super()
+    }
+
+    UpdateCompetenciaView(UpdateController updateController, InputService inputService) {
+        super(updateController, inputService)
+    }
 
     void show() {
         println 'Atualização de Competência'

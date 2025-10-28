@@ -11,10 +11,10 @@ class UpdateView {
         this(new UpdateCandidatoView(), new UpdateEmpresaView(), new UpdateVagaView(), new UpdateCompetenciaView())
     }
 
-    private UpdateView(UpdateCandidatoView candidatoView,
-                       UpdateEmpresaView empresaView,
-                       UpdateVagaView vagaView,
-                       UpdateCompetenciaView competenciaView) {
+    UpdateView(UpdateCandidatoView candidatoView,
+               UpdateEmpresaView empresaView,
+               UpdateVagaView vagaView,
+               UpdateCompetenciaView competenciaView) {
         this.candidatoView = candidatoView
         this.empresaView = empresaView
         this.vagaView = vagaView
