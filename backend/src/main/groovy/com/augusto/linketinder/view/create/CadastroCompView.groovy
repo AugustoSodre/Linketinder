@@ -12,12 +12,8 @@ class CadastroCompView {
         println "Cadastro da Competência"
         println()
 
-        Competencia comp = new Competencia()
+        Competencia comp = createCompetencia()
 
-        print("Digite o nome da Competência: ")
-        comp.nome = inputService.getNomeInput()
-
-        // Adiciona pessoa ao final do processo
         try {
             competenciaDao.insert(comp)
             println()
@@ -26,6 +22,14 @@ class CadastroCompView {
             println("Erro ao adicionar Competência! " + err.message)
         }
 
+    }
 
+    Competencia createCompetencia(){
+        Competencia comp = new Competencia()
+
+        print("Digite o nome da Competência: ")
+        comp.nome = inputService.getNomeInput()
+
+        return comp
     }
 }

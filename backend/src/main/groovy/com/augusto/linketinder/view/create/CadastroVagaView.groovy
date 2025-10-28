@@ -16,6 +16,19 @@ class CadastroVagaView {
         println "Cadastro da Vaga"
         println()
 
+        Vaga vaga = createVaga()
+
+        try {
+            vagaDao.insert(vaga)
+            println()
+            println("Vaga adicionada com sucesso!")
+        } catch (Exception err){
+            println("Erro ao adicionar vaga! " + err.message)
+        }
+
+    }
+
+    Vaga createVaga(){
         Vaga vaga = new Vaga()
 
         print("Digite o ID da Empresa: ")
@@ -43,14 +56,6 @@ class CadastroVagaView {
         }
         vaga.competencias = inputService.getCompetenciasInput(listaComp)
 
-        // Adiciona pessoa ao final do processo
-        try {
-            vagaDao.insert(vaga)
-            println()
-            println("Vaga adicionada com sucesso!")
-        } catch (Exception err){
-            println("Erro ao adicionar vaga! " + err.message)
-        }
-
+        return vaga
     }
 }

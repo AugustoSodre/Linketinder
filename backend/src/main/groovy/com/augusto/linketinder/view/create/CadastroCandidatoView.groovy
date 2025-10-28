@@ -2,6 +2,7 @@ package com.augusto.linketinder.view.create
 
 import com.augusto.linketinder.DAO.DAO_Candidato
 import com.augusto.linketinder.DAO.DAO_Competencia
+import com.augusto.linketinder.model.pessoa.Pessoa
 import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Candidato
@@ -16,6 +17,18 @@ class CadastroCandidatoView {
         println "Cadastro do Candidato"
         println()
 
+        Candidato candidato = createCandidato()
+
+        try {
+            candidatoDao.insert(candidato)
+            println()
+            println("Candidato adicionado com sucesso!")
+        } catch (Exception e){
+            println("Erro ao adicionar candidato! " + e.message)
+        }
+    }
+
+    Candidato createCandidato(){
         Candidato pessoa = new Candidato()
 
         print("Digite o Nome do Candidato: ")
@@ -52,13 +65,6 @@ class CadastroCandidatoView {
         print("Digite a senha do Candidato: ")
         pessoa.senha = inputService.getSenhaInput()
 
-        //Adiciona pessoa ao final do processo
-        try {
-            candidatoDao.insert(pessoa)
-            println()
-            println("Candidato adicionado com sucesso!")
-        } catch (Exception e){
-            println("Erro ao adicionar candidato!")
-        }
+        return pessoa
     }
 }

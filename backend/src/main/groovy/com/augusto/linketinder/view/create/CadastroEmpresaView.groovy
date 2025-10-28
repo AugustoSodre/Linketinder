@@ -16,6 +16,19 @@ class CadastroEmpresaView {
         println "Cadastro da Pessoa Jurídica"
         println()
 
+        Empresa empresa = createEmpresa()
+
+        try {
+            empresaDao.insert(empresa)
+            println()
+            println("Empresa adicionada com sucesso!")
+        } catch (Exception err){
+            println("Erro ao adicionar empresa! " + err.message)
+        }
+
+    }
+
+    Empresa createEmpresa(){
         Empresa pessoa = new Empresa()
 
         print("Digite o Nome da Empresa: ")
@@ -49,17 +62,9 @@ class CadastroEmpresaView {
         }
         pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
-        print("Digite a senha do Candidato: ")
+        print("Digite a senha da Empresa: ")
         pessoa.senha = inputService.getSenhaInput()
 
-        // Adiciona pessoa ao final do processo
-        try {
-            empresaDao.insert(pessoa)
-            println()
-            println("Empresa adicionada com sucesso!")
-        } catch (Exception err){
-            println("Erro ao adicionar empresa! " + err.message)
-        }
-
+        return pessoa
     }
 }
