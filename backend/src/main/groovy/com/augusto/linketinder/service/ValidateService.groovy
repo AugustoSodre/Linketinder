@@ -71,7 +71,11 @@ class ValidateService {
     }
 
     boolean isCNPJValid(String cnpj) {
+        if (cnpj ==~ /^\d{2}(\.?\d{3}){2}\/?\d{4}-?\d{2}$|^\d{14}$/) {
+            return true
+        }
 
+        return false
     }
 
     boolean isPaisValid(String pais) {

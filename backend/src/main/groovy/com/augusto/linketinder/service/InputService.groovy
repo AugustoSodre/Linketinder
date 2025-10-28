@@ -132,10 +132,9 @@ class InputService {
 
         while(tentativas < maxTentativas){
             cpf = getStringInput()
-            if (cpf ==~ /^\d{3}(\.\d{3}){2}-\d{2}$|^\d{11}$/){
+            if (validateService.isCPFValid(cpf)){
                 return cpf
             } else{
-                println "CPF inválido! Tente novamente"
                 tentativas++
             }
         }

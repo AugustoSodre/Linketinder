@@ -61,6 +61,17 @@ class ValidateServiceTest {
 
     @Test
     void isCNPJValid() {
+        assertFalse(validateService.isCNPJValid(""));
+        assertFalse(validateService.isCNPJValid("123"));
+        assertFalse(validateService.isCNPJValid("abc"));
+        assertFalse(validateService.isCNPJValid("abc123"));
+        assertTrue(validateService.isCNPJValid("85918854000104"));
+        assertTrue(validateService.isCNPJValid("85.918.854/0001-04"));
+        assertTrue(validateService.isCNPJValid("85918.854/0001-04"));
+        assertTrue(validateService.isCNPJValid("85.918854/0001-04"));
+        assertTrue(validateService.isCNPJValid("85.918.8540001-04"));
+        assertTrue(validateService.isCNPJValid("85.918.854/000104"));
+
     }
 
     @Test
