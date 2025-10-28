@@ -35,13 +35,13 @@ class MenuEmpresa {
     void printOptions(){
         println()
         println("-" * 25)
-        println "Empregadores"
+        println "Empresa"
         println()
         println "Opções:"
-        println "1. Cadastrar Empregador"
-        println "2. Mostrar Empregadores"
-        println "3. Alterar Empregador"
-        println "4. Deletar Empregador"
+        println "1. Cadastrar Empresa"
+        println "2. Mostrar Empresas"
+        println "3. Alterar Empresa"
+        println "4. Deletar Empresa"
         println "0. Sair"
         println()
         println("-" * 25)
