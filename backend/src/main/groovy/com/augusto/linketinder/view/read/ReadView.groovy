@@ -40,7 +40,7 @@ class ReadView {
         }
     }
 
-    void showComp(){
+    void showCompetencia(){
         for (Competencia comp in competenciaDao.listAll()){
             println()
             println(comp.toString())

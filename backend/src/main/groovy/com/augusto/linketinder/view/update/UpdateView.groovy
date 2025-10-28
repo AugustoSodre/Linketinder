@@ -33,7 +33,7 @@ class UpdateView {
         vagaView.show()
     }
 
-    void showUpdateComp() {
+    void showUpdateCompetencia() {
         competenciaView.show()
     }
 }

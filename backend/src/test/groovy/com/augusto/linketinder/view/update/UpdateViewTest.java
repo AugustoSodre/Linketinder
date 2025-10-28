@@ -59,9 +59,9 @@ class UpdateViewTest {
     }
 
     @Test
-    void showUpdateCompShouldDelegateToCompetenciaView() {
+    void showUpdateCompetenciaShouldDelegateToCompetenciaView() {
         // Act
-        updateView.showUpdateComp();
+        updateView.showUpdateCompetencia();
 
         // Assert
         assertEquals(0, candidatoView.invocations);

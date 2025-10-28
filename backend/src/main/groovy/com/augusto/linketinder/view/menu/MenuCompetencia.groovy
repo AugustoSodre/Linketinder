@@ -16,10 +16,10 @@ class MenuCompetencia {
                 new CadastroCompView().show()
                 break
             case 2:
-                new ReadView().showComp()
+                new ReadView().showCompetencia()
                 break
             case 3:
-                new UpdateView().showUpdateComp()
+                new UpdateView().showUpdateCompetencia()
                 break
             case 4:
                 new DeleteView().showDeleteCompetencia()
