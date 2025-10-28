@@ -25,13 +25,21 @@ class ValidateServiceTest {
     void isEstadoValid() {
         assertFalse(validateService.isEstadoValid(""));
         assertFalse(validateService.isEstadoValid("@"));
+        assertFalse(validateService.isEstadoValid("XX"));
+        assertFalse(validateService.isEstadoValid("bA"));
+        assertFalse(validateService.isEstadoValid("Ro"));
+        assertFalse(validateService.isEstadoValid("am"));
         assertTrue(validateService.isEstadoValid("DF"));
-        assertTrue(validateService.isEstadoValid("bA"));
-        assertTrue(validateService.isEstadoValid("Ro"));
     }
 
     @Test
     void isCEPValid() {
+        assertFalse(validateService.isCEPValid(""));
+        assertFalse(validateService.isCEPValid("123"));
+        assertFalse(validateService.isCEPValid("abc"));
+        assertFalse(validateService.isCEPValid("abc123"));
+        assertTrue(validateService.isCEPValid("70670444"));
+        assertTrue(validateService.isCEPValid("70670-444"));
     }
 
     @Test

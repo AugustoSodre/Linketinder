@@ -51,50 +51,17 @@ class InputService {
     }
 
     String getEstadoInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        def estados = [
-                "AC",
-                "AL",
-                "AP",
-                "AM",
-                "BA",
-                "CE",
-                "DF",
-                "ES",
-                "GO",
-                "MA",
-                "MT",
-                "MS",
-                "MG",
-                "PA",
-                "PB",
-                "PR",
-                "PE",
-                "PI",
-                "RJ",
-                "RN",
-                "RS",
-                "RO",
-                "RR",
-                "SC",
-                "SP",
-                "SE",
-                "TO"
-        ]
-
         String estado
         int tentativas = 0
 
         while(tentativas < maxTentativas){
             estado = getStringInput().toUpperCase()
-
-            if(estado in estados){
+            if(validateService.isEstadoValid(estado)){
                 return estado
             } else{
-                println("Input inválido!")
                 tentativas++
             }
         }
-
         throw new RuntimeException("Máximo de tentativas excedido para estado")
     }
 
@@ -104,10 +71,9 @@ class InputService {
 
         while(tentativas < maxTentativas){
             cep = getStringInput()
-            if (cep ==~ /^\d{5}-?\d{3}$/){
+            if (validateService.isCEPValid(cep)){
                 return cep
             } else{
-                println "CEP inválido! Tente novamente"
                 tentativas++
             }
         }
