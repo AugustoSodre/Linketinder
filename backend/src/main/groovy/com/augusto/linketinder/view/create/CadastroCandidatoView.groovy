@@ -6,6 +6,7 @@ import com.augusto.linketinder.model.pessoa.Pessoa
 import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.view.helper.ViewHelper
 
 class CadastroCandidatoView {
 
@@ -54,22 +55,13 @@ class CadastroCandidatoView {
 
         println()
         println("Competências disponíveis:")
-
         List<Competencia> listaComp = competenciaDao.listAll()
-        printCompetencia(listaComp)
+        new ViewHelper().printAllAvailableCompetencias(listaComp)
         pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
         print("Digite a senha do Candidato: ")
         pessoa.senha = inputService.getSenhaInput()
 
         return pessoa
-    }
-
-    void printCompetencia(List<Competencia> listaComp){
-        int cont = 1
-        for(c in listaComp){
-            println("${cont} " + c.nome)
-            cont++
-        }
     }
 }

@@ -5,6 +5,7 @@ import com.augusto.linketinder.DAO.DAO_Empresa
 import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Empresa
+import com.augusto.linketinder.view.helper.ViewHelper
 
 class CadastroEmpresaView {
 
@@ -55,20 +56,12 @@ class CadastroEmpresaView {
         println()
         println("Competências disponíveis:")
         List<Competencia> listaComp = competenciaDao.listAll()
-        printCompetencia(listaComp)
+        new ViewHelper().printAllAvailableCompetencias(listaComp)
         pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
         print("Digite a senha da Empresa: ")
         pessoa.senha = inputService.getSenhaInput()
 
         return pessoa
-    }
-
-    void printCompetencia(List<Competencia> listaComp){
-        int cont = 1
-        for(c in listaComp){
-            println("${cont} " + c.nome)
-            cont++
-        }
     }
 }
