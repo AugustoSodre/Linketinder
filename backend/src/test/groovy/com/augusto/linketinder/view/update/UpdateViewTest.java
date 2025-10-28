@@ -74,7 +74,7 @@ class UpdateViewTest {
         int invocations = 0;
 
         @Override
-        void show() {
+        public void show() {
             invocations++;
         }
     }
@@ -83,7 +83,7 @@ class UpdateViewTest {
         int invocations = 0;
 
         @Override
-        void show() {
+        public void show() {
             invocations++;
         }
     }
@@ -92,7 +92,7 @@ class UpdateViewTest {
         int invocations = 0;
 
         @Override
-        void show() {
+        public void show() {
             invocations++;
         }
     }
@@ -101,7 +101,7 @@ class UpdateViewTest {
         int invocations = 0;
 
         @Override
-        void show() {
+        public void show() {
             invocations++;
         }
     }

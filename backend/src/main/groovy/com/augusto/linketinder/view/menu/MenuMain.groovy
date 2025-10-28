@@ -1,28 +1,13 @@
 package com.augusto.linketinder.view.menu
 
-
 import com.augusto.linketinder.service.InputService
-
 
 class MenuMain {
 
     boolean showMainMenu(){
-        limpaTela()
-        println()
-        println("-" * 25)
-        println "Linketinder!"
-        println()
-        println "Opções:"
-        println "1. Gerenciar Empresas"
-        println "2. Gerenciar Candidatos"
-        println "3. Gerenciar Vagas"
-        println "4. Gerenciar Competências"
-        println "0. Sair"
-        println()
-        println("-" * 25)
-
-
-        switch (new InputService().getIntInput()){
+        printOptions()
+        int option = new InputService().getIntInput()
+        switch (option){
             case 1:
                 limpaTela()
                 new MenuEmpresa().showMenuEmpresa()
@@ -46,6 +31,22 @@ class MenuMain {
         }
 
         return false
+    }
+
+    void printOptions(){
+        limpaTela()
+        println()
+        println("-" * 25)
+        println "Linketinder!"
+        println()
+        println "Opções:"
+        println "1. Gerenciar Empresas"
+        println "2. Gerenciar Candidatos"
+        println "3. Gerenciar Vagas"
+        println "4. Gerenciar Competências"
+        println "0. Sair"
+        println()
+        println("-" * 25)
     }
 
     void limpaTela(){

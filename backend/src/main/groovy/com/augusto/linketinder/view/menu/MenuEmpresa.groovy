@@ -1,6 +1,5 @@
 package com.augusto.linketinder.view.menu
 
-
 import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.view.create.CadastroEmpresaView
 import com.augusto.linketinder.view.delete.DeleteView
@@ -11,20 +10,7 @@ import com.augusto.linketinder.view.update.UpdateView
 class MenuEmpresa {
 
     void showMenuEmpresa(){
-        println()
-        println("-" * 25)
-        println "Empregadores"
-        println()
-        println "Opções:"
-        println "1. Cadastrar Empregador"
-        println "2. Mostrar Empregadores"
-        println "3. Alterar Empregador"
-        println "4. Deletar Empregador"
-        println "0. Sair"
-        println()
-        println("-" * 25)
-
-        //Chamar Controller para input
+        printOptions()
         switch(new InputService().getIntInput()){
             case 1:
                 new CadastroEmpresaView().show()
@@ -44,5 +30,20 @@ class MenuEmpresa {
                 println "Input inválido"
         }
 
+    }
+
+    void printOptions(){
+        println()
+        println("-" * 25)
+        println "Empregadores"
+        println()
+        println "Opções:"
+        println "1. Cadastrar Empregador"
+        println "2. Mostrar Empregadores"
+        println "3. Alterar Empregador"
+        println "4. Deletar Empregador"
+        println "0. Sair"
+        println()
+        println("-" * 25)
     }
 }
