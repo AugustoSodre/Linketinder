@@ -1,7 +1,6 @@
-package com.augusto.linketinder.control;
+package com.augusto.linketinder.service;
 
 import com.augusto.linketinder.model.Competencia;
-import com.augusto.linketinder.service.InputService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,8 +28,8 @@ class InputServiceTest {
 
     @Test
     void testEmptyGetStringInput() {
-        mockBufferedReader(("o\n").repeat(6));
-        assertThrows(RuntimeException.class, () -> inputService.getEstadoInput());
+        mockBufferedReader("");
+        assertThrows(Exception.class, () -> inputService.getStringInput());
     }
 
     @ParameterizedTest
@@ -45,7 +44,7 @@ class InputServiceTest {
             "?",
             "{"
     })
-    void testRegularGetStringInput(String input) {
+    void testValidGetStringInput(String input) {
         mockBufferedReader(input + "\n");
         String result = inputService.getStringInput();
         assertFalse(result.isEmpty());
@@ -75,6 +74,15 @@ class InputServiceTest {
         assertEquals("jose@hotmail.com", result);
     }
 
+    @Test
+    void testInvalidThenValidGetEmailInput() {
+        String invalidEstado = "blabla";
+        String validEstado = "blabla@gmail.com";
+        String input = invalidEstado + "\n" + validEstado + "\n";
+        mockBufferedReader(input);
+        assertEquals(validEstado, inputService.getEmailInput());
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"AC", "ba", "dF", "Sp"})
     void testValidGetEstadoInput(String input) {
@@ -84,9 +92,12 @@ class InputServiceTest {
     }
 
     @Test
-    void testInvalidGetEstadoInput() {
-        mockBufferedReader(("o\n").repeat(6));
-        assertThrows(RuntimeException.class, () -> inputService.getEstadoInput());
+    void testInvalidThenValidGetEstadoInput() {
+        String invalidEstado = "PL";
+        String validEstado = "BA";
+        String input = invalidEstado + "\n" + validEstado + "\n";
+        mockBufferedReader(input);
+        assertEquals(validEstado, inputService.getEstadoInput());
     }
 
     @ParameterizedTest
@@ -98,9 +109,12 @@ class InputServiceTest {
     }
 
     @Test
-    void testInvalidGetCepInput() {
-        mockBufferedReader(("o\n").repeat(6));
-        assertThrows(RuntimeException.class, () -> inputService.getCepInput());
+    void testInvalidThenValidGetCepInput() {
+        String invalidCEP = "123";
+        String validCEP = "66666-444";
+        String input = invalidCEP + "\n" + validCEP + "\n";
+        mockBufferedReader(input);
+        assertEquals(validCEP, inputService.getCepInput());
     }
 
     @ParameterizedTest
@@ -178,9 +192,12 @@ class InputServiceTest {
     }
 
     @Test
-    void testInvalidGetCpfInput() {
-        mockBufferedReader(("o\n").repeat(6));
-        assertThrows(RuntimeException.class, () -> inputService.getCpfInput());
+    void testInvalidThenValidGetCpfInput() {
+        String invalidCPF = "123";
+        String validCPF = "123.456.789-10";
+        String input = invalidCPF + "\n" + validCPF + "\n";
+        mockBufferedReader(input);
+        assertEquals(validCPF, inputService.getCpfInput());
     }
 
     @ParameterizedTest
@@ -192,9 +209,12 @@ class InputServiceTest {
     }
 
     @Test
-    void testInvalidGetCnpjInput() {
-        mockBufferedReader(("1234567.89/12345\n").repeat(6));
-        assertThrows(RuntimeException.class, () -> inputService.getCnpjInput());
+    void testInvalidThenValidGetCnpjInput() {
+        String invalidCNPJ = "1234567.89/12345";
+        String validCNPJ = "66.872.236/0001-26";
+        String input = invalidCNPJ + "\n" + validCNPJ + "\n";
+        mockBufferedReader(input);
+        assertEquals(validCNPJ, inputService.getCnpjInput());
     }
 
     @ParameterizedTest
@@ -206,10 +226,15 @@ class InputServiceTest {
     }
 
     @Test
-    void testGetIntInput() {
+    void testValidGetIntInput() {
+        mockBufferedReader("42\n");
+        assertEquals(42, inputService.getIntInput());
+    }
+
+    @Test
+    void testInvalidThenValidGetIntInput() {
         mockBufferedReader("notanumber\n42\n");
-        int result = inputService.getIntInput();
-        assertEquals(42, result);
+        assertThrows(Exception.class, () -> inputService.getIntInput());
     }
 
     @Test

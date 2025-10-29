@@ -76,9 +76,45 @@ class ValidateServiceTest {
 
     @Test
     void isPaisValid() {
+        assertFalse(validateService.isPaisValid(""));
+        assertFalse(validateService.isPaisValid("123"));
+        assertTrue(validateService.isPaisValid("Canada"));
+        assertTrue(validateService.isPaisValid("CA"));
     }
 
     @Test
     void isIdadeValid() {
+        assertFalse(validateService.isIdadeValid(-1));
+        assertFalse(validateService.isIdadeValid(123));
+        assertTrue(validateService.isIdadeValid(21));
+        assertTrue(validateService.isIdadeValid(32));
     }
+
+    @Test
+    void isNomeValid() {
+        assertFalse(validateService.isPaisValid(""));
+        assertTrue(validateService.isPaisValid("Babidi"));
+        assertTrue(validateService.isPaisValid("aLaN"));
+        assertTrue(validateService.isPaisValid("LAra"));
+    }
+
+    @Test
+    void isDescricaoValid() {
+        assertFalse(validateService.isPaisValid(""));
+        assertTrue(validateService.isPaisValid("Babidi"));
+        assertTrue(validateService.isPaisValid("aLaN"));
+        assertTrue(validateService.isPaisValid("LAra"));
+    }
+
+    @Test
+    void isSenhaValid() {
+        assertFalse(validateService.isPaisValid(""));
+        assertTrue(validateService.isPaisValid("Babidi"));
+        assertTrue(validateService.isPaisValid("aLaN"));
+        assertTrue(validateService.isPaisValid("LAra"));
+    }
+
+
+
+
 }

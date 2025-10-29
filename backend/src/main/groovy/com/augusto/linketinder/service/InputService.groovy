@@ -6,86 +6,181 @@ class InputService {
 
     private BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
     private ValidateService validateService = new ValidateService()
-    private static final int MAX_TENTATIVAS_PADRAO = 5
 
     void setBr(BufferedReader bufferedReader) {
         this.br = bufferedReader
     }
 
-    String getStringInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        int tentativas = 0
-        while (tentativas < maxTentativas){
+    String getStringInput(){
+        try{
+            String input = br.readLine()
+            if (input != null && !input.isEmpty()) {
+                return input.trim()
+            } else {
+                println("Input inválido\n")
+                print "Digite novamente: "
+            }
+        } catch (Exception exception){
+            throw exception
+        }
+
+        throw new RuntimeException("Número de tentativas alcançado! Tente novamente!")
+    }
+
+    int getIntInput(){
+        try{
+            return Integer.parseInt(br.readLine())
+        } catch (Exception ignored){
+            println("Input inválido")
+            print "Digite novamente: "
+        }
+
+        throw new RuntimeException("Máximo de tentativas excedido para input inteiro")
+    }
+
+    String getNomeInput(){
+        String nome = ""
+
+        while(!validateService.isNomeValid(nome)){
             try{
-                String input = br.readLine()
-                if (input != null && !input.isEmpty()) {
-                    return input.trim()
-                } else {
-                    println("Input inválido")
-                    tentativas++
-                }
-            } catch (Exception ignored){
-                println("Input inválido")
-                tentativas++
+                nome = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("Nome")
+                println e.message
             }
         }
-        throw new RuntimeException("Máximo de tentativas excedido para input de string")
+
+        return nome
     }
 
-    String getNomeInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        return getStringInput(maxTentativas)
-    }
+    String getDescricaoInput(){
+        String descricao = ""
 
-    String getEmailInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        String email
-        int tentativas = 0
-
-        while(tentativas < maxTentativas){
-            email = getStringInput()
-            if (validateService.isEmailValid(email)){
-                return email
-            } else{
-                tentativas++
+        while(!validateService.isDescricaoValid(descricao)){
+            try{
+                descricao = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("Descrição")
+                println e.message
             }
         }
-        throw new RuntimeException("Máximo de tentativas excedido para email")
+
+        return descricao
     }
 
-    String getEstadoInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        String estado
-        int tentativas = 0
+    String getPaisInput(){
+        String pais = ""
 
-        while(tentativas < maxTentativas){
-            estado = getStringInput().toUpperCase()
-            if(validateService.isEstadoValid(estado)){
-                return estado
-            } else{
-                tentativas++
+        while(!validateService.isPaisValid(pais)){
+            try{
+                pais = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("País")
+                println e.message
             }
         }
-        throw new RuntimeException("Máximo de tentativas excedido para estado")
+
+        return pais
     }
 
-    String getCepInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        String cep
-        int tentativas = 0
+    int getIdadeInput(){
+        return getIntInput()
+    }
 
-        while(tentativas < maxTentativas){
-            cep = getStringInput()
-            if (validateService.isCEPValid(cep)){
-                return cep
-            } else{
-                tentativas++
+    String getSenhaInput() {
+        String senha = ""
+
+        while(!validateService.isSenhaValid(senha)){
+            try{
+                senha = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("Senha")
+                println e.message
             }
         }
-        throw new RuntimeException("Máximo de tentativas excedido para CEP")
+
+        return senha
     }
 
-    String getDescricaoInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        return getStringInput(maxTentativas)
+    String getEmailInput(){
+        String email = ""
+
+        while(!validateService.isEmailValid(email)){
+            try{
+                email = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("Email")
+                println e.message
+            }
+        }
+
+        return email
     }
 
-    List<Competencia> getCompetenciasInput(List<Competencia> listaComp, int maxTentativas = MAX_TENTATIVAS_PADRAO) {
+    String getEstadoInput(){
+        String estado = ""
+
+        while(!validateService.isEstadoValid(estado)){
+            try{
+                estado = getStringInput()
+                estado = estado.toUpperCase()
+            } catch (Exception e){
+                printMensagemErro("Estado")
+                println e.message
+            }
+        }
+
+        return estado
+    }
+
+    String getCepInput(){
+        String cep = ""
+
+        while(!validateService.isCEPValid(cep)){
+            try{
+                cep = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("CEP")
+                println e.message
+            }
+        }
+
+        return cep
+    }
+
+    String getCpfInput(){
+        String cpf = ""
+
+        while(!validateService.isCPFValid(cpf)){
+            try{
+                cpf = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("CPF")
+                println e.message
+            }
+        }
+
+        return cpf
+    }
+
+    String getCnpjInput(){
+        String cnpj = ""
+
+        while(!validateService.isCNPJValid(cnpj)){
+            try{
+                cnpj = getStringInput()
+            } catch (Exception e){
+                printMensagemErro("CNPJ")
+                println e.message
+            }
+        }
+
+        return cnpj
+    }
+
+    List<Competencia> getCompetenciasInput(List<Competencia> listaComp) {
         List<Competencia> listCompetenciasSelecionadas = []
+        final int maxTentativas = 5
         int tentativasInvalidas = 0
 
         while (tentativasInvalidas < maxTentativas) {
@@ -97,7 +192,7 @@ class InputService {
 
             int opcao
             try {
-                opcao = getIntInput(maxTentativas - tentativasInvalidas)
+                opcao = getIntInput()
             } catch (RuntimeException e) {
                 throw new RuntimeException("Máximo de tentativas excedido para competências")
             }
@@ -126,60 +221,9 @@ class InputService {
         return listCompetenciasSelecionadas
     }
 
-    String getCpfInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        String cpf
-        int tentativas = 0
 
-        while(tentativas < maxTentativas){
-            cpf = getStringInput()
-            if (validateService.isCPFValid(cpf)){
-                return cpf
-            } else{
-                tentativas++
-            }
-        }
-        throw new RuntimeException("Máximo de tentativas excedido para CPF")
-    }
-
-    String getCnpjInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        String cnpj
-        int tentativas = 0
-
-        while(tentativas < maxTentativas){
-            cnpj = getStringInput()
-            if (cnpj ==~ /^\d{2}(\.\d{3}){2}\/\d{4}-\d{2}$|^\d{14}$/){
-                return cnpj
-            } else{
-                println "CNPJ inválido! Tente novamente"
-                tentativas++
-            }
-        }
-        throw new RuntimeException("Máximo de tentativas excedido para CNPJ")
-    }
-
-    String getPaisInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        return getStringInput(maxTentativas)
-    }
-
-    int getIntInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        int tentativas = 0
-        while (tentativas < maxTentativas){
-            try{
-                return Integer.parseInt(br.readLine())
-            } catch (Exception ignored){
-                println("Input inválido")
-                tentativas++
-            }
-        }
-        throw new RuntimeException("Máximo de tentativas excedido para input inteiro")
-    }
-
-    int getIdadeInput(int maxTentativas = MAX_TENTATIVAS_PADRAO){
-        return getIntInput(maxTentativas)
-    }
-
-    String getSenhaInput(int maxTentativas = MAX_TENTATIVAS_PADRAO) {
-        return getStringInput(maxTentativas)
+    void printMensagemErro(String objeto){
+        println "${objeto} inválido! Tente novamente"
     }
 
 }
