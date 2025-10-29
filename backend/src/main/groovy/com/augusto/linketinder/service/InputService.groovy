@@ -4,38 +4,27 @@ import com.augusto.linketinder.model.Competencia
 
 class InputService {
 
-    private BufferedReader br = new BufferedReader(new InputStreamReader(System.in))
-    private ValidateService validateService = new ValidateService()
+    private ValidateService validateService
+    private InputServiceCore inputServiceCore
+
+    InputService() {
+        this(new ValidateService(), new InputServiceCore())
+    }
+
+    InputService(ValidateService validateService) {
+        this(validateService, new InputServiceCore())
+    }
+
+    InputService(ValidateService validateService, InputServiceCore inputServiceCore){
+        this.validateService = validateService ?: new ValidateService()
+        this.inputServiceCore = inputServiceCore ?: new InputServiceCore()
+    }
 
     void setBr(BufferedReader bufferedReader) {
-        this.br = bufferedReader
-    }
-
-    String getStringInput(){
-        try{
-            String input = br.readLine()
-            if (input != null && !input.isEmpty()) {
-                return input.trim()
-            } else {
-                println("Input inválido\n")
-                print "Digite novamente: "
-            }
-        } catch (Exception exception){
-            throw exception
+        if (bufferedReader == null) {
+            throw new IllegalArgumentException("BufferedReader não pode ser nulo")
         }
-
-        throw new RuntimeException("Número de tentativas alcançado! Tente novamente!")
-    }
-
-    int getIntInput(){
-        try{
-            return Integer.parseInt(br.readLine())
-        } catch (Exception ignored){
-            println("Input inválido")
-            print "Digite novamente: "
-        }
-
-        throw new RuntimeException("Máximo de tentativas excedido para input inteiro")
+        this.inputServiceCore = new InputServiceCore(bufferedReader, validateService)
     }
 
     String getNomeInput(){
@@ -43,9 +32,9 @@ class InputService {
 
         while(!validateService.isNomeValid(nome)){
             try{
-                nome = getStringInput()
+                nome = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("Nome")
+                inputServiceCore.printMensagemErro("Nome")
                 println e.message
             }
         }
@@ -58,9 +47,9 @@ class InputService {
 
         while(!validateService.isDescricaoValid(descricao)){
             try{
-                descricao = getStringInput()
+                descricao = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("Descrição")
+                inputServiceCore.printMensagemErro("Descrição")
                 println e.message
             }
         }
@@ -73,9 +62,9 @@ class InputService {
 
         while(!validateService.isPaisValid(pais)){
             try{
-                pais = getStringInput()
+                pais = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("País")
+                inputServiceCore.printMensagemErro("País")
                 println e.message
             }
         }
@@ -83,8 +72,12 @@ class InputService {
         return pais
     }
 
+    int getIntInput() {
+        return inputServiceCore.getIntInput()
+    }
+
     int getIdadeInput(){
-        return getIntInput()
+        return inputServiceCore.getIntInput()
     }
 
     String getSenhaInput() {
@@ -92,9 +85,9 @@ class InputService {
 
         while(!validateService.isSenhaValid(senha)){
             try{
-                senha = getStringInput()
+                senha = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("Senha")
+                inputServiceCore.printMensagemErro("Senha")
                 println e.message
             }
         }
@@ -107,9 +100,9 @@ class InputService {
 
         while(!validateService.isEmailValid(email)){
             try{
-                email = getStringInput()
+                email = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("Email")
+                inputServiceCore.printMensagemErro("Email")
                 println e.message
             }
         }
@@ -122,10 +115,10 @@ class InputService {
 
         while(!validateService.isEstadoValid(estado)){
             try{
-                estado = getStringInput()
+                estado = inputServiceCore.getStringInput()
                 estado = estado.toUpperCase()
             } catch (Exception e){
-                printMensagemErro("Estado")
+                inputServiceCore.printMensagemErro("Estado")
                 println e.message
             }
         }
@@ -138,9 +131,9 @@ class InputService {
 
         while(!validateService.isCEPValid(cep)){
             try{
-                cep = getStringInput()
+                cep = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("CEP")
+                inputServiceCore.printMensagemErro("CEP")
                 println e.message
             }
         }
@@ -153,9 +146,9 @@ class InputService {
 
         while(!validateService.isCPFValid(cpf)){
             try{
-                cpf = getStringInput()
+                cpf = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("CPF")
+                inputServiceCore.printMensagemErro("CPF")
                 println e.message
             }
         }
@@ -168,9 +161,9 @@ class InputService {
 
         while(!validateService.isCNPJValid(cnpj)){
             try{
-                cnpj = getStringInput()
+                cnpj = inputServiceCore.getStringInput()
             } catch (Exception e){
-                printMensagemErro("CNPJ")
+                inputServiceCore.printMensagemErro("CNPJ")
                 println e.message
             }
         }
@@ -179,11 +172,13 @@ class InputService {
     }
 
     List<Competencia> getCompetenciasInput(List<Competencia> listaComp) {
-        List<Competencia> listCompetenciasSelecionadas = []
-        final int maxTentativas = 5
-        int tentativasInvalidas = 0
+        if (!validateService.isListCompetenciaValid(listaComp)) {
+            throw new IllegalArgumentException("Lista de competências inválida")
+        }
 
-        while (tentativasInvalidas < maxTentativas) {
+        List<Competencia> listCompetenciasSelecionadas = []
+
+        while (true) {
             println()
             println("Competências selecionadas:")
             listCompetenciasSelecionadas.each {println("- " + it.nome)}
@@ -192,38 +187,31 @@ class InputService {
 
             int opcao
             try {
-                opcao = getIntInput()
+                opcao = inputServiceCore.getIntInput()
             } catch (RuntimeException e) {
-                throw new RuntimeException("Máximo de tentativas excedido para competências")
+                println e.message
+                continue
             }
 
-            if (opcao == 0) break
+            if (opcao == 0) {
+                break
+            }
 
-            if (opcao > 0 && opcao <= listaComp.size()) {
-                Competencia comp = listaComp[opcao - 1]
-                if (!listCompetenciasSelecionadas.contains(comp)) {
-                    listCompetenciasSelecionadas.add(comp)
-                    tentativasInvalidas = 0 // Reset contador após sucesso
-                } else {
-                    println("Competência já foi selecionada.")
-                    tentativasInvalidas++
-                }
-            } else {
+            if (!validateService.isCompetenciaOpcaoValida(opcao, listaComp.size())) {
                 println("Opção inválida, tente novamente.")
-                tentativasInvalidas++
+                continue
             }
-        }
 
-        if (tentativasInvalidas >= maxTentativas) {
-            throw new RuntimeException("Máximo de tentativas excedido para competências")
+            Competencia comp = listaComp[opcao - 1]
+            if (!validateService.isCompetenciaSelecionavel(listCompetenciasSelecionadas, comp)) {
+                println("Competência já foi selecionada.")
+                continue
+            }
+
+            listCompetenciasSelecionadas.add(comp)
         }
 
         return listCompetenciasSelecionadas
-    }
-
-
-    void printMensagemErro(String objeto){
-        println "${objeto} inválido! Tente novamente"
     }
 
 }

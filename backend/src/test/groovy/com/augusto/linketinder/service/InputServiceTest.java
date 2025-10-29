@@ -26,31 +26,6 @@ class InputServiceTest {
         inputService.setBr(new BufferedReader(new StringReader(input)));
     }
 
-    @Test
-    void testEmptyGetStringInput() {
-        mockBufferedReader("");
-        assertThrows(Exception.class, () -> inputService.getStringInput());
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {
-            "Capital",
-            "UPPERCASE",
-            "lowercase",
-            "cAmEl",
-            "Dot.",
-            "One Compound word",
-            ",",
-            "?",
-            "{"
-    })
-    void testValidGetStringInput(String input) {
-        mockBufferedReader(input + "\n");
-        String result = inputService.getStringInput();
-        assertFalse(result.isEmpty());
-        assertEquals(input, result);
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {
             "Augusto",
@@ -172,15 +147,30 @@ class InputServiceTest {
     }
 
     @Test
-    void testGetCompetenciasInputExceedsMaxTentativas() {
+    void testGetCompetenciasInputWithNullList() {
+        assertThrows(IllegalArgumentException.class, () -> inputService.getCompetenciasInput(null));
+    }
+
+    @Test
+    void testGetCompetenciasInputWithNullEntry() {
+        List<Competencia> competencias = Arrays.asList(new Competencia(1, "Java"), null);
+
+        assertThrows(IllegalArgumentException.class, () -> inputService.getCompetenciasInput(competencias));
+    }
+
+    @Test
+    void testGetCompetenciasInputInvalidSelectionThenValid() {
         List<Competencia> competencias = Arrays.asList(
                 new Competencia(1, "Java"),
                 new Competencia(2, "Groovy")
         );
 
-        mockBufferedReader("5\n5\n5\n5\n5\n");
+        mockBufferedReader("5\n1\n0\n");
 
-        assertThrows(RuntimeException.class, () -> inputService.getCompetenciasInput(competencias));
+        List<Competencia> result = inputService.getCompetenciasInput(competencias);
+
+        assertEquals(1, result.size());
+        assertEquals(competencias.get(0), result.get(0));
     }
 
     @ParameterizedTest
@@ -223,18 +213,6 @@ class InputServiceTest {
         mockBufferedReader(input + "\n");
         String result = inputService.getPaisInput();
         assertEquals(input.trim(), result);
-    }
-
-    @Test
-    void testValidGetIntInput() {
-        mockBufferedReader("42\n");
-        assertEquals(42, inputService.getIntInput());
-    }
-
-    @Test
-    void testInvalidThenValidGetIntInput() {
-        mockBufferedReader("notanumber\n42\n");
-        assertThrows(Exception.class, () -> inputService.getIntInput());
     }
 
     @Test

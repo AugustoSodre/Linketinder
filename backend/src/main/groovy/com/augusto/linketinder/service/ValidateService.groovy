@@ -59,7 +59,23 @@ class ValidateService {
     }
 
     boolean isListCompetenciaValid(List<Competencia> competenciaList) {
+        if (competenciaList == null) {
+            return false
+        }
 
+        return competenciaList.every { it != null }
+    }
+
+    boolean isCompetenciaOpcaoValida(int opcao, int totalCompetencias) {
+        return opcao > 0 && opcao <= totalCompetencias
+    }
+
+    boolean isCompetenciaSelecionavel(List<Competencia> selecionadas, Competencia competencia) {
+        if (selecionadas == null || competencia == null) {
+            return false
+        }
+
+        return !selecionadas.contains(competencia)
     }
 
     boolean isCPFValid(String cpf) {

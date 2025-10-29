@@ -1,7 +1,11 @@
 package com.augusto.linketinder.service;
 
+import com.augusto.linketinder.model.Competencia;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,6 +48,29 @@ class ValidateServiceTest {
 
     @Test
     void isListCompetenciaValid() {
+        assertFalse(validateService.isListCompetenciaValid(null));
+        assertFalse(validateService.isListCompetenciaValid(Arrays.asList(new Competencia(1, "Java"), null)));
+        assertTrue(validateService.isListCompetenciaValid(Collections.emptyList()));
+        assertTrue(validateService.isListCompetenciaValid(Arrays.asList(new Competencia(1, "Java"), new Competencia(2, "Groovy"))));
+    }
+
+    @Test
+    void isCompetenciaOpcaoValida() {
+        assertFalse(validateService.isCompetenciaOpcaoValida(0, 3));
+        assertFalse(validateService.isCompetenciaOpcaoValida(4, 3));
+        assertTrue(validateService.isCompetenciaOpcaoValida(1, 3));
+        assertTrue(validateService.isCompetenciaOpcaoValida(3, 3));
+    }
+
+    @Test
+    void isCompetenciaSelecionavel() {
+        Competencia java = new Competencia(1, "Java");
+        Competencia groovy = new Competencia(2, "Groovy");
+
+        assertFalse(validateService.isCompetenciaSelecionavel(null, java));
+        assertFalse(validateService.isCompetenciaSelecionavel(Collections.singletonList(java), null));
+        assertFalse(validateService.isCompetenciaSelecionavel(Collections.singletonList(java), java));
+        assertTrue(validateService.isCompetenciaSelecionavel(Collections.singletonList(java), groovy));
     }
 
     @Test
