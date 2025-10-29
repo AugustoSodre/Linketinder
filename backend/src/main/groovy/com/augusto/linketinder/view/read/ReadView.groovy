@@ -11,10 +11,24 @@ import com.augusto.linketinder.model.pessoa.Empresa
 
 class ReadView {
 
-    private final DAO_Candidato candidatoDao = new DAO_Candidato()
-    private final DAO_Empresa empresaDao = new DAO_Empresa()
-    private final DAO_Vaga vagaDao = new DAO_Vaga()
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final DAO_Candidato candidatoDao
+    private final DAO_Empresa empresaDao
+    private final DAO_Vaga vagaDao
+    private final DAO_Competencia competenciaDao
+
+    ReadView() {
+        this(new DAO_Candidato(), new DAO_Empresa(), new DAO_Vaga(), new DAO_Competencia())
+    }
+
+    ReadView(DAO_Candidato candidatoDao,
+             DAO_Empresa empresaDao,
+             DAO_Vaga vagaDao,
+             DAO_Competencia competenciaDao) {
+        this.candidatoDao = candidatoDao
+        this.empresaDao = empresaDao
+        this.vagaDao = vagaDao
+        this.competenciaDao = competenciaDao
+    }
 
     void showCandidatos(){
         for (final Candidato p in candidatoDao.listAll()) {

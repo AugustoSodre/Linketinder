@@ -11,7 +11,11 @@ class BaseUpdateView {
     protected final UpdateController updateController
     protected final InputService inputService
 
-    BaseUpdateView(UpdateController updateController = new UpdateController(), InputService inputService = new InputService()) {
+    BaseUpdateView() {
+        this(new UpdateController(), new InputService())
+    }
+
+    BaseUpdateView(UpdateController updateController, InputService inputService) {
         this.updateController = updateController
         this.inputService = inputService
     }

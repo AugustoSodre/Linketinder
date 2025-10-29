@@ -52,13 +52,13 @@ class MenuMain {
         UpdateCompetenciaView updateCompetenciaView = new UpdateCompetenciaView(updateController, sharedInputService)
         UpdateView updateView = new UpdateView(updateCandidatoView, updateEmpresaView, updateVagaView, updateCompetenciaView)
 
-        ReadView readView = new ReadView()
+    ReadView readView = new ReadView(candidatoDao, empresaDao, vagaDao, competenciaDao)
 
-        this.inputService = sharedInputService
-        this.menuEmpresa = new MenuEmpresa(sharedInputService, cadastroEmpresaView, readView, updateView, deleteView)
-        this.menuCandidato = new MenuCandidato(sharedInputService, cadastroCandidatoView, readView, updateView, deleteView)
-        this.menuVaga = new MenuVaga(sharedInputService, cadastroVagaView, readView, updateView, deleteView)
-        this.menuCompetencia = new MenuCompetencia(sharedInputService, cadastroCompView, readView, updateView, deleteView)
+    this.inputService = sharedInputService
+    this.menuEmpresa = new MenuEmpresa(sharedInputService, cadastroEmpresaView, readView, updateView, deleteView)
+    this.menuCandidato = new MenuCandidato(sharedInputService, cadastroCandidatoView, readView, updateView, deleteView)
+    this.menuVaga = new MenuVaga(sharedInputService, cadastroVagaView, readView, updateView, deleteView)
+    this.menuCompetencia = new MenuCompetencia(sharedInputService, cadastroCompView, readView, updateView, deleteView)
     }
 
     MenuMain(InputService inputService,

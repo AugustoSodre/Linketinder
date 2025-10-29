@@ -1,5 +1,8 @@
 package com.augusto.linketinder.view.update
 
+import com.augusto.linketinder.control.UpdateController
+import com.augusto.linketinder.service.InputService
+
 class UpdateView {
 
     private final UpdateCandidatoView candidatoView
@@ -8,7 +11,7 @@ class UpdateView {
     private final UpdateCompetenciaView competenciaView
 
     UpdateView() {
-        this(new UpdateCandidatoView(), new UpdateEmpresaView(), new UpdateVagaView(), new UpdateCompetenciaView())
+        this(*createDefaultViews())
     }
 
     UpdateView(UpdateCandidatoView candidatoView,
@@ -35,5 +38,17 @@ class UpdateView {
 
     void showUpdateCompetencia() {
         competenciaView.show()
+    }
+
+    private static List createDefaultViews() {
+        UpdateController sharedController = new UpdateController()
+        InputService sharedInputService = new InputService()
+
+        return [
+                new UpdateCandidatoView(sharedController, sharedInputService),
+                new UpdateEmpresaView(sharedController, sharedInputService),
+                new UpdateVagaView(sharedController, sharedInputService),
+                new UpdateCompetenciaView(sharedController, sharedInputService)
+        ]
     }
 }
