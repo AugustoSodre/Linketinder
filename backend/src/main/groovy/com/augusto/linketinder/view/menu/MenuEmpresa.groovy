@@ -3,26 +3,47 @@ package com.augusto.linketinder.view.menu
 import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.view.create.CadastroEmpresaView
 import com.augusto.linketinder.view.delete.DeleteView
-
 import com.augusto.linketinder.view.read.ReadView
 import com.augusto.linketinder.view.update.UpdateView
 
 class MenuEmpresa {
 
+    private final InputService inputService
+    private final CadastroEmpresaView cadastroEmpresaView
+    private final ReadView readView
+    private final UpdateView updateView
+    private final DeleteView deleteView
+
+    MenuEmpresa() {
+        this(new InputService(), new CadastroEmpresaView(), new ReadView(), new UpdateView(), new DeleteView())
+    }
+
+    MenuEmpresa(InputService inputService,
+                CadastroEmpresaView cadastroEmpresaView,
+                ReadView readView,
+                UpdateView updateView,
+                DeleteView deleteView) {
+        this.inputService = inputService
+        this.cadastroEmpresaView = cadastroEmpresaView
+        this.readView = readView
+        this.updateView = updateView
+        this.deleteView = deleteView
+    }
+
     void showMenuEmpresa(){
         printOptions()
-        switch(new InputService().getIntInput()){
+        switch(inputService.getIntInput()){
             case 1:
-                new CadastroEmpresaView().show()
+                cadastroEmpresaView.show()
                 break
             case 2:
-                new ReadView().showEmpresas()
+                readView.showEmpresas()
                 break
             case 3:
-                new UpdateView().showUpdateEmpresa()
+                updateView.showUpdateEmpresa()
                 break
             case 4:
-                new DeleteView().showDeleteEmpresa()
+                deleteView.showDeleteEmpresa()
                 break
             case 0:
                 break

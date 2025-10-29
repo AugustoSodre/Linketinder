@@ -14,11 +14,27 @@ import java.sql.SQLException
 
 class DeleteController {
 
-    private final DAO_Candidato candidatoDao = new DAO_Candidato()
-    private final DAO_Empresa empresaDao = new DAO_Empresa()
-    private final DAO_Vaga vagaDao = new DAO_Vaga()
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
-    private final InputService inputService = new InputService()
+    private final DAO_Candidato candidatoDao
+    private final DAO_Empresa empresaDao
+    private final DAO_Vaga vagaDao
+    private final DAO_Competencia competenciaDao
+    private final InputService inputService
+
+    DeleteController() {
+        this(new DAO_Candidato(), new DAO_Empresa(), new DAO_Vaga(), new DAO_Competencia(), new InputService())
+    }
+
+    DeleteController(DAO_Candidato candidatoDao,
+                     DAO_Empresa empresaDao,
+                     DAO_Vaga vagaDao,
+                     DAO_Competencia competenciaDao,
+                     InputService inputService) {
+        this.candidatoDao = candidatoDao
+        this.empresaDao = empresaDao
+        this.vagaDao = vagaDao
+        this.competenciaDao = competenciaDao
+        this.inputService = inputService
+    }
 
     void deleteCandidato(){
         int id = inputService.getIntInput()

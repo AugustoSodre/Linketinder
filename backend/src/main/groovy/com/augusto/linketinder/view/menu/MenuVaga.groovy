@@ -8,21 +8,43 @@ import com.augusto.linketinder.view.update.UpdateView
 
 class MenuVaga {
 
+    private final InputService inputService
+    private final CadastroVagaView cadastroVagaView
+    private final ReadView readView
+    private final UpdateView updateView
+    private final DeleteView deleteView
+
+    MenuVaga() {
+        this(new InputService(), new CadastroVagaView(), new ReadView(), new UpdateView(), new DeleteView())
+    }
+
+    MenuVaga(InputService inputService,
+             CadastroVagaView cadastroVagaView,
+             ReadView readView,
+             UpdateView updateView,
+             DeleteView deleteView) {
+        this.inputService = inputService
+        this.cadastroVagaView = cadastroVagaView
+        this.readView = readView
+        this.updateView = updateView
+        this.deleteView = deleteView
+    }
+
     void showMenuVaga() {
         printOptions()
-        int option = new InputService().getIntInput()
+        int option = inputService.getIntInput()
         switch (option) {
             case 1:
-                new CadastroVagaView().show()
+                cadastroVagaView.show()
                 break
             case 2:
-                new ReadView().showVagas()
+                readView.showVagas()
                 break
             case 3:
-                new UpdateView().showUpdateVaga()
+                updateView.showUpdateVaga()
                 break
             case 4:
-                new DeleteView().showDeleteVaga()
+                deleteView.showDeleteVaga()
                 break
             case 0:
                 break

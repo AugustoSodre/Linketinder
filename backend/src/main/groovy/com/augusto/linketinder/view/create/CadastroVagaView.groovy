@@ -9,9 +9,24 @@ import com.augusto.linketinder.view.helper.ViewHelper
 
 class CadastroVagaView {
 
-    InputService inputService = new InputService()
-    private final DAO_Vaga vagaDao = new DAO_Vaga()
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final InputService inputService
+    private final DAO_Vaga vagaDao
+    private final DAO_Competencia competenciaDao
+    private final ViewHelper viewHelper
+
+    CadastroVagaView() {
+        this(new InputService(), new DAO_Vaga(), new DAO_Competencia(), new ViewHelper())
+    }
+
+    CadastroVagaView(InputService inputService,
+                     DAO_Vaga vagaDao,
+                     DAO_Competencia competenciaDao,
+                     ViewHelper viewHelper) {
+        this.inputService = inputService
+        this.vagaDao = vagaDao
+        this.competenciaDao = competenciaDao
+        this.viewHelper = viewHelper
+    }
 
     void show() {
         println "Cadastro da Vaga"
@@ -50,7 +65,7 @@ class CadastroVagaView {
         println()
         println("Competências disponíveis:")
         List<Competencia> listaComp = competenciaDao.listAll()
-        new ViewHelper().printAllAvailableCompetencias(listaComp)
+    viewHelper.printAllAvailableCompetencias(listaComp)
         vaga.competencias = inputService.getCompetenciasInput(listaComp)
 
         return vaga

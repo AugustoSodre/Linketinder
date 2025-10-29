@@ -8,21 +8,43 @@ import com.augusto.linketinder.view.update.UpdateView
 
 class MenuCompetencia {
 
+    private final InputService inputService
+    private final CadastroCompView cadastroCompView
+    private final ReadView readView
+    private final UpdateView updateView
+    private final DeleteView deleteView
+
+    MenuCompetencia() {
+        this(new InputService(), new CadastroCompView(), new ReadView(), new UpdateView(), new DeleteView())
+    }
+
+    MenuCompetencia(InputService inputService,
+                    CadastroCompView cadastroCompView,
+                    ReadView readView,
+                    UpdateView updateView,
+                    DeleteView deleteView) {
+        this.inputService = inputService
+        this.cadastroCompView = cadastroCompView
+        this.readView = readView
+        this.updateView = updateView
+        this.deleteView = deleteView
+    }
+
     void showMenuComp() {
         printOptions()
-        int option = new InputService().getIntInput()
+        int option = inputService.getIntInput()
         switch (option) {
             case 1:
-                new CadastroCompView().show()
+                cadastroCompView.show()
                 break
             case 2:
-                new ReadView().showCompetencia()
+                readView.showCompetencia()
                 break
             case 3:
-                new UpdateView().showUpdateCompetencia()
+                updateView.showUpdateCompetencia()
                 break
             case 4:
-                new DeleteView().showDeleteCompetencia()
+                deleteView.showDeleteCompetencia()
                 break
             case 0:
                 break

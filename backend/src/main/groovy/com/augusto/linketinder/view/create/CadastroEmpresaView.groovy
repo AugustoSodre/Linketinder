@@ -9,9 +9,24 @@ import com.augusto.linketinder.view.helper.ViewHelper
 
 class CadastroEmpresaView {
 
-    InputService inputService = new InputService()
-    private final DAO_Empresa empresaDao = new DAO_Empresa()
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final InputService inputService
+    private final DAO_Empresa empresaDao
+    private final DAO_Competencia competenciaDao
+    private final ViewHelper viewHelper
+
+    CadastroEmpresaView() {
+        this(new InputService(), new DAO_Empresa(), new DAO_Competencia(), new ViewHelper())
+    }
+
+    CadastroEmpresaView(InputService inputService,
+                         DAO_Empresa empresaDao,
+                         DAO_Competencia competenciaDao,
+                         ViewHelper viewHelper) {
+        this.inputService = inputService
+        this.empresaDao = empresaDao
+        this.competenciaDao = competenciaDao
+        this.viewHelper = viewHelper
+    }
 
     void show() {
         println "Cadastro da Pessoa Jurídica"
@@ -56,7 +71,7 @@ class CadastroEmpresaView {
         println()
         println("Competências disponíveis:")
         List<Competencia> listaComp = competenciaDao.listAll()
-        new ViewHelper().printAllAvailableCompetencias(listaComp)
+    viewHelper.printAllAvailableCompetencias(listaComp)
         pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
         print("Digite a senha da Empresa: ")

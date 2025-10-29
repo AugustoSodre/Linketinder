@@ -5,8 +5,18 @@ import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 
 class CadastroCompView {
-    InputService inputService = new InputService()
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+
+    private final InputService inputService
+    private final DAO_Competencia competenciaDao
+
+    CadastroCompView() {
+        this(new InputService(), new DAO_Competencia())
+    }
+
+    CadastroCompView(InputService inputService, DAO_Competencia competenciaDao) {
+        this.inputService = inputService
+        this.competenciaDao = competenciaDao
+    }
 
     void show() {
         println "Cadastro da Competência"

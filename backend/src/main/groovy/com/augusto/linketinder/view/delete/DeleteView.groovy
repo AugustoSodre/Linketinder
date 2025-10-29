@@ -4,31 +4,41 @@ import com.augusto.linketinder.control.DeleteController
 
 class DeleteView {
 
+    private final DeleteController deleteController
+
+    DeleteView() {
+        this(new DeleteController())
+    }
+
+    DeleteView(DeleteController deleteController) {
+        this.deleteController = deleteController
+    }
+
     void showDeleteCandidato(){
         println "Deletar Candidato!"
         println()
         print("Digite o ID do Candidato: ")
-        new DeleteController().deleteCandidato()
+        deleteController.deleteCandidato()
     }
 
     void showDeleteEmpresa(){
         println "Deletar Empresa!"
         println()
         print("Digite o ID da Empresa: ")
-        new DeleteController().deleteEmpresa()
+        deleteController.deleteEmpresa()
     }
 
     void showDeleteVaga(){
         println "Deletar Empresa!"
         println()
         print("Digite o ID da Vaga: ")
-        new DeleteController().deleteVaga()
+        deleteController.deleteVaga()
     }
 
     void showDeleteCompetencia(){
         println "Deletar Competência!"
         println()
         print("Digite o ID da Competência: ")
-        new DeleteController().deleteCompetencia()
+        deleteController.deleteCompetencia()
     }
 }

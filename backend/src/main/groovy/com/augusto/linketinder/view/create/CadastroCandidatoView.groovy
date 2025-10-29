@@ -10,9 +10,24 @@ import com.augusto.linketinder.view.helper.ViewHelper
 
 class CadastroCandidatoView {
 
-    InputService inputService = new InputService()
-    private final DAO_Candidato candidatoDao = new DAO_Candidato()
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final InputService inputService
+    private final DAO_Candidato candidatoDao
+    private final DAO_Competencia competenciaDao
+    private final ViewHelper viewHelper
+
+    CadastroCandidatoView() {
+        this(new InputService(), new DAO_Candidato(), new DAO_Competencia(), new ViewHelper())
+    }
+
+    CadastroCandidatoView(InputService inputService,
+                           DAO_Candidato candidatoDao,
+                           DAO_Competencia competenciaDao,
+                           ViewHelper viewHelper) {
+        this.inputService = inputService
+        this.candidatoDao = candidatoDao
+        this.competenciaDao = competenciaDao
+        this.viewHelper = viewHelper
+    }
 
     void show(){
         println "Cadastro do Candidato"
@@ -56,7 +71,7 @@ class CadastroCandidatoView {
         println()
         println("Competências disponíveis:")
         List<Competencia> listaComp = competenciaDao.listAll()
-        new ViewHelper().printAllAvailableCompetencias(listaComp)
+    viewHelper.printAllAvailableCompetencias(listaComp)
         pessoa.competencias = inputService.getCompetenciasInput(listaComp)
 
         print("Digite a senha do Candidato: ")
