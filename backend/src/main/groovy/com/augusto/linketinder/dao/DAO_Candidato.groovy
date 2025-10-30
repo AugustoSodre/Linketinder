@@ -1,4 +1,4 @@
-package com.augusto.linketinder.DAO
+package com.augusto.linketinder.dao
 
 import com.augusto.linketinder.model.pessoa.Candidato
 
@@ -10,7 +10,24 @@ import java.sql.Statement
 
 class DAO_Candidato extends BaseDao {
 
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final DAO_Competencia competenciaDao
+
+    DAO_Candidato() {
+        this(new DataSource())
+    }
+
+    DAO_Candidato(DataSource dataSource) {
+        this(dataSource, new DAO_Competencia(dataSource))
+    }
+
+    DAO_Candidato(DataSource dataSource, DAO_Competencia competenciaDao) {
+        super(dataSource)
+        this.competenciaDao = Objects.requireNonNull(competenciaDao, "competenciaDao")
+    }
+
+    DAO_Candidato(DAO_Competencia competenciaDao) {
+        this(new DataSource(), competenciaDao)
+    }
 
     void insert(Candidato candidato) throws SQLException {
         final String sql = """

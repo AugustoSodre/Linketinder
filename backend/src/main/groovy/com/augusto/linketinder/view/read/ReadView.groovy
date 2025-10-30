@@ -1,9 +1,9 @@
 package com.augusto.linketinder.view.read
 
-import com.augusto.linketinder.DAO.DAO_Candidato
-import com.augusto.linketinder.DAO.DAO_Competencia
-import com.augusto.linketinder.DAO.DAO_Empresa
-import com.augusto.linketinder.DAO.DAO_Vaga
+import com.augusto.linketinder.dao.DAO_Candidato
+import com.augusto.linketinder.dao.DAO_Competencia
+import com.augusto.linketinder.dao.DAO_Empresa
+import com.augusto.linketinder.dao.DAO_Vaga
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato

@@ -1,20 +1,37 @@
 package com.augusto.linketinder.control
 
-import com.augusto.linketinder.DAO.DAO_Candidato
-import com.augusto.linketinder.DAO.DAO_Competencia
-import com.augusto.linketinder.DAO.DAO_Empresa
-import com.augusto.linketinder.DAO.DAO_Vaga
+import com.augusto.linketinder.dao.DAO_Candidato
+import com.augusto.linketinder.dao.DAO_Competencia
+import com.augusto.linketinder.dao.DAO_Empresa
+import com.augusto.linketinder.dao.DAO_Vaga
+import com.augusto.linketinder.dao.DataSource
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Candidato
 import com.augusto.linketinder.model.pessoa.Empresa
 
+import java.util.Objects
+
 class UpdateController {
 
-    private final DAO_Candidato candidatoDao = new DAO_Candidato()
-    private final DAO_Empresa empresaDao = new DAO_Empresa()
-    private final DAO_Vaga vagaDao = new DAO_Vaga()
-    private final DAO_Competencia competenciaDao = new DAO_Competencia()
+    private final DAO_Candidato candidatoDao
+    private final DAO_Empresa empresaDao
+    private final DAO_Vaga vagaDao
+    private final DAO_Competencia competenciaDao
+
+    UpdateController() {
+        this(*createDefaultDaos())
+    }
+
+    UpdateController(DAO_Candidato candidatoDao,
+                     DAO_Empresa empresaDao,
+                     DAO_Vaga vagaDao,
+                     DAO_Competencia competenciaDao) {
+        this.candidatoDao = Objects.requireNonNull(candidatoDao, "candidatoDao")
+        this.empresaDao = Objects.requireNonNull(empresaDao, "empresaDao")
+        this.vagaDao = Objects.requireNonNull(vagaDao, "vagaDao")
+        this.competenciaDao = Objects.requireNonNull(competenciaDao, "competenciaDao")
+    }
 
     List<Candidato> listarCandidatos() {
         return candidatoDao.listAll()
@@ -94,5 +111,14 @@ class UpdateController {
 
     void removerRelacionamento(String objeto, int idCompetencia, int idObjeto) {
         competenciaDao.removeRelation(objeto, idCompetencia, idObjeto)
+    }
+
+    private static List createDefaultDaos() {
+        DataSource sharedDataSource = new DataSource()
+        DAO_Competencia competenciaDao = new DAO_Competencia(sharedDataSource)
+        DAO_Vaga vagaDao = new DAO_Vaga(sharedDataSource, competenciaDao)
+        DAO_Candidato candidatoDao = new DAO_Candidato(sharedDataSource, competenciaDao)
+        DAO_Empresa empresaDao = new DAO_Empresa(sharedDataSource, competenciaDao, vagaDao)
+        return [candidatoDao, empresaDao, vagaDao, competenciaDao]
     }
 }

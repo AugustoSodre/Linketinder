@@ -1,4 +1,4 @@
-package com.augusto.linketinder.DAO
+package com.augusto.linketinder.dao
 
 import com.augusto.linketinder.model.Competencia
 
@@ -9,6 +9,14 @@ import java.sql.SQLException
 import java.sql.Statement
 
 class DAO_Competencia extends BaseDao {
+
+    DAO_Competencia() {
+        super()
+    }
+
+    DAO_Competencia(DataSource dataSource) {
+        super(dataSource)
+    }
 
     void insert(Competencia competencia) throws SQLException {
         final String sql = "INSERT INTO competencia(nome) VALUES (?)"

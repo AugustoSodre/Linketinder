@@ -1,9 +1,10 @@
 package com.augusto.linketinder.view.menu
 
-import com.augusto.linketinder.DAO.DAO_Candidato
-import com.augusto.linketinder.DAO.DAO_Competencia
-import com.augusto.linketinder.DAO.DAO_Empresa
-import com.augusto.linketinder.DAO.DAO_Vaga
+import com.augusto.linketinder.dao.DAO_Candidato
+import com.augusto.linketinder.dao.DAO_Competencia
+import com.augusto.linketinder.dao.DAO_Empresa
+import com.augusto.linketinder.dao.DAO_Vaga
+import com.augusto.linketinder.dao.DataSource
 import com.augusto.linketinder.control.DeleteController
 import com.augusto.linketinder.control.UpdateController
 import com.augusto.linketinder.service.InputService
@@ -29,12 +30,13 @@ class MenuMain {
     private final MenuCompetencia menuCompetencia
 
     MenuMain() {
-        InputService sharedInputService = new InputService()
+    InputService sharedInputService = new InputService()
 
-        DAO_Candidato candidatoDao = new DAO_Candidato()
-        DAO_Empresa empresaDao = new DAO_Empresa()
-        DAO_Vaga vagaDao = new DAO_Vaga()
-        DAO_Competencia competenciaDao = new DAO_Competencia()
+    DataSource sharedDataSource = new DataSource()
+    DAO_Competencia competenciaDao = new DAO_Competencia(sharedDataSource)
+    DAO_Vaga vagaDao = new DAO_Vaga(sharedDataSource, competenciaDao)
+    DAO_Candidato candidatoDao = new DAO_Candidato(sharedDataSource, competenciaDao)
+    DAO_Empresa empresaDao = new DAO_Empresa(sharedDataSource, competenciaDao, vagaDao)
         ViewHelper viewHelper = new ViewHelper()
 
         CadastroCandidatoView cadastroCandidatoView = new CadastroCandidatoView(sharedInputService, candidatoDao, competenciaDao, viewHelper)
@@ -45,20 +47,20 @@ class MenuMain {
         DeleteController deleteController = new DeleteController(candidatoDao, empresaDao, vagaDao, competenciaDao, sharedInputService)
         DeleteView deleteView = new DeleteView(deleteController)
 
-        UpdateController updateController = new UpdateController()
+    UpdateController updateController = new UpdateController(candidatoDao, empresaDao, vagaDao, competenciaDao)
         UpdateCandidatoView updateCandidatoView = new UpdateCandidatoView(updateController, sharedInputService)
         UpdateEmpresaView updateEmpresaView = new UpdateEmpresaView(updateController, sharedInputService)
         UpdateVagaView updateVagaView = new UpdateVagaView(updateController, sharedInputService)
         UpdateCompetenciaView updateCompetenciaView = new UpdateCompetenciaView(updateController, sharedInputService)
         UpdateView updateView = new UpdateView(updateCandidatoView, updateEmpresaView, updateVagaView, updateCompetenciaView)
 
-    ReadView readView = new ReadView(candidatoDao, empresaDao, vagaDao, competenciaDao)
+        ReadView readView = new ReadView(candidatoDao, empresaDao, vagaDao, competenciaDao)
 
-    this.inputService = sharedInputService
-    this.menuEmpresa = new MenuEmpresa(sharedInputService, cadastroEmpresaView, readView, updateView, deleteView)
-    this.menuCandidato = new MenuCandidato(sharedInputService, cadastroCandidatoView, readView, updateView, deleteView)
-    this.menuVaga = new MenuVaga(sharedInputService, cadastroVagaView, readView, updateView, deleteView)
-    this.menuCompetencia = new MenuCompetencia(sharedInputService, cadastroCompView, readView, updateView, deleteView)
+        this.inputService = sharedInputService
+        this.menuEmpresa = new MenuEmpresa(sharedInputService, cadastroEmpresaView, readView, updateView, deleteView)
+        this.menuCandidato = new MenuCandidato(sharedInputService, cadastroCandidatoView, readView, updateView, deleteView)
+        this.menuVaga = new MenuVaga(sharedInputService, cadastroVagaView, readView, updateView, deleteView)
+        this.menuCompetencia = new MenuCompetencia(sharedInputService, cadastroCompView, readView, updateView, deleteView)
     }
 
     MenuMain(InputService inputService,
@@ -73,10 +75,10 @@ class MenuMain {
         this.menuCompetencia = menuCompetencia
     }
 
-    boolean showMainMenu(){
+    boolean showMainMenu() {
         printOptions()
         int option = inputService.getIntInput()
-        switch (option){
+        switch (option) {
             case 1:
                 limpaTela()
                 menuEmpresa.showMenuEmpresa()
@@ -102,7 +104,7 @@ class MenuMain {
         return false
     }
 
-    void printOptions(){
+    void printOptions() {
         limpaTela()
         println()
         println("-" * 25)
@@ -118,7 +120,7 @@ class MenuMain {
         println("-" * 25)
     }
 
-    void limpaTela(){
+    void limpaTela() {
         for (i in 0..<50) {
             println()
         }

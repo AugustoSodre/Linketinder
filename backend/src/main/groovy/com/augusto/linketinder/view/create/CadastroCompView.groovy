@@ -1,6 +1,6 @@
 package com.augusto.linketinder.view.create
 
-import com.augusto.linketinder.DAO.DAO_Competencia
+import com.augusto.linketinder.dao.DAO_Competencia
 import com.augusto.linketinder.service.InputService
 import com.augusto.linketinder.model.Competencia
 
