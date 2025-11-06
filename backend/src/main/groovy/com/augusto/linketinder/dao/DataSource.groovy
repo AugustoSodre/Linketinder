@@ -4,7 +4,9 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
-class DataSource {
+class DataSource{
+    private static final instance = new DataSource()
+
     private String DB_URL = "jdbc:postgresql://localhost:5432/linketinder"
     private String DB_USER = "postgres"
     private String DB_PASSWORD = "postgres"
@@ -16,6 +18,10 @@ class DataSource {
     }
 
     DataSource() {}
+
+    static DataSource getInstance(){
+        return instance
+    }
 
     Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)

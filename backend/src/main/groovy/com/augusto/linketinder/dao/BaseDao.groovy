@@ -9,7 +9,7 @@ abstract class BaseDao {
     private final DataSource dataSource
 
     BaseDao() {
-        this(new DataSource())
+        this(DataSource.getInstance())
     }
 
     BaseDao(DataSource dataSource) {
