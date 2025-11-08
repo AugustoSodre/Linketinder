@@ -1,5 +1,7 @@
 package com.augusto.linketinder.dao
 
+import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider
+import com.augusto.linketinder.dao.connectionProvider.ConnectionProviderFactory
 import com.augusto.linketinder.model.pessoa.Candidato
 
 import java.sql.Connection
@@ -8,25 +10,25 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
-class DAO_Candidato extends BaseDao {
+class CandidatoDAO extends BaseDao {
 
-    private final DAO_Competencia competenciaDao
+    private final CompetenciaDAO competenciaDao
 
-    DAO_Candidato() {
-        this(new DataSource())
+    CandidatoDAO() {
+        this(ConnectionProviderFactory.getProvider())
     }
 
-    DAO_Candidato(DataSource dataSource) {
-        this(dataSource, new DAO_Competencia(dataSource))
+    CandidatoDAO(ConnectionProvider provider) {
+        this(provider, new CompetenciaDAO(provider))
     }
 
-    DAO_Candidato(DataSource dataSource, DAO_Competencia competenciaDao) {
-        super(dataSource)
+    CandidatoDAO(ConnectionProvider provider, CompetenciaDAO competenciaDao) {
+        super(provider)
         this.competenciaDao = Objects.requireNonNull(competenciaDao, "competenciaDao")
     }
 
-    DAO_Candidato(DAO_Competencia competenciaDao) {
-        this(new DataSource(), competenciaDao)
+    CandidatoDAO(CompetenciaDAO competenciaDao) {
+        this(ConnectionProviderFactory.getProvider(), competenciaDao)
     }
 
     void insert(Candidato candidato) throws SQLException {

@@ -7,6 +7,9 @@ import com.augusto.linketinder.model.pessoa.Empresa;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider;
+import com.augusto.linketinder.dao.connectionProvider.H2ConnectionProvider;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,23 +24,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class DaoIntegrationTest {
 
-    private DataSource dataSource;
-    private DAO_Competencia competenciaDao;
-    private DAO_Vaga vagaDao;
-    private DAO_Candidato candidatoDao;
-    private DAO_Empresa empresaDao;
+    private ConnectionProvider dataSource;
+    private CompetenciaDAO competenciaDao;
+    private VagaDAO vagaDao;
+    private CandidatoDAO candidatoDao;
+    private EmpresaDAO empresaDao;
 
     @BeforeEach
     void setUp() throws SQLException {
-        dataSource = new DataSource(
-                "jdbc:h2:mem:linketinder;MODE=PostgreSQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1",
-                "sa",
-                ""
-        );
-        competenciaDao = new DAO_Competencia(dataSource);
-        vagaDao = new DAO_Vaga(dataSource, competenciaDao);
-        candidatoDao = new DAO_Candidato(dataSource, competenciaDao);
-        empresaDao = new DAO_Empresa(dataSource, competenciaDao, vagaDao);
+    dataSource = new H2ConnectionProvider(
+        "jdbc:h2:mem:linketinder;MODE=PostgreSQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1",
+        "sa",
+        ""
+    );
+
+    competenciaDao = DaoFactory.createCompetenciaDAO(dataSource);
+    vagaDao = DaoFactory.createVagaDAO(dataSource, competenciaDao);
+    candidatoDao = DaoFactory.createCandidatoDAO(dataSource, competenciaDao);
+    empresaDao = DaoFactory.createEmpresaDAO(dataSource, competenciaDao, vagaDao);
         recreateSchema();
     }
 

@@ -269,6 +269,36 @@ psql -U postgres -d linketinder -f scriptPopulacaoInicialDados.sql
 - 6 competências técnicas
 - Relacionamentos configurados entre todas as entidades
 
+## Providers de Conexão e Factory (DAO layer)
+
+O backend agora usa uma abstração para aquisição de conexões chamada `ConnectionProvider`. Há duas implementações prontas:
+
+- `JDBCConnectionProvider` — provedor JDBC genérico (usa variáveis de ambiente `JDBC_URL`, `JDBC_USER`, `JDBC_PASSWORD`). Este provedor é instanciado sob demanda (não é singleton), então cada chamada cria um provider com sua configuração.
+- `H2ConnectionProvider` — provedor simples para testes e desenvolvimento que cria conexões com um banco H2 in-memory. A URL pode ser customizada via `H2_JDBC_URL`, `H2_JDBC_USER`, `H2_JDBC_PASSWORD`.
+
+A seleção de qual provider a aplicação usa é centralizada em `DataSourceFactory.getProvider()` — escolha via variável de ambiente `DB_PROVIDER` ou pela propriedade do sistema Java `-DDB_PROVIDER=h2`:
+
+- `DB_PROVIDER=h2` retorna um `H2ConnectionProvider` (útil em testes locais e CI).
+- qualquer outro valor (ou vazio) retorna um `JDBCConnectionProvider` por padrão.
+
+As DAOs agora dependem da abstração `ConnectionProvider` e são obtidas via `DAOFactory`. `DAOFactory` é um factory simples que cria instâncias de DAOs já com o provider correspondente. Para testes, existem helpers do `DAOFactory.create*` que aceitam um `ConnectionProvider` (por exemplo um `H2ConnectionProvider`) para manter os testes isolados do estado global.
+
+Exemplos rápidos:
+
+Rodar os testes com H2 via variável de ambiente (Linux/macOS):
+
+```bash
+export DB_PROVIDER=h2
+cd backend
+./gradlew test
+```
+
+Ou passar como propriedade do JVM (útil em IDEs ou CI):
+
+```bash
+./gradlew -DDB_PROVIDER=h2 test
+```
+
 **Verificar instalação:**
 ```sql
 -- Conectar ao banco

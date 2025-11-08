@@ -15,17 +15,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class DataSourceTest {
+class JDBCConnectionProviderTest {
 
     @Test
     void shouldOpenConnectionsWithCustomCredentials() throws Exception {
-    JDBCConnectionProvider dataSource = new JDBCConnectionProvider(
+        JDBCConnectionProvider provider = new JDBCConnectionProvider(
                 "jdbc:h2:mem:datasourceTestdb;MODE=PostgreSQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1",
                 "sa",
                 ""
         );
 
-        try (Connection connection = dataSource.getConnection();
+        try (Connection connection = provider.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT 1")) {
 
@@ -33,24 +33,23 @@ class DataSourceTest {
             assertEquals(1, resultSet.getInt(1));
         }
     }
-
     @Test
-    void shouldConfigureAndReturnSingletonInstance() throws Exception {
+    void dataSourceFactoryDefaultReturnsJDBCProvider() throws Exception {
+        // ensure default selection
         System.clearProperty("DB_PROVIDER");
         ConnectionProvider provider = ConnectionProviderFactory.getProvider();
         assertNotNull(provider);
         assertTrue(provider instanceof JDBCConnectionProvider);
-
-        try (Connection connection = provider.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet rs = statement.executeQuery("SELECT 1")) {
+        try (Connection c = provider.getConnection();
+             Statement s = c.createStatement();
+             ResultSet rs = s.executeQuery("SELECT 1")) {
             assertTrue(rs.next());
             assertEquals(1, rs.getInt(1));
         }
     }
-
     @Test
     void dataSourceFactorySelectsH2WhenRequested() throws Exception {
+        // set system property (ConnectionProviderFactory checks system property first)
         System.setProperty("DB_PROVIDER", "h2");
         try {
             ConnectionProvider provider = ConnectionProviderFactory.getProvider();

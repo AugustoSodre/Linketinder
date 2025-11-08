@@ -1,5 +1,6 @@
 package com.augusto.linketinder.dao
 
+import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider
 import com.augusto.linketinder.model.Competencia
 
 import java.sql.Connection
@@ -8,14 +9,14 @@ import java.sql.ResultSet
 import java.sql.SQLException
 import java.sql.Statement
 
-class DAO_Competencia extends BaseDao {
+class CompetenciaDAO extends BaseDao {
 
-    DAO_Competencia() {
+    CompetenciaDAO() {
         super()
     }
 
-    DAO_Competencia(DataSource dataSource) {
-        super(dataSource)
+    CompetenciaDAO(ConnectionProvider provider) {
+        super(provider)
     }
 
     void insert(Competencia competencia) throws SQLException {
@@ -109,37 +110,34 @@ class DAO_Competencia extends BaseDao {
     }
 
     void addRelation(String objeto, int competenciaId, int objetoId) throws SQLException {
-        String tabela = resolveRelationTable(objeto)
-        String coluna = resolveRelationColumn(objeto)
-        if (!tabela || !coluna) {
+        RelationType rel = RelationType.fromObjectName(objeto)
+        if (rel == null) {
             throw new IllegalArgumentException("Objeto inválido: ${objeto}")
         }
-        executeRelationInsert(tabela, coluna, competenciaId, objetoId)
+        executeRelationInsert(rel.table, rel.column, competenciaId, objetoId)
     }
 
     void removeRelation(String objeto, int competenciaId, int objetoId) throws SQLException {
-        String tabela = resolveRelationTable(objeto)
-        String coluna = resolveRelationColumn(objeto)
-        if (!tabela || !coluna) {
+        RelationType rel = RelationType.fromObjectName(objeto)
+        if (rel == null) {
             throw new IllegalArgumentException("Objeto inválido: ${objeto}")
         }
-        executeRelationDelete(tabela, coluna, competenciaId, objetoId)
+        executeRelationDelete(rel.table, rel.column, competenciaId, objetoId)
     }
 
     String listRelations(String objeto) throws SQLException {
-        String tabela = resolveRelationTable(objeto)
-        String coluna = resolveRelationColumn(objeto)
-        if (!tabela || !coluna) {
+        RelationType rel = RelationType.fromObjectName(objeto)
+        if (rel == null) {
             throw new IllegalArgumentException("Objeto inválido: ${objeto}")
         }
 
-        final String sql = "SELECT rel.id_competencia, comp.nome AS nome_competencia, rel.${coluna} AS id_objeto, obj.nome AS nome_objeto " +
-                "FROM ${tabela} rel " +
+        final String sql = "SELECT rel.id_competencia, comp.nome AS nome_competencia, rel.${rel.column} AS id_objeto, obj.nome AS nome_objeto " +
+                "FROM ${rel.table} rel " +
                 "JOIN competencia comp ON rel.id_competencia = comp.id " +
-                "JOIN ${objeto} obj ON rel.${coluna} = obj.id " +
+                "JOIN ${rel.objectName} obj ON rel.${rel.column} = obj.id " +
                 "ORDER BY comp.id, obj.id"
 
-        StringBuilder builder = new StringBuilder("*competência*                  *${objeto}*\n")
+        StringBuilder builder = new StringBuilder("*competência*                  *${rel.objectName}*\n")
 
         Connection conn = null
         Statement stmt = null
@@ -316,31 +314,5 @@ class DAO_Competencia extends BaseDao {
         )
     }
 
-    private String resolveRelationTable(String objeto) {
-        switch (objeto) {
-            case "candidato":
-                return "competencia_candidato"
-            case "empresa":
-                return "competencia_empresa"
-            case "vaga":
-                return "competencia_vaga"
-            default:
-                throw new SQLException("Objeto desconhecido!")
-                return null
-        }
-    }
-
-    private String resolveRelationColumn(String objeto) {
-        switch (objeto) {
-            case "candidato":
-                return "id_candidato"
-            case "empresa":
-                return "id_empresa"
-            case "vaga":
-                return "id_vaga"
-            default:
-                throw new SQLException("Objeto desconhecido!")
-                return null
-        }
-    }
+    // relation resolution is now centralized in RelationType enum
 }
