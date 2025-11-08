@@ -1,201 +1,138 @@
 import { listCandidatos, listEmpresas } from "../storage/lists"
 
+// Centralized regex constants (input & normalized forms)
+export const NAME_REGEX = /^[a-zA-ZÀ-ÿ\s]+$/
+export const EMAIL_REGEX = /^[\w.]+@\w+\.\w+(\.\w{2,3})?$/
+export const STATE_REGEX = /^[A-Z]{2}$/
+export const CEP_INPUT_REGEX = /^\d{5}-?\d{3}$/
+export const CEP_NORMALIZED_REGEX = /^\d{8}$/
+export const CPF_INPUT_REGEX = /^\d{3}\.?\d{3}\.?\d{3}-?\d{2}$/
+export const CPF_NORMALIZED_REGEX = /^\d{11}$/
+export const CNPJ_INPUT_REGEX = /^\d{2}\.?\d{3}\.?\d{3}\/??\d{4}-?\d{2}$/
+export const CNPJ_NORMALIZED_REGEX = /^\d{14}$/
+export const COUNTRY_REGEX = /^[A-Z]{2}$/
+
+// Normalization helpers
+export function normalizeCPF(raw: string): string {
+  return raw.replaceAll('.', '').replaceAll('-', '').trim()
+}
+
+export function normalizeCNPJ(raw: string): string {
+  return raw.replaceAll('.', '').replaceAll('-', '').replaceAll('/', '').trim()
+}
+
+export function normalizeCEP(raw: string): string {
+  return raw.replaceAll('-', '').trim()
+}
+
+// Storage helpers
+export function isCpfUnique(cpf: string): boolean {
+  return !listCandidatos.some(c => ((c as any).cpf ?? '') === cpf)
+}
+
+export function isCnpjUnique(cnpj: string): boolean {
+  return !listEmpresas.some(e => ((e as any).cnpj ?? '') === cnpj)
+}
+
+export function findCandidatoByCpf(cpf: string) {
+  return listCandidatos.find(c => ((c as any).cpf ?? '') === cpf)
+}
+
+export function findEmpresaByCnpj(cnpj: string) {
+  return listEmpresas.find(e => ((e as any).cnpj ?? '') === cnpj)
+}
+
+// DOM helpers
+export function getFieldValue(id: string): string {
+  return (document.getElementById(id) as HTMLInputElement)?.value ?? ''
+}
+
+// Backwards-compatible validators (thin wrappers around centralized utilities)
 export function getValidNome(): string | null {
-	let nome: string = (document.getElementById("nome") as HTMLInputElement)?.value
-
-	const regexCustom = /^[a-zA-ZÀ-ÿ\s]+$/
-
-	if(!nome){
-		alert("Nome Inválido! Tente novamente!")
-		return null
-	}
-
-	if(regexCustom.test(nome)){
-		return nome
-	} else{
-		alert("Nome com caractere Inválido! Tente novamente!")
-		return null
-	}
-	
+  const nome = getFieldValue('nome')
+  if (!nome) { alert('Nome Inválido! Tente novamente!'); return null }
+  if (!NAME_REGEX.test(nome)) { alert('Nome com caractere Inválido! Tente novamente!'); return null }
+  return nome
 }
 
-export function getValidEmail(): string | null{
-	let email: string = (document.getElementById("email") as HTMLInputElement)?.value
-
-	const regexCustom = /^[\w.]+@\w+\.\w+(\.\w{2,3})?$/
-
-	if(regexCustom.test(email)){
-		return email
-	} else {
-		alert("Email Inválido! Tente novamente!")
-		return null
-	}
-	
+export function getValidEmail(): string | null {
+  const email = getFieldValue('email')
+  if (!EMAIL_REGEX.test(email)) { alert('Email Inválido! Tente novamente!'); return null }
+  return email
 }
 
-export function getValidEstado(): string | null{
-	let estado: string = (document.getElementById("estado") as HTMLInputElement)?.value
-
-	const regexCustom = /^[A-Z]{2}$/
-
-	if(regexCustom.test(estado)){
-		return estado
-	} else{
-		alert("Estado Inválido! Tente novamente!")
-		return null
-	}
+export function getValidEstado(): string | null {
+  const estado = getFieldValue('estado')
+  if (!STATE_REGEX.test(estado)) { alert('Estado Inválido! Tente novamente!'); return null }
+  return estado
 }
 
-export function getValidCEP(): string | null{
-	let cep: string = (document.getElementById("cep") as HTMLInputElement)?.value
-
-	const regexCustom = /^\d{5}-?\d{3}$/
-
-	if(regexCustom.test(cep)){
-		cep = cep.replaceAll("-","")
-		return cep
-	} else{
-		alert("CEP Inválido! Tente novamente!")
-		return null
-	}
+export function getValidCEP(): string | null {
+  const cepRaw = getFieldValue('cep')
+  if (!CEP_INPUT_REGEX.test(cepRaw)) { alert('CEP Inválido! Tente novamente!'); return null }
+  const cep = normalizeCEP(cepRaw)
+  if (!CEP_NORMALIZED_REGEX.test(cep)) { alert('CEP Inválido! Tente novamente!'); return null }
+  return cep
 }
 
-export function getValidDescricao(): string | null{
-	let descricao = (document.getElementById("descricao") as HTMLInputElement)?.value
-
-	if(descricao?.length > 0){
-		return descricao
-	} else{
-		alert("Descrição Inválida! Tente novamente!")
-		return null
-	}
+export function getValidDescricao(): string | null {
+  const descricao = getFieldValue('descricao')
+  if (!descricao || descricao.length === 0) { alert('Descrição Inválida! Tente novamente!'); return null }
+  return descricao
 }
 
-export function getValidIdade(): number | null{
-	let idade: number = parseInt((document.getElementById("idade") as HTMLInputElement)?.value ?? "")
-
-	if( isNaN(idade) || idade > 120 || idade < 0){
-		alert("Idade inválida! Tente novamente!")
-		return null
-	} else{
-		return idade
-	}
-
+export function getValidIdade(): number | null {
+  const raw = getFieldValue('idade')
+  const idade = Number(raw)
+  if (Number.isNaN(idade) || idade < 0 || idade > 120) { alert('Idade inválida! Tente novamente!'); return null }
+  return idade
 }
 
-export function getValidCPF(): string | null{
-	let cpf: string = (document.getElementById("cpf") as HTMLInputElement)?.value
-
-	const regexCustom = /^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/
-
-	if(regexCustom.test(cpf)){
-		cpf = cpf.replaceAll(".", "")
-		cpf = cpf.replaceAll("-", "")
-	} else {
-		alert("CPF Inválido! Tente novamente!")
-		return null
-	}
-
-	for(const c of listCandidatos){
-		if((c as any).cpf == cpf){
-			alert("CPF Já Cadastrado! Tente novamente!")
-			return null
-		}
-	}
-
-	return cpf
-
+export function getValidCPF(): string | null {
+  const cpfRaw = getFieldValue('cpf')
+  if (!CPF_INPUT_REGEX.test(cpfRaw)) { alert('CPF Inválido! Tente novamente!'); return null }
+  const cpf = normalizeCPF(cpfRaw)
+  if (!CPF_NORMALIZED_REGEX.test(cpf)) { alert('CPF Inválido! Tente novamente!'); return null }
+  if (!isCpfUnique(cpf)) { alert('CPF Já Cadastrado! Tente novamente!'); return null }
+  return cpf
 }
 
-export function getValidPais(): string | null{
-	let pais: string = (document.getElementById("pais") as HTMLInputElement)?.value
-
-	const regexCustom = /^[A-Z]{2}$/
-
-	if(regexCustom.test(pais)){
-		return pais
-	} else{
-		alert("País Inválido! Tente novamente!")
-		return null
-	}
+export function getValidPais(): string | null {
+  const pais = getFieldValue('pais')
+  if (!COUNTRY_REGEX.test(pais)) { alert('País Inválido! Tente novamente!'); return null }
+  return pais
 }
 
-export function getValidCNPJ(): string | null{
-	let cnpj: string = (document.getElementById("cnpj") as HTMLInputElement)?.value
-
-	const regexCustom = /^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}$/
-
-	if(regexCustom.test(cnpj)){
-		cnpj = cnpj.replaceAll(".", "")
-		cnpj = cnpj.replaceAll("-", "")
-		cnpj = cnpj.replaceAll("/", "")
-	} else {
-		alert("CNPJ Inválido! Tente novamente!")
-		return null
-	}
-
-	for(const c of listEmpresas){
-		if((c as any).cnpj == cnpj){
-			alert("CNPJ Já Cadastrado! Tente novamente!")
-			return null
-		}
-	}
-
-	return cnpj
+export function getValidCNPJ(): string | null {
+  const cnpjRaw = getFieldValue('cnpj')
+  if (!CNPJ_INPUT_REGEX.test(cnpjRaw)) { alert('CNPJ Inválido! Tente novamente!'); return null }
+  const cnpj = normalizeCNPJ(cnpjRaw)
+  if (!CNPJ_NORMALIZED_REGEX.test(cnpj)) { alert('CNPJ Inválido! Tente novamente!'); return null }
+  if (!isCnpjUnique(cnpj)) { alert('CNPJ Já Cadastrado! Tente novamente!'); return null }
+  return cnpj
 }
 
-export function getValidNomeVaga(): string | null{
-	let nome: string = (document.getElementById("nome-vaga") as HTMLInputElement)?.value
-
-	const regexCustom = /^[a-zA-ZÀ-ÿ\s]+$/
-
-	if(regexCustom.test(nome)){
-		return nome
-	} else{
-		alert("Nome com caractere Inválido! Tente novamente!")
-		return null
-	}
+export function getValidNomeVaga(): string | null {
+  const nome = getFieldValue('nome-vaga')
+  if (!NAME_REGEX.test(nome)) { alert('Nome com caractere Inválido! Tente novamente!'); return null }
+  return nome
 }
 
-export function getValidDescricaoVaga(): string | null{
-	let descricao = (document.getElementById("descricao-vaga") as HTMLInputElement)?.value
-
-	if(descricao?.length > 0){
-		return descricao
-	} else{
-		alert("Descrição Inválida! Tente novamente!")
-		return null
-	}
+export function getValidDescricaoVaga(): string | null {
+  const descricao = getFieldValue('descricao-vaga')
+  if (!descricao || descricao.length === 0) { alert('Descrição Inválida! Tente novamente!'); return null }
+  return descricao
 }
 
-export function getValidLoginIdentification(idHTML: string): string | null{
-	let identification = (document.getElementById(idHTML) as HTMLInputElement)?.value
-
-	if(idHTML == "cnpj-login-empresa"){
-		const regexCustom = /^\d{2}\.?\d{3}\.?\d{3}\/?\d{4}\-?\d{2}$/
-		if(regexCustom.test(identification)){
-			identification = identification.replaceAll(".", "")
-			identification = identification.replaceAll("-", "")
-			identification = identification.replaceAll("/", "")
-		} else {
-			alert("CNPJ Inválido! Tente novamente!")
-			return null
-		}
-
-	} 
-	else if(idHTML == "cpf-login-candidato"){
-		const regexCustom = /^\d{3}\.?\d{3}\.?\d{3}\-?\d{2}$/
-
-		if(regexCustom.test(identification)){
-			identification = identification.replaceAll(".", "")
-			identification = identification.replaceAll("-", "")
-		} else {
-			alert("CPF Inválido! Tente novamente!")
-			return null
-		}
-	}
-
-	return identification
-
-	
+export function getValidLoginIdentification(idHTML: string): string | null {
+  const identification = getFieldValue(idHTML)
+  if (idHTML === 'cnpj-login-empresa') {
+	if (!CNPJ_INPUT_REGEX.test(identification)) { alert('CNPJ Inválido! Tente novamente!'); return null }
+	return normalizeCNPJ(identification)
+  }
+  if (idHTML === 'cpf-login-candidato') {
+	if (!CPF_INPUT_REGEX.test(identification)) { alert('CPF Inválido! Tente novamente!'); return null }
+	return normalizeCPF(identification)
+  }
+  return identification
 }
