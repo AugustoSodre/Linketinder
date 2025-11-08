@@ -1,5 +1,5 @@
 import { createFormListeners } from "../helpers/formHelper"
-import { renderMenu } from "../pages/menu"
+import PageFactory from "../factories/PageFactory";
 
 export function renderFormLogin(app: HTMLDivElement , tipo: string){
     if(tipo == "Candidato"){
@@ -9,7 +9,8 @@ export function renderFormLogin(app: HTMLDivElement , tipo: string){
         renderLoginEmpresaHTML(app)
 
     } else{
-        renderMenu(app)
+        const page = PageFactory.create("menu");
+        if(page) page(app); else window.location.reload();
 
     }
 }

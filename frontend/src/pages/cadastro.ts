@@ -1,13 +1,11 @@
-import { renderFormCandidato, renderFormEmpresa } from "../components/form-cadastro"
+import FormFactory from "../factories/FormFactory";
 
 export function renderCadastro(app: HTMLDivElement, type: string){
-    if(type == "Candidato"){
-        renderFormCandidato(app)
-    }
-    else if (type == "Empresa"){
-        renderFormEmpresa(app)
-        
-    } else{
+    const render = FormFactory.create('cadastro', type as any);
+
+    if(render){
+        render(app)
+    } else {
         window.location.reload()
     }
 }

@@ -1,13 +1,11 @@
-import { renderFormLogin } from "../components/form-login"
+import FormFactory from "../factories/FormFactory";
 
 export function renderLogin(app: HTMLDivElement, type: string){
-    if(type == "Candidato"){
-        renderFormLogin(app, "Candidato")
-    }
-    else if (type == "Empresa"){
-        renderFormLogin(app, "Empresa")
-        
-    } else{
+    const render = FormFactory.create('login', type as any);
+
+    if(render){
+        render(app)
+    } else {
         window.location.reload()
     }
 }

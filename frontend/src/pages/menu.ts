@@ -1,6 +1,5 @@
 
-import { renderLogin } from "./login"
-import { renderCadastro } from "./cadastro"
+import PageFactory from "../factories/PageFactory";
 
 export function renderMenu(app: HTMLDivElement){
     app.innerHTML = `
@@ -11,20 +10,25 @@ export function renderMenu(app: HTMLDivElement){
             <button class="btn-menu" id="btn-login-empresa">Login Empresa</button>
         </div>
     `
+    
+    const actions: Record<string, { page: any, payload?: any }> = {
+        "btn-cadastrar-candidato": { page: "cadastro", payload: "Candidato" },
+        "btn-cadastrar-empresa": { page: "cadastro", payload: "Empresa" },
+        "btn-login-candidato": { page: "login", payload: "Candidato" },
+        "btn-login-empresa": { page: "login", payload: "Empresa" }
+    };
 
-    document.getElementById("btn-cadastrar-candidato")?.addEventListener("click",
-        () => renderCadastro(app, "Candidato")
-    )
-
-    document.getElementById("btn-cadastrar-empresa")?.addEventListener("click",
-        () => renderCadastro(app, "Empresa")
-    )
-
-    document.getElementById("btn-login-candidato")?.addEventListener("click",
-        () => renderLogin(app, "Candidato")
-    )
-
-    document.getElementById("btn-login-empresa")?.addEventListener("click",
-        () => renderLogin(app, "Empresa")
-    )
+    Object.entries(actions).forEach(([id, info]) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("click", () => {
+            const page = PageFactory.create(info.page as any);
+            if (page) {
+                if (info.payload !== undefined) page(app, info.payload);
+                else page(app);
+            } else {
+                window.location.reload();
+            }
+        });
+    });
 }
