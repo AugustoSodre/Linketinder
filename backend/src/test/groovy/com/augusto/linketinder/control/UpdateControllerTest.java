@@ -10,20 +10,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UpdateControllerTest {
 
-    private UpdateController controller;
+    private CandidatoController candidatoController;
+    private EmpresaController empresaController;
+    private VagaController vagaController;
 
     @BeforeEach
-	//Arrange
     void setUp() {
-        controller = new UpdateController();
+        candidatoController = new CandidatoController();
+        empresaController = new EmpresaController();
+        vagaController = new VagaController();
     }
 
     @Test
     void camposCandidatoShouldExposeExpectedMappings() {
-        // Act
-        Map<String, String> campos = controller.camposCandidato();
+        Map<String, String> campos = candidatoController.camposCandidato();
 
-        // Assert
         assertEquals("nome", campos.get("nome"));
         assertEquals("descricao", campos.get("descrição"));
         assertEquals("senha", campos.get("senha"));
@@ -32,10 +33,8 @@ class UpdateControllerTest {
 
     @Test
     void camposEmpresaShouldExposeExpectedMappings() {
-        // Act
-        Map<String, String> campos = controller.camposEmpresa();
+        Map<String, String> campos = empresaController.camposEmpresa();
 
-        // Assert
         assertEquals("nome", campos.get("nome"));
         assertEquals("pais", campos.get("país"));
         assertEquals("cnpj", campos.get("CNPJ"));
@@ -44,10 +43,8 @@ class UpdateControllerTest {
 
     @Test
     void camposVagaShouldContainAllExpectedEntries() {
-        // Act
-        Map<String, String> campos = controller.camposVaga();
+        Map<String, String> campos = vagaController.camposVaga();
 
-        // Assert
         assertEquals("id_empresa", campos.get("ID da empresa"));
         assertEquals("nome", campos.get("nome"));
         assertEquals("descricao", campos.get("descrição"));

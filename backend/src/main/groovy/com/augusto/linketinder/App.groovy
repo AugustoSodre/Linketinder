@@ -1,13 +1,16 @@
 package com.augusto.linketinder
 
-import com.augusto.linketinder.view.menu.MenuMain
+import com.augusto.linketinder.service.InputService
+import com.augusto.linketinder.view.MenuView
+import com.augusto.linketinder.control.MenuController
 
 static void main(String[] args){
+    final InputService inputService = new InputService()
+    final MenuController menuController = new MenuController()
+    final MenuView menuView = new MenuView(inputService, menuController)
 
-    MenuMain menuMain = new MenuMain()
-
-    while (true){
-        if(menuMain.showMainMenu()){
+    while (true) {
+        if (menuView.showMainMenu()) {
             break
         }
     }
