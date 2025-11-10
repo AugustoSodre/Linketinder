@@ -1,140 +1,67 @@
-# Linketinder 
+# Linketinder
 
 **Desenvolvido por:** Augusto S. Lima
 
-## 📋 Sobre o Projeto
+## 📋 Sobre o projeto
 
-O Linketinder é uma aplicação desenvolvida em Groovy e TypeScript que conecta candidatos e empresas, facilitando o processo de recrutamento. O projeto possui duas implementações distintas:
-- **Backend/CLI em Groovy**: Interface de linha de comando para cadastro e gerenciamento
-- **Frontend em TypeScript**: Interface web moderna e interativa
+Linketinder conecta candidatos e empresas por meio de um backend em Groovy (CLI) e um frontend moderno em TypeScript. As duas implementações ainda não estão integradas, mas compartilham o mesmo domínio e scripts de banco de dados, preparando o caminho para uma futura API REST.
 
-*Nota: Atualmente as duas implementações funcionam de forma independente e não estão integradas.*
+## 🚀 Tecnologias
 
-## 🚀 Tecnologias Utilizadas
+- Backend: Groovy 3, Gradle, testes unitários em Spock/GroovyTest
+- Frontend: TypeScript, Vite, HTML5, CSS3, localStorage
+- Banco de dados: PostgreSQL 15+, scripts SQL versionados
+- Ferramentas de apoio: IntelliJ IDEA, pgAdmin, dbdiagram.io
 
-### Backend (Groovy)
-- **Groovy** - Linguagem principal do backend
-- **Gradle** - Gerenciamento de dependências e build
-
-### Frontend (TypeScript)
-- **TypeScript** - Linguagem principal do frontend
-- **Vite** - Build tool e servidor de desenvolvimento
-- **HTML5/CSS3** - Interface e estilização
-- **JavaScript ES6+** - Funcionalidades interativas
-
-### Banco de Dados (PostgreSQL)
-- **PostgreSQL 15+** - Sistema de gerenciamento de banco de dados relacional
-- **pgAdmin 4** - Interface gráfica para administração do PostgreSQL
-- **dbdiagram.io** - Ferramenta de modelagem e documentação do banco de dados
-
-### Ferramentas de Desenvolvimento
-- **IntelliJ IDEA** - IDE de desenvolvimento
-
-## 📁 Estrutura do Projeto
+## 🧭 Estrutura do projeto
 
 ```
 Linketinder/
-├── backend/                      # Backend Groovy
-│   ├── src/
-│   │   ├── main/
-│   │   │   └── groovy/
-│   │   │       └── com/augusto/linketinder/
-│   │   │           ├── control/
-│   │   │           │   ├── CadastroController.groovy
-│   │   │           │   ├── DeleteController.groovy
-│   │   │           │   ├── MenuController.groovy
-│   │   │           │   ├── UpdateController.groovy
-│   │   │           │   └── UpdateController_Helper.groovy
-│   │   │           ├── DAO/
-│   │   │           │   ├── DAO.groovy
-│   │   │           │   └── DAO_Helper.groovy
-│   │   │           ├── model/
-│   │   │           │   ├── Competencia.groovy
-│   │   │           │   ├── Vaga.groovy
-│   │   │           │   └── pessoa/
-│   │   │           │       ├── Candidato.groovy
-│   │   │           │       ├── Empresa.groovy
-│   │   │           │       └── Pessoa.groovy
-│   │   │           └── view/
-│   │   │               ├── create/
-│   │   │               ├── delete/
-│   │   │               ├── menu/
-│   │   │               ├── read/
-│   │   │               └── update/
-│   │   │           └── App.groovy
-│   │   └── test/
-│   │       └── groovy/
+├── backend/
 │   ├── build.gradle
 │   ├── gradlew
-│   ├── gradlew.bat
-│   └── settings.gradle
-├── frontend/                     # Frontend TypeScript
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── form-cadastro.ts
-│   │   │   ├── form-login.ts
-│   │   │   ├── grafico.ts
-│   │   │   ├── homeGenerator.ts
-│   │   │   └── listar.ts
-│   │   ├── handlers/
-│   │   │   └── formHandler.ts
-│   │   ├── helpers/
-│   │   │   ├── formHelper.ts
-│   │   │   └── homeHelper.ts
-│   │   ├── models/
-│   │   │   ├── Candidato.ts
-│   │   │   ├── Empresa.ts
-│   │   │   ├── Pessoa.ts
-│   │   │   └── Vaga.ts
-│   │   ├── pages/
-│   │   │   ├── cadastro.ts
-│   │   │   ├── home.ts
-│   │   │   ├── login.ts
-│   │   │   └── menu.ts
-│   │   ├── storage/
-│   │   │   └── lists.ts
-│   │   ├── styles/
-│   │   │   ├── style.css
-│   │   │   ├── style-cadastro.css
-│   │   │   ├── style-home.css
-│   │   │   ├── style-login.css
-│   │   │   └── style-menu.css
-│   │   ├── templates/
-│   │   │   ├── cadastroCandidato.html
-│   │   │   ├── cadastroEmpresa.html
-│   │   │   ├── homeCandidato.html
-│   │   │   ├── homeEmpresa.html
-│   │   │   ├── login.html
-│   │   │   └── menu.html
-│   │   ├── validators/
-│   │   │   └── formValidator.ts
-│   │   ├── main.ts
-│   │   └── router.ts
+│   └── src/
+│       ├── main/groovy/com/augusto/linketinder/
+│       │   ├── control/        # Controllers da CLI
+│       │   ├── dao/            # DAOs, factories e providers de conexão
+│       │   ├── model/          # Modelos do domínio (pessoa, vaga, competência)
+│       │   ├── view/           # Views para interação via terminal
+│       │   └── App.groovy      # Entrada principal da aplicação CLI
+│       └── test/groovy/        # Testes (usa H2 in-memory)
+├── frontend/
 │   ├── index.html
 │   ├── package.json
-│   └── tsconfig.json
-├── database/                     # Banco de Dados PostgreSQL
-│   ├── MER-Inicial.png
+│   ├── tsconfig.json
+│   └── src/
+│       ├── components/         # Componentes reutilizáveis de UI
+│       ├── factories/          # FormFactory, PageFactory, etc.
+│       ├── handlers/           # FormHandler e orquestração de eventos
+│       ├── helpers/            # Funções utilitárias (formHelper, homeHelper)
+│       ├── models/             # Modelos/DTOs TypeScript
+│       ├── pages/              # Páginas SPA (login, cadastro, home, menu)
+│       ├── storage/            # Listas e acesso ao localStorage
+│       ├── templates/          # HTML partials injetados dinamicamente
+│       └── validators/         # Cadeia de validadores (Chain of Responsibility)
+├── database/
 │   ├── scriptEstruturaBasica.sql
-│   └── scriptPopulacaoInicialDados.sql
+│   ├── scriptPopulacaoInicialDados.sql
+│   └── MER-Inicial.png
 └── README.md
 ```
 
 ## 🏗️ Arquitetura
 
-### Backend (MVC em Groovy)
-O backend segue o padrão arquitetural MVC (Model-View-Controller):
-- **Model**: Classes de domínio e estruturas de dados
-- **View**: Interface de linha de comando
-- **Controller**: Lógica de negócio e comunicação entre camadas
+### Backend (CLI em Groovy)
+- Padrão MVC aplicado: models representam domínio (candidatos, empresas, vagas); controllers coordenam fluxo da CLI; views cuidam da interação textual.
+- Camada de dados desacoplada via `ConnectionProvider`. A `DAOFactory` injeta automaticamente `JDBCConnectionProvider` (PostgreSQL) ou `H2ConnectionProvider` (testes) conforme `DB_PROVIDER` ou `-DDB_PROVIDER=h2`.
+- DAOs encapsulam SQL e trabalham com o provider selecionado, permitindo trocar o banco sem alterar regras de negócio.
+- Testes utilizam banco H2 in-memory para garantir isolamento.
 
 ### Frontend (SPA em TypeScript)
-O frontend utiliza uma arquitetura de Single Page Application (SPA):
-- **Components**: Componentes reutilizáveis da interface
-- **Pages**: Páginas da aplicação
-- **Models**: Definições de tipos e interfaces TypeScript
-- **Handlers**: Lógica de manipulação de eventos
-- **Storage**: Gerenciamento de dados em localStorage
+- Estrutura SPA com roteamento simples (`src/router.ts`).
+- Factories (`FormFactory`, `PageFactory`) constroem elementos on-demand, facilitando composição e testes.
+- Validações seguem Chain of Responsibility (`validators/chain/*`), permitindo adicionar regras sem quebrar o fluxo.
+- Handlers orquestram submissão e feedback de formulários, apoiados por helpers e models tipados.
 
 ### Banco de Dados (PostgreSQL)
 O banco de dados foi modelado seguindo as melhores práticas de normalização e integridade referencial:
@@ -155,19 +82,27 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 - **Vaga** pertence a uma empresa (N:1) e requer múltiplas competências (N:N via competencia_vaga)
 - **Competência** é compartilhada entre candidatos, empresas e vagas
 
+## 🧩 Padrões de projeto em uso
+- **Factory**: `DAOFactory`, `DataSourceFactory`, `FormFactory`, `PageFactory`.
+- **DAO**: encapsula persistência e mantém controllers enxutos.
+- **Provider**: `ConnectionProvider` para abstrair fonte de dados (JDBC x H2).
+- **Chain of Responsibility**: validadores sequenciais no frontend.
+- **Handler**: gerenciamento de eventos e submissões de formulários.
+
 ## ⚙️ Funcionalidades
 
 ### Backend (CLI Groovy)
 - ✅ Cadastro de candidatos e empresas via linha de comando
 - ✅ Visualização de registros
-- ✅ Gerenciamento CRUD básico
+- ✅ Gerenciamento CRUD completo
 - ✅ Sistema de competências
+- ✅ Integração com PostgreSQL e H2 (testes)
 
 ### Frontend (Web TypeScript)
 - ✅ Interface web responsiva
 - ✅ Sistema de login/cadastro
 - ✅ Páginas dedicadas para candidatos e empresas
-- ✅ Formulários interativos
+- ✅ Formulários interativos com validação em cadeia
 - ✅ Gráficos e visualizações
 - ✅ Armazenamento local (localStorage)
 - ✅ Roteamento SPA
@@ -179,51 +114,32 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 - ✅ Scripts automatizados de criação e população
 - ✅ Suporte a múltiplas competências por entidade
 
-## 🛠️ Como Executar
+## 🛠️ Como executar
 
 ### Backend (Groovy)
+Pré-requisitos: JDK 8+ e Gradle Wrapper (já incluso).
 
-**Pré-requisitos:**
-- Java 8 ou superior
-- Gradle instalado
-
-**Execução:**
 ```bash
-# Navegue até a pasta backend
 cd backend
+./gradlew run            # executa a CLI
 
-# Via Gradle
-./gradlew run
+# Rodar testes (usa H2 por padrão quando DB_PROVIDER=h2)
+export DB_PROVIDER=h2
+./gradlew test
 
-# Ou
-gradle run
-
-# Via IntelliJ IDEA
-# Navegue até App.groovy e execute
+# Alternativa via propriedade JVM
+./gradlew -DDB_PROVIDER=h2 test
 ```
 
 ### Frontend (TypeScript)
+Pré-requisitos: Node.js 16+ e npm.
 
-**Pré-requisitos:**
-- Node.js 16+ instalado
-- npm ou yarn
-
-**Execução:**
 ```bash
-# Navegue até a pasta frontend
 cd frontend
-
-# Instale as dependências
 npm install
-
-# Execute em modo de desenvolvimento
-npm run dev
-
-# Build para produção
-npm run build
-
-# Preview da build de produção
-npm run preview
+npm run dev       # modo desenvolvimento (http://localhost:5173)
+npm run build     # build produção
+npm run preview   # serve build de produção
 ```
 
 ### Banco de Dados (PostgreSQL)
@@ -235,68 +151,15 @@ npm run preview
 
 **Configuração inicial:**
 
-1. **Criar o banco de dados:**
 ```bash
-# Via terminal psql
-psql -U postgres
-CREATE DATABASE linketinder;
-\q
-```
+# criar banco
+psql -U postgres -c "CREATE DATABASE linketinder;"
 
-2. **Executar script de estrutura:**
-```bash
-# Via terminal
-psql -U postgres -d linketinder -f scriptEstruturaBasica.sql
+# criar estrutura
+psql -U postgres -d linketinder -f database/scriptEstruturaBasica.sql
 
-# Ou via pgAdmin 4
-# Abra o Query Tool e execute o conteúdo do arquivo scriptEstruturaBasica.sql
-```
-
-3. **Popular com dados iniciais:**
-```bash
-# Via terminal
-psql -U postgres -d linketinder -f scriptPopulacaoInicialDados.sql
-
-# Ou via pgAdmin 4
-# Execute o conteúdo do arquivo scriptPopulacaoInicialDados.sql
-```
-
-**Estrutura criada:**
-- 7 tabelas relacionadas
-- 5 candidatos (personagens de The Office)
-- 5 empresas
-- 5 vagas de emprego
-- 6 competências técnicas
-- Relacionamentos configurados entre todas as entidades
-
-## Providers de Conexão e Factory (DAO layer)
-
-O backend agora usa uma abstração para aquisição de conexões chamada `ConnectionProvider`. Há duas implementações prontas:
-
-- `JDBCConnectionProvider` — provedor JDBC genérico (usa variáveis de ambiente `JDBC_URL`, `JDBC_USER`, `JDBC_PASSWORD`). Este provedor é instanciado sob demanda (não é singleton), então cada chamada cria um provider com sua configuração.
-- `H2ConnectionProvider` — provedor simples para testes e desenvolvimento que cria conexões com um banco H2 in-memory. A URL pode ser customizada via `H2_JDBC_URL`, `H2_JDBC_USER`, `H2_JDBC_PASSWORD`.
-
-A seleção de qual provider a aplicação usa é centralizada em `DataSourceFactory.getProvider()` — escolha via variável de ambiente `DB_PROVIDER` ou pela propriedade do sistema Java `-DDB_PROVIDER=h2`:
-
-- `DB_PROVIDER=h2` retorna um `H2ConnectionProvider` (útil em testes locais e CI).
-- qualquer outro valor (ou vazio) retorna um `JDBCConnectionProvider` por padrão.
-
-As DAOs agora dependem da abstração `ConnectionProvider` e são obtidas via `DAOFactory`. `DAOFactory` é um factory simples que cria instâncias de DAOs já com o provider correspondente. Para testes, existem helpers do `DAOFactory.create*` que aceitam um `ConnectionProvider` (por exemplo um `H2ConnectionProvider`) para manter os testes isolados do estado global.
-
-Exemplos rápidos:
-
-Rodar os testes com H2 via variável de ambiente (Linux/macOS):
-
-```bash
-export DB_PROVIDER=h2
-cd backend
-./gradlew test
-```
-
-Ou passar como propriedade do JVM (útil em IDEs ou CI):
-
-```bash
-./gradlew -DDB_PROVIDER=h2 test
+# popular dados iniciais
+psql -U postgres -d linketinder -f database/scriptPopulacaoInicialDados.sql
 ```
 
 **Verificar instalação:**
@@ -313,11 +176,19 @@ SELECT * FROM empresa;
 SELECT * FROM vaga;
 ```
 
+**Estrutura criada:**
+- 7 tabelas relacionadas
+- 5 candidatos (personagens de The Office)
+- 5 empresas
+- 5 vagas de emprego
+- 6 competências técnicas
+- Relacionamentos configurados entre todas as entidades
+
 ## 🌐 Acesso à Aplicação
 
 ### Backend
 - **Tipo**: Interface de linha de comando (CLI)
-- **Execução**: Via terminal após executar `gradle run`
+- **Execução**: Via terminal após executar `./gradlew run`
 
 ### Frontend
 - **Tipo**: Aplicação web (SPA)
@@ -331,40 +202,11 @@ SELECT * FROM vaga;
 - **Acesso via pgAdmin**: `http://localhost:5050` (se configurado)
 - **Acesso via psql**: `psql -U postgres -d linketinder`
 
-## 📋 Funcionalidades Detalhadas
-
-### Recursos do Frontend Web:
-1. **Página de Login**: Autenticação de candidatos e empresas
-2. **Cadastro Duplo**: Formulários específicos para candidatos e empresas
-3. **Dashboard Candidatos**: 
-   - Visualização de perfil
-   - Listagem de vagas disponíveis
-   - Gráficos de competências
-4. **Dashboard Empresas**:
-   - Gestão de vagas
-   - Visualização de candidatos
-   - Análises e métricas
-5. **Navegação SPA**: Roteamento sem recarregamento de página
-
-### Recursos do Banco de Dados:
-1. **Tabela Candidato**: Armazena informações pessoais e profissionais
-2. **Tabela Empresa**: Dados cadastrais das empresas recrutadoras
-3. **Tabela Vaga**: Descrição das oportunidades de trabalho
-4. **Tabela Competência**: Catálogo de habilidades técnicas
-5. **Tabelas Associativas**: Relacionam competências com candidatos, empresas e vagas
-6. **Constraints de Integridade**: Garantem consistência dos dados
-7. **Cascata de Operações**: Atualizações e deleções propagadas automaticamente
-
-## 🚧 Próximos Passos
-
-- [ ] **Integração Backend-Frontend**: Conectar as duas implementações
-- [ ] **API REST**: Criar endpoints para comunicação
-- [ ] **DAO Layer**: Implementar camada de acesso a dados
-- [ ] **Connection Pool**: Configurar pool de conexões eficiente
-- [ ] **Sistema de Matching**: Algoritmo de compatibilidade baseado em competências
-- [ ] **Autenticação JWT**: Sistema de autenticação robusto
-- [ ] **Queries Otimizadas**: Implementar índices e otimizar consultas
-- [ ] **Deploy**: Preparar para produção
+## ✅ Funcionalidades atuais
+- Cadastro, listagem e atualização básica de candidatos, empresas, vagas e competências pela CLI.
+- Interface web com páginas de login, cadastro, dashboard e gráficos.
+- Validação de formulários com cadeia configurável de regras.
+- Scripts SQL para criação e seed inicial do banco.
 
 ## 🎯 Objetivo do Projeto
 
@@ -375,6 +217,35 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 - Futuro sistema de matching inteligente baseado em competências
 - Experiência completa de recrutamento
 
+## 📋 Funcionalidades detalhadas
+
+### Frontend web
+1. Login e autenticação simplificada (ajustada para integração futura).
+2. Fluxos de cadastro distintos para candidatos e empresas.
+3. Dashboard do candidato com listagem de vagas e gráficos de competências.
+4. Dashboard da empresa com gestão de vagas e visualização de candidatos.
+5. SPA com roteamento sem recarregar a página.
+
+### Banco de dados
+1. **Tabela Candidato**: Armazena informações pessoais e profissionais
+2. **Tabela Empresa**: Dados cadastrais das empresas recrutadoras
+3. **Tabela Vaga**: Descrição das oportunidades de trabalho
+4. **Tabela Competência**: Catálogo de habilidades técnicas
+5. **Tabelas Associativas**: Relacionam competências com candidatos, empresas e vagas
+6. **Constraints de Integridade**: Garantem consistência dos dados
+7. **Cascata de Operações**: Atualizações e deleções propagadas automaticamente
+
+## 🚧 Próximos Passos
+
+- [ ] **Integração Backend-Frontend**: Conectar as duas implementações via API REST
+- [ ] **API REST**: Criar endpoints para comunicação
+- [ ] **Connection Pool**: Configurar pool de conexões eficiente (ex.: HikariCP)
+- [ ] **Sistema de Matching**: Algoritmo de compatibilidade baseado em competências
+- [ ] **Autenticação JWT**: Sistema de autenticação robusto
+- [ ] **Testes End-to-End**: Cobertura completa do fluxo de integração
+- [ ] **Queries Otimizadas**: Implementar índices e otimizar consultas
+- [ ] **Deploy**: Preparar para produção
+
 ## 📝 Notas Técnicas
 
 - **Arquitetura**: Projeto modularizado com separação clara entre backend, frontend e database
@@ -383,8 +254,9 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 - **Banco de Dados**: PostgreSQL com estrutura normalizada até 4FN
 - **Modelagem**: Desenvolvida em dbdiagram.io e exportada para SQL
 - **Build System**: Gradle para o backend, Vite para o frontend
-- **Testes**: Estrutura preparada para testes unitários em Groovy
+- **Testes**: Estrutura preparada para testes unitários em Groovy com suporte a H2
 - **Compatibilidade**: Frontend responsivo para diferentes dispositivos
+- **Design Patterns**: Factory, DAO, Provider, Chain of Responsibility, Handler
 
 ## 🤝 Contribuições
 
