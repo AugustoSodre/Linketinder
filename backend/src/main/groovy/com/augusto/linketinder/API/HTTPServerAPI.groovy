@@ -11,14 +11,13 @@ class HTTPServerAPI {
         this.port = port
         this.httpServer = HttpServer.create(new InetSocketAddress(port), 0)
         configureRoutes()
-        httpServer.setExecutor(null) // Usa o executor padrão
+        httpServer.setExecutor(null)
     }
 
     private void configureRoutes() {
         httpServer.createContext("/candidatos", new CandidatoControllerAPI())
-        // Adicione mais rotas aqui conforme necessário
-        // httpServer.createContext("/empresas", new EmpresaControllerAPI())
-        // httpServer.createContext("/vagas", new VagaControllerAPI())
+        httpServer.createContext("/empresas", new EmpresaControllerAPI())
+        httpServer.createContext("/vagas", new VagaControllerAPI())
     }
 
     void start() {

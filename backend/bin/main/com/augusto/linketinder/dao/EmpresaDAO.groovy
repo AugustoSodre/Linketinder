@@ -74,6 +74,20 @@ class EmpresaDAO extends BaseDao {
         }
 
         competenciaDao.associateWithEmpresa(empresa.id, empresa.competencias)
+        
+        // Insere as vagas da empresa
+        println "DEBUG: empresa.listaVaga = ${empresa.listaVaga}"
+        println "DEBUG: empresa.listaVaga size = ${empresa.listaVaga?.size()}"
+        if (empresa.listaVaga) {
+            empresa.listaVaga.each { vaga ->
+                println "DEBUG: Inserindo vaga: ${vaga.nome} para empresa ID: ${empresa.id}"
+                vaga.id_empresa = empresa.id
+                vagaDao.insert(vaga)
+                println "DEBUG: Vaga inserida com ID: ${vaga.id}"
+            }
+        } else {
+            println "DEBUG: Nenhuma vaga para inserir!"
+        }
     }
 
     List<Empresa> listAll() throws SQLException {
