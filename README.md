@@ -8,10 +8,11 @@ Linketinder conecta candidatos e empresas por meio de um backend em Groovy (CLI)
 
 ## 🚀 Tecnologias
 
-- Backend: Groovy 3, Gradle, testes unitários em Spock/GroovyTest
+- Backend: Groovy 3, Gradle, API REST (HttpServer), testes unitários em Spock/GroovyTest
 - Frontend: TypeScript, Vite, HTML5, CSS3, localStorage
 - Banco de dados: PostgreSQL 15+, scripts SQL versionados
 - Ferramentas de apoio: IntelliJ IDEA, pgAdmin, dbdiagram.io
+- API: JSON, Jackson ObjectMapper, CORS habilitado
 
 ## 🧭 Estrutura do projeto
 
@@ -22,11 +23,14 @@ Linketinder/
 │   ├── gradlew
 │   └── src/
 │       ├── main/groovy/com/augusto/linketinder/
+│       │   ├── API/            # Controllers REST API
 │       │   ├── control/        # Controllers da CLI
 │       │   ├── dao/            # DAOs, factories e providers de conexão
 │       │   ├── model/          # Modelos do domínio (pessoa, vaga, competência)
+│       │   ├── service/        # Camada de serviço
 │       │   ├── view/           # Views para interação via terminal
-│       │   └── App.groovy      # Entrada principal da aplicação CLI
+│       │   ├── App.groovy      # Entrada principal da aplicação CLI
+│       │   └── Server.groovy   # Servidor HTTP da API REST (inicia HTTPServerAPI)
 │       └── test/groovy/        # Testes (usa H2 in-memory)
 ├── frontend/
 │   ├── index.html
@@ -51,8 +55,14 @@ Linketinder/
 
 ## 🏗️ Arquitetura
 
-### Backend (CLI em Groovy)
-- Padrão MVC aplicado: models representam domínio (candidatos, empresas, vagas); controllers coordenam fluxo da CLI; views cuidam da interação textual.
+### Backend (CLI + API REST em Groovy)
+- **CLI**: Padrão MVC aplicado com controllers coordenando fluxo da linha de comando e views para interação textual.
+- **API REST**: Controllers dedicados (`CandidatoControllerAPI`, `EmpresaControllerAPI`, `VagaControllerAPI`) implementando HttpHandler para servir endpoints JSON.
+- **Camada de Serviço**: Services (`CandidatoService`, `EmpresaService`, `VagaService`) encapsulam lógica de negócio e são compartilhados entre CLI e API.
+- **Serialização JSON**: Jackson ObjectMapper para conversão bidirecional entre objetos Groovy e JSON.
+- **CORS**: Headers configurados para permitir integração com frontend em diferentes origens.
+- **Validações**: Verificação de existência de recursos antes de atualizar/deletar.
+- **Funções auxiliares**: Métodos `toJson()` e `mapTo*()` para transformação consistente de dados.
 - Camada de dados desacoplada via `ConnectionProvider`. A `DAOFactory` injeta automaticamente `JDBCConnectionProvider` (PostgreSQL) ou `H2ConnectionProvider` (testes) conforme `DB_PROVIDER` ou `-DDB_PROVIDER=h2`.
 - DAOs encapsulam SQL e trabalham com o provider selecionado, permitindo trocar o banco sem alterar regras de negócio.
 - Testes utilizam banco H2 in-memory para garantir isolamento.
@@ -85,18 +95,32 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 ## 🧩 Padrões de projeto em uso
 - **Factory**: `DAOFactory`, `DataSourceFactory`, `FormFactory`, `PageFactory`.
 - **DAO**: encapsula persistência e mantém controllers enxutos.
+- **Service Layer**: camada intermediária entre controllers e DAOs, compartilhada entre CLI e API.
 - **Provider**: `ConnectionProvider` para abstrair fonte de dados (JDBC x H2).
+- **Handler**: `HttpHandler` para processamento de requisições HTTP na API REST.
 - **Chain of Responsibility**: validadores sequenciais no frontend.
-- **Handler**: gerenciamento de eventos e submissões de formulários.
+- **DRY (Don't Repeat Yourself)**: funções auxiliares reutilizáveis (`*ToJson`, `mapTo*`, `*Exists`).
+- **Strategy**: diferentes estratégias de serialização/deserialização via Jackson.
 
 ## ⚙️ Funcionalidades
 
-### Backend (CLI Groovy)
+### Backend (CLI + API REST Groovy)
+**CLI:**
 - ✅ Cadastro de candidatos e empresas via linha de comando
 - ✅ Visualização de registros
 - ✅ Gerenciamento CRUD completo
 - ✅ Sistema de competências
 - ✅ Integração com PostgreSQL e H2 (testes)
+
+**API REST:**
+- ✅ Endpoints RESTful completos para Candidatos, Empresas e Vagas
+- ✅ Operações CRUD via HTTP (GET, POST, PUT, DELETE)
+- ✅ Serialização/Deserialização JSON automática
+- ✅ Validações de existência de recursos
+- ✅ Suporte a relacionamentos (competências e vagas)
+- ✅ CORS habilitado para integração frontend
+- ✅ Logs detalhados de requisições e respostas
+- ✅ Tratamento de erros com códigos HTTP apropriados
 
 ### Frontend (Web TypeScript)
 - ✅ Interface web responsiva
@@ -119,6 +143,7 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 ### Backend (Groovy)
 Pré-requisitos: JDK 8+ e Gradle Wrapper (já incluso).
 
+**Executar CLI:**
 ```bash
 cd backend
 ./gradlew run            # executa a CLI
@@ -130,6 +155,23 @@ export DB_PROVIDER=h2
 # Alternativa via propriedade JVM
 ./gradlew -DDB_PROVIDER=h2 test
 ```
+
+**Executar API REST:**
+```bash
+cd backend
+./gradlew build          # compila o projeto
+
+# Inicia o servidor (porta padrão: 8080)
+java -cp "build/classes/groovy/main:build/libs/*" com.augusto.linketinder.Server
+
+# Ou especifica uma porta diferente
+java -cp "build/classes/groovy/main:build/libs/*" com.augusto.linketinder.Server 9090
+
+# Ou usa variável de ambiente
+PORT=9090 java -cp "build/classes/groovy/main:build/libs/*" com.augusto.linketinder.Server
+```
+
+> 📖 Para mais detalhes sobre execução e configuração do backend, consulte [backend/README.md](backend/README.md)
 
 ### Frontend (TypeScript)
 Pré-requisitos: Node.js 16+ e npm.
@@ -187,8 +229,15 @@ SELECT * FROM vaga;
 ## 🌐 Acesso à Aplicação
 
 ### Backend
-- **Tipo**: Interface de linha de comando (CLI)
+**CLI:**
+- **Tipo**: Interface de linha de comando
 - **Execução**: Via terminal após executar `./gradlew run`
+
+**API REST:**
+- **Tipo**: Servidor HTTP
+- **URL base**: `http://localhost:8080`
+- **Formato**: JSON
+- **CORS**: Habilitado para todas as origens
 
 ### Frontend
 - **Tipo**: Aplicação web (SPA)
@@ -201,6 +250,225 @@ SELECT * FROM vaga;
 - **Nome do banco**: linketinder
 - **Acesso via pgAdmin**: `http://localhost:5050` (se configurado)
 - **Acesso via psql**: `psql -U postgres -d linketinder`
+
+## 🔌 API REST - Endpoints
+
+A API REST implementada fornece endpoints completos para gerenciamento de Candidatos, Empresas e Vagas, seguindo as melhores práticas RESTful.
+
+### 📋 Estratégia de Implementação
+
+A API foi desenvolvida utilizando uma arquitetura em camadas com separação clara de responsabilidades:
+
+1. **Controllers (HttpHandler)**: Processam requisições HTTP, validam entrada e coordenam respostas
+2. **Services**: Encapsulam lógica de negócio e orquestram chamadas aos DAOs
+3. **DAOs**: Gerenciam persistência e acesso ao banco de dados
+4. **Models**: Representam as entidades do domínio
+
+**Padrões e práticas aplicadas:**
+- ✅ **Funções auxiliares reutilizáveis**: `*ToJson()` para serialização, `mapTo*()` para deserialização, `*Exists()` para validações
+- ✅ **DRY (Don't Repeat Yourself)**: Eliminação de código duplicado através de funções centralizadas
+- ✅ **Validação de recursos**: Verificação de existência antes de operações de atualização e remoção
+- ✅ **Tratamento de erros**: Respostas HTTP apropriadas (404, 500) com mensagens descritivas
+- ✅ **Conversão automática de tipos**: Maps JSON → Objetos Groovy e vice-versa
+- ✅ **Relacionamentos**: Suporte completo a listas aninhadas (competências, vagas)
+- ✅ **CORS**: Configurado para permitir integração com frontends em diferentes origens
+
+### 👤 Candidatos
+
+**Base URL:** `/candidatos`
+
+| Método | Endpoint | Descrição | Body |
+|--------|----------|-----------|------|
+| GET | `/candidatos` | Lista todos os candidatos | - |
+| GET | `/candidatos/{id}` | Busca candidato por ID | - |
+| POST | `/candidatos` | Cria novo candidato | JSON |
+| PUT | `/candidatos/{id}` | Atualiza candidato | JSON |
+| DELETE | `/candidatos/{id}` | Remove candidato | - |
+
+**Exemplo POST - Criar Candidato:**
+```bash
+curl -X POST http://localhost:8080/candidatos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "João Silva",
+    "email": "joao@example.com",
+    "estado": "SP",
+    "cep": "01234-567",
+    "cpf": "123.456.789-00",
+    "idade": 25,
+    "descricao": "Desenvolvedor Full Stack",
+    "senha": "senha123",
+    "competencias": [
+      {"id": 1, "nome": "Angular"},
+      {"id": 2, "nome": "Java"}
+    ]
+  }'
+```
+
+**Exemplo PUT - Atualizar Candidato:**
+```bash
+curl -X PUT http://localhost:8080/candidatos/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "João Silva Atualizado",
+    "email": "joao.novo@example.com",
+    "descricao": "Desenvolvedor Full Stack Sênior"
+  }'
+```
+
+**Exemplo DELETE:**
+```bash
+curl -X DELETE http://localhost:8080/candidatos/1
+```
+
+### 🏢 Empresas
+
+**Base URL:** `/empresas`
+
+| Método | Endpoint | Descrição | Body |
+|--------|----------|-----------|------|
+| GET | `/empresas` | Lista todas as empresas | - |
+| GET | `/empresas/{id}` | Busca empresa por ID | - |
+| POST | `/empresas` | Cria nova empresa | JSON |
+| PUT | `/empresas/{id}` | Atualiza empresa | JSON |
+| DELETE | `/empresas/{id}` | Remove empresa | - |
+
+**Exemplo POST - Criar Empresa com Vagas:**
+```bash
+curl -X POST http://localhost:8080/empresas \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Tech Solutions LTDA",
+    "email": "contato@techsolutions.com",
+    "estado": "SP",
+    "cep": "01310-100",
+    "pais": "Brasil",
+    "cnpj": "12.345.678/0001-90",
+    "descricao": "Empresa de tecnologia",
+    "senha": "senha123",
+    "competencias": [
+      {"id": 1, "nome": "Angular"},
+      {"id": 2, "nome": "Java"}
+    ],
+    "vagas": [
+      {
+        "nome": "Desenvolvedor Full Stack",
+        "descricao": "Vaga para desenvolvedor com experiência",
+        "cidade": "São Paulo",
+        "estado": "SP",
+        "competencias": [
+          {"id": 1, "nome": "Angular"},
+          {"id": 2, "nome": "Java"}
+        ]
+      }
+    ]
+  }'
+```
+
+**⚠️ Importante:** Ao criar uma empresa, NÃO envie `id` ou `id_empresa` nas vagas. Esses campos são gerados automaticamente.
+
+**Exemplo PUT - Atualizar Empresa:**
+```bash
+curl -X PUT http://localhost:8080/empresas/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Tech Solutions LTDA - Atualizada",
+    "email": "novo@techsolutions.com"
+  }'
+```
+
+### 💼 Vagas
+
+**Base URL:** `/vagas`
+
+| Método | Endpoint | Descrição | Body |
+|--------|----------|-----------|------|
+| GET | `/vagas` | Lista todas as vagas | - |
+| GET | `/vagas/{id}` | Busca vaga por ID | - |
+| POST | `/vagas` | Cria nova vaga | JSON |
+| PUT | `/vagas/{id}` | Atualiza vaga | JSON |
+| DELETE | `/vagas/{id}` | Remove vaga | - |
+
+**Exemplo POST - Criar Vaga:**
+```bash
+curl -X POST http://localhost:8080/vagas \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id_empresa": 1,
+    "nome": "Desenvolvedor Full Stack Pleno",
+    "descricao": "Vaga para desenvolvedor com experiência",
+    "cidade": "São Paulo",
+    "estado": "SP",
+    "competencias": [
+      {"id": 1, "nome": "Angular"},
+      {"id": 2, "nome": "Java"}
+    ]
+  }'
+```
+
+**⚠️ Importante:** O campo `id_empresa` é obrigatório e deve referenciar uma empresa existente.
+
+**Exemplo PUT - Atualizar Vaga:**
+```bash
+curl -X PUT http://localhost:8080/vagas/1 \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Desenvolvedor Full Stack Sênior",
+    "cidade": "Rio de Janeiro"
+  }'
+```
+
+### 📊 Respostas da API
+
+**Sucesso (200/201):**
+```json
+{
+  "message": "Recurso criado/atualizado com sucesso",
+  "id": 1,
+  "data": { }
+}
+```
+
+**Erro (404):**
+```json
+{
+  "error": "Recurso não encontrado",
+  "status": 404
+}
+```
+
+**Erro (500):**
+```json
+{
+  "error": "Erro interno",
+  "status": 500
+}
+```
+
+### 🔧 Testando a API
+
+**Usando cURL:**
+```bash
+# Listar todos os candidatos
+curl http://localhost:8080/candidatos
+
+# Buscar candidato específico
+curl http://localhost:8080/candidatos/1
+```
+
+**Usando ferramentas gráficas:**
+- Postman
+- Insomnia
+- Thunder Client (VS Code)
+- HTTPie
+
+**Arquivos de teste inclusos:**
+- `backend/test-candidato.json` - Exemplo para criar candidato
+- `backend/test-update-candidato.json` - Exemplo para atualizar candidato
+- `backend/test-empresa.json` - Exemplo para criar empresa com vagas
+- `backend/test-update-empresa.json` - Exemplo para atualizar empresa
+- `backend/test-vaga.json` - Exemplo para criar vaga
+- `backend/test-update-vaga.json` - Exemplo para atualizar vaga
 
 ## ✅ Funcionalidades atuais
 - Cadastro, listagem e atualização básica de candidatos, empresas, vagas e competências pela CLI.
@@ -237,26 +505,30 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 
 ## 🚧 Próximos Passos
 
-- [ ] **Integração Backend-Frontend**: Conectar as duas implementações via API REST
-- [ ] **API REST**: Criar endpoints para comunicação
+- [x] **API REST**: Endpoints completos para Candidatos, Empresas e Vagas ✅
+- [ ] **Integração Backend-Frontend**: Conectar frontend TypeScript com a API REST
 - [ ] **Connection Pool**: Configurar pool de conexões eficiente (ex.: HikariCP)
 - [ ] **Sistema de Matching**: Algoritmo de compatibilidade baseado em competências
 - [ ] **Autenticação JWT**: Sistema de autenticação robusto
 - [ ] **Testes End-to-End**: Cobertura completa do fluxo de integração
 - [ ] **Queries Otimizadas**: Implementar índices e otimizar consultas
 - [ ] **Deploy**: Preparar para produção
+- [ ] **Documentação OpenAPI/Swagger**: Documentação interativa da API
 
 ## 📝 Notas Técnicas
 
-- **Arquitetura**: Projeto modularizado com separação clara entre backend, frontend e database
-- **Backend**: Utiliza Banco de Dados conectado em PostgreSQL com arquitetura MVC
-- **Frontend**: Usa localStorage para persistência local (migração para API planejada)
+- **Arquitetura**: Projeto modularizado com separação clara entre backend (CLI + API REST), frontend e database
+- **Backend CLI**: Utiliza Banco de Dados conectado em PostgreSQL com arquitetura MVC
+- **Backend API**: HttpServer nativo do Java com controllers RESTful, serialização JSON via Jackson
+- **Camada de Serviço**: Services compartilhados entre CLI e API para reutilização de lógica de negócio
+- **Frontend**: Usa localStorage para persistência local (integração com API em desenvolvimento)
 - **Banco de Dados**: PostgreSQL com estrutura normalizada até 4FN
 - **Modelagem**: Desenvolvida em dbdiagram.io e exportada para SQL
 - **Build System**: Gradle para o backend, Vite para o frontend
 - **Testes**: Estrutura preparada para testes unitários em Groovy com suporte a H2
 - **Compatibilidade**: Frontend responsivo para diferentes dispositivos
-- **Design Patterns**: Factory, DAO, Provider, Chain of Responsibility, Handler
+- **Design Patterns**: Factory, DAO, Service Layer, Provider, Chain of Responsibility, Handler, Strategy, DRY
+- **API**: RESTful, JSON, CORS habilitado, validações de recursos, tratamento de erros HTTP
 
 ## 🤝 Contribuições
 
