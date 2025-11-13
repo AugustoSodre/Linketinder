@@ -1,29 +1,42 @@
 package com.augusto.linketinder.dao.connectionProvider
 
+import groovy.transform.CompileStatic
+
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
+@CompileStatic
 class JDBCConnectionProvider implements ConnectionProvider {
 
-    private final String DB_URL
-    private final String DB_USER
-    private final String DB_PASSWORD
+    private static final String DEFAULT_URL = "jdbc:postgresql://localhost:5432/linketinder"
+    private static final String DEFAULT_USER = "postgres"
+    private static final String DEFAULT_PASSWORD = "postgres"
 
-    JDBCConnectionProvider() {
-        this(System.getenv('JDBC_URL') ?: "jdbc:postgresql://localhost:5432/linketinder",
-                System.getenv('JDBC_USER') ?: "postgres",
-                System.getenv('JDBC_PASSWORD') ?: "postgres")
+    private final String dbUrl
+    private final String dbUser
+    private final String dbPassword
+
+    static {
+        Class.forName("org.postgresql.Driver")
     }
 
-    JDBCConnectionProvider(String db_url, String db_user, String db_password) {
-        this.DB_URL = db_url
-        this.DB_USER = db_user
-        this.DB_PASSWORD = db_password
+    JDBCConnectionProvider() {
+        this(
+            System.getenv('JDBC_URL') ?: DEFAULT_URL,
+            System.getenv('JDBC_USER') ?: DEFAULT_USER,
+            System.getenv('JDBC_PASSWORD') ?: DEFAULT_PASSWORD
+        )
+    }
+
+    JDBCConnectionProvider(String dbUrl, String dbUser, String dbPassword) {
+        this.dbUrl = dbUrl
+        this.dbUser = dbUser
+        this.dbPassword = dbPassword
     }
 
     @Override
     Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD)
+        return DriverManager.getConnection(dbUrl, dbUser, dbPassword)
     }
 }
