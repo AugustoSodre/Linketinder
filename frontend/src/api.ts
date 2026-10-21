@@ -23,6 +23,13 @@ async function request(path: string, method: string = "GET", body?: unknown): Pr
 
     const res = await fetch(API_URL + path, { method, headers, body: body ? JSON.stringify(body) : undefined })
     const data = await res.json().catch(() => null)
+    // Token vencido (ou servidor reiniciado): sai da conta em vez de deixar a tela num estado logado falso
+    if (res.status === 401 && session) {
+        clearSession()
+        alert("Sua sessão expirou. Faça login novamente.")
+        window.location.reload()
+        return new Promise(() => {}) // a página vai recarregar; não deixa quem chamou mostrar outro alerta
+    }
     if (!res.ok) throw new Error(data?.error ?? `Erro ${res.status}`)
     return data
 }

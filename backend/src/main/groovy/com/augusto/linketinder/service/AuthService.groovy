@@ -14,8 +14,9 @@ import java.util.concurrent.ConcurrentHashMap
 class AuthService {
     private static final int ITERACOES = 120_000
     private static final SecureRandom random = new SecureRandom()
+    static long validadeTokenMs = 8 * 60 * 60 * 1000L
 
-    // shortcut: tokens vivem só em memória e somem quando o servidor reinicia; trocar por JWT ou tabela se precisar persistir
+    // shortcut: tokens vivem só em memória (somem quando o servidor reinicia); trocar por JWT ou tabela se precisar persistir
     private static final Map<String, Map> tokens = new ConcurrentHashMap<>()
 
     private final CandidatoDAO candidatoDao
@@ -60,15 +61,23 @@ class AuthService {
         if (!credenciais || !verify(senha, credenciais.senha as String)) {
             return null
         }
+        // Limpa tokens vencidos a cada login para o mapa não crescer sem limite
+        tokens.values().removeIf { it.expira < System.currentTimeMillis() }
+
         def token = UUID.randomUUID().toString()
-        tokens[token] = [tipo: tipo, id: credenciais.id]
+        tokens[token] = [tipo: tipo, id: credenciais.id, expira: System.currentTimeMillis() + validadeTokenMs]
         return [token: token, tipo: tipo, id: credenciais.id]
     }
 
-    // Retorna [tipo, id] do usuário logado ou null se o token for ausente/inválido
+    // Retorna [tipo, id] do usuário logado ou null se o token for ausente, inválido ou vencido
     static Map getSession(HttpExchange exchange) {
         def header = exchange.requestHeaders.getFirst("Authorization")
-        return header?.startsWith("Bearer ") ? tokens[header.substring(7)] : null
+        def sessao = header?.startsWith("Bearer ") ? tokens[header.substring(7)] : null
+        if (sessao && sessao.expira < System.currentTimeMillis()) {
+            tokens.remove(header.substring(7))
+            return null
+        }
+        return sessao
     }
 
     // 0 = liberado, 401 = sem login, 403 = logado mas não é o dono (tipo/id diferentes)

@@ -101,6 +101,23 @@ class AuthServiceTest {
     }
 
     @Test
+    void expiredTokenShouldBeRejected() {
+        long validadeOriginal = AuthService.getValidadeTokenMs();
+        AuthService.setValidadeTokenMs(-1);
+        try {
+            Map<?, ?> sessao = authService.login("12345678901", null, "123456");
+            Headers headers = new Headers();
+            headers.add("Authorization", "Bearer " + sessao.get("token"));
+            HttpExchange exchange = mock(HttpExchange.class);
+            when(exchange.getRequestHeaders()).thenReturn(headers);
+
+            assertNull(AuthService.getSession(exchange));
+        } finally {
+            AuthService.setValidadeTokenMs(validadeOriginal);
+        }
+    }
+
+    @Test
     void deleteWithoutTokenShouldReturn401() throws Exception {
         HttpExchange exchange = mock(HttpExchange.class);
         when(exchange.getRequestMethod()).thenReturn("DELETE");
