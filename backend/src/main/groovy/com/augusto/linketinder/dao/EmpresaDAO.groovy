@@ -73,12 +73,18 @@ class EmpresaDAO extends BaseDao {
             close(conn)
         }
 
-        competenciaDao.associateWithEmpresa(empresa.id, empresa.competencias)
-        
-        // Insere as vagas da empresa
-        empresa.listaVaga?.each { vaga ->
-            vaga.id_empresa = empresa.id
-            vagaDao.insert(vaga)
+        // shortcut: desfaz com delete em vez de transação (cada DAO abre sua conexão); trocar por transação se os DAOs passarem a compartilhar a Connection
+        try {
+            competenciaDao.associateWithEmpresa(empresa.id, empresa.competencias)
+
+            // Insere as vagas da empresa
+            empresa.listaVaga?.each { vaga ->
+                vaga.id_empresa = empresa.id
+                vagaDao.insert(vaga)
+            }
+        } catch (Exception e) {
+            delete(empresa.id)
+            throw e
         }
     }
 

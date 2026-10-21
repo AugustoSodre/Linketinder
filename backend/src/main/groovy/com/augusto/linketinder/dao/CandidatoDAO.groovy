@@ -66,7 +66,13 @@ class CandidatoDAO extends BaseDao {
             close(conn)
         }
 
-        competenciaDao.associateWithCandidato(candidato.id, candidato.competencias)
+        // shortcut: desfaz com delete em vez de transação (cada DAO abre sua conexão); trocar por transação se os DAOs passarem a compartilhar a Connection
+        try {
+            competenciaDao.associateWithCandidato(candidato.id, candidato.competencias)
+        } catch (Exception e) {
+            delete(candidato.id)
+            throw e
+        }
     }
 
     List<Candidato> listAll() throws SQLException {

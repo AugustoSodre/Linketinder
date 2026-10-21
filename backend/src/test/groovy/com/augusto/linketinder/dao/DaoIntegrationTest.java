@@ -21,6 +21,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class DaoIntegrationTest {
 
@@ -162,6 +164,25 @@ class DaoIntegrationTest {
         assertNotNull(empresas.get(0).getListaVaga());
         assertEquals(1, empresas.get(0).getListaVaga().size());
         assertEquals(2, empresas.get(0).getCompetencias().size());
+    }
+
+    @Test
+    void shouldNotKeepEmpresaWhenVagaInsertFails() {
+        Empresa empresa = new Empresa();
+        empresa.setNome("Tech Corp");
+        empresa.setEmail("contato@techcorp.com");
+        empresa.setEstado("PE");
+        empresa.setCep("50000000");
+        empresa.setPais("BR");
+        empresa.setCnpj("12345678000199");
+        empresa.setDescricao("Consultoria de tecnologia");
+        empresa.setSenha("senhaSegura");
+        empresa.setCompetencias(List.of());
+        // nome null viola o NOT NULL da vaga
+        empresa.setListaVaga(List.of(new Vaga(0, null, "desc", "Recife", "PE", List.of())));
+
+        assertThrows(Exception.class, () -> empresaDao.insert(empresa));
+        assertDoesNotThrow(() -> assertEquals(0, empresaDao.listAll().size()));
     }
 
     private void recreateSchema() throws SQLException {
