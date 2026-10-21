@@ -229,8 +229,6 @@ class EmpresaControllerAPI implements HttpHandler {
     }
 
     private Empresa mapToEmpresa(Map data) {
-        println "DEBUG: mapToEmpresa recebeu data: ${data}"
-        println "DEBUG: data.vagas = ${data.vagas}"
         
         def empresa = new Empresa()
         empresa.nome = data.nome
@@ -257,10 +255,8 @@ class EmpresaControllerAPI implements HttpHandler {
         
         // Converte a lista de vagas de Map para objetos Vaga
         if (data.vagas && data.vagas instanceof List) {
-            println "DEBUG: Convertendo ${data.vagas.size()} vagas"
             empresa.listaVaga = data.vagas.collect { vaga ->
                 if (vaga instanceof Map) {
-                    println "DEBUG: Criando vaga: ${vaga.nome}"
                     def vagaObj = new Vaga()
                     vagaObj.id_empresa = 0  // Será definido no DAO
                     vagaObj.nome = vaga.nome
@@ -281,19 +277,15 @@ class EmpresaControllerAPI implements HttpHandler {
                         vagaObj.competencias = []
                     }
                     
-                    println "DEBUG: Vaga criada: ${vagaObj.nome}"
                     return vagaObj
                 } else {
                     return vaga as Vaga
                 }
             }
-            println "DEBUG: empresa.listaVaga após conversão = ${empresa.listaVaga}"
         } else {
-            println "DEBUG: Nenhuma vaga encontrada nos dados!"
             empresa.listaVaga = []
         }
         
-        println "DEBUG: Retornando empresa com ${empresa.listaVaga?.size()} vagas"
         return empresa
     }
 }
