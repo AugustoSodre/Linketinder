@@ -1,3 +1,4 @@
+import { escapeHtml } from "../helpers/escapeHtml"
 import { generateCompetenciasList } from "../helpers/homeHelper"
 import { listCandidatos, listEmpresas } from "../storage/lists"
 
@@ -16,12 +17,12 @@ export function listarVagas(currentUser: any): string{
     
             text += `
             <label for="nome-vaga">Título da Vaga:</label>
-            <p id="nome-vaga">${vagaAtual.nome}</p>
+            <p id="nome-vaga">${escapeHtml(vagaAtual.nome)}</p>
             `
     
             text +=`
             <label for="descricao-vaga">Descrição da Vaga:</label>
-            <p id="descricao-vaga">${vagaAtual.descricao}</p>
+            <p id="descricao-vaga">${escapeHtml(vagaAtual.descricao)}</p>
             `
 
             text += `
@@ -36,7 +37,7 @@ export function listarVagas(currentUser: any): string{
             `
     
             vagaAtual.competencias.forEach((c: any) => {
-                text += `<li class="skill" id="skill-${c}">${c}</li>`
+                text += `<li class="skill" id="skill-${escapeHtml(c)}">${escapeHtml(c)}</li>`
             })
     
             text += `
@@ -63,7 +64,7 @@ export function listarCandidatos(currentUser: any): string{
             <p id="nome-candidato">Anonimo</p>
 
             <label for="descricao">Descrição:</label>
-            <p id="descricao-candidato">${candidato.descricao}</p>
+            <p id="descricao-candidato">${escapeHtml(candidato.descricao)}</p>
 
             <div class="profile-item" id="candidato-competencias">
                 <label for="competencias">Competências:</label>

@@ -1,3 +1,4 @@
+import { escapeHtml } from "./escapeHtml"
 import { handleFormCandidato, handleFormLoginCandidato, handleFormLoginEmpresa } from "../handlers/formHandler";
 import { handleFormEmpresa } from "../handlers/formHandler";
 import { listCompetenciasDisponiveis } from "../storage/lists";
@@ -100,8 +101,8 @@ export function generateCompetenciasText(sufixo: string): string{
     competencias.forEach((competencia) => {
         text += `
         <div id="competencia-div">
-            <label for="${competencia}">${competencia}</label>
-            <input type="checkbox" id="${competencia}" name="${competencia}" value="${competencia}" class="competencia-${sufixo}">
+            <label for="${escapeHtml(competencia)}">${escapeHtml(competencia)}</label>
+            <input type="checkbox" id="${escapeHtml(competencia)}" name="${escapeHtml(competencia)}" value="${escapeHtml(competencia)}" class="competencia-${sufixo}">
           </div>
         `
     })
