@@ -1,14 +1,5 @@
-import { Candidato } from "../models/Candidato"
-import { Empresa } from "../models/Empresa"
+// Preenchidas a partir da API REST em loadData() (src/api.ts); guardam o JSON cru da API
+export var listCandidatos: any[] = []
+export var listEmpresas: any[] = []
 
-export var listCandidatos: Candidato[] = []
-export var listEmpresas: Empresa[] = []
-
-export var listCompetenciasDisponiveis: string[] = [
-    "Django",
-    "SpringBoot",
-    "Angular",
-    "React",
-    "Linux",
-    "PowerBI"
-]
+export var listCompetenciasDisponiveis: string[] = []

@@ -4,12 +4,12 @@
 
 ## 📋 Sobre o projeto
 
-Linketinder conecta candidatos e empresas por meio de um backend em Groovy (CLI) e um frontend moderno em TypeScript. As duas implementações ainda não estão integradas, mas compartilham o mesmo domínio e scripts de banco de dados, preparando o caminho para uma futura API REST.
+Linketinder conecta candidatos e empresas por meio de um backend em Groovy (CLI) e um frontend moderno em TypeScript. O frontend consome a API REST do backend, que persiste os dados no PostgreSQL.
 
 ## 🚀 Tecnologias
 
 - Backend: Groovy 5, Gradle, API REST (HttpServer), testes com JUnit 5 + Mockito + H2
-- Frontend: TypeScript, Vite, HTML5, CSS3, localStorage
+- Frontend: TypeScript, Vite, HTML5, CSS3, Fetch API (consome a API REST)
 - Banco de dados: PostgreSQL 15+, scripts SQL versionados
 - Ferramentas de apoio: IntelliJ IDEA, pgAdmin, dbdiagram.io
 - API: JSON, Jackson ObjectMapper, CORS habilitado
@@ -43,7 +43,7 @@ Linketinder/
 │       ├── helpers/            # Funções utilitárias (formHelper, homeHelper)
 │       ├── models/             # Modelos/DTOs TypeScript
 │       ├── pages/              # Páginas SPA (login, cadastro, home, menu)
-│       ├── storage/            # Listas e acesso ao localStorage
+│       ├── storage/            # Listas carregadas da API (src/api.ts faz as requisições)
 │       ├── templates/          # HTML partials injetados dinamicamente
 │       └── validators/         # Cadeia de validadores (Chain of Responsibility)
 ├── database/
@@ -128,7 +128,7 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 - ✅ Páginas dedicadas para candidatos e empresas
 - ✅ Formulários interativos com validação em cadeia
 - ✅ Gráficos e visualizações
-- ✅ Armazenamento local (localStorage)
+- ✅ Dados carregados da API REST; login com senha e token na sessão (sessionStorage)
 - ✅ Roteamento SPA
 
 ### Banco de Dados (PostgreSQL)
@@ -176,7 +176,8 @@ Pré-requisitos: Node.js 16+ e npm.
 ```bash
 cd frontend
 npm install
-npm run dev       # modo desenvolvimento (http://localhost:5173)
+npm run dev       # modo desenvolvimento (http://localhost:5173); a API precisa estar rodando
+# Para outra URL da API: VITE_API_URL=http://localhost:9090 npm run dev
 npm run build     # build produção
 npm run preview   # serve build de produção
 ```
@@ -500,7 +501,7 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 ## 📋 Funcionalidades detalhadas
 
 ### Frontend web
-1. Login e autenticação simplificada (ajustada para integração futura).
+1. Login com CPF/CNPJ e senha, autenticado pela API (token Bearer).
 2. Fluxos de cadastro distintos para candidatos e empresas.
 3. Dashboard do candidato com listagem de vagas e gráficos de competências.
 4. Dashboard da empresa com gestão de vagas e visualização de candidatos.
@@ -518,7 +519,7 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 ## 🚧 Próximos Passos
 
 - [x] **API REST**: Endpoints completos para Candidatos, Empresas e Vagas ✅
-- [ ] **Integração Backend-Frontend**: Conectar frontend TypeScript com a API REST
+- [x] **Integração Backend-Frontend**: Conectar frontend TypeScript com a API REST
 - [ ] **Connection Pool**: Configurar pool de conexões eficiente (ex.: HikariCP)
 - [ ] **Sistema de Matching**: Algoritmo de compatibilidade baseado em competências
 - [ ] **Autenticação JWT**: Sistema de autenticação robusto
@@ -533,7 +534,7 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 - **Backend CLI**: Utiliza Banco de Dados conectado em PostgreSQL com arquitetura MVC
 - **Backend API**: HttpServer nativo do Java com controllers RESTful, serialização JSON via Jackson
 - **Camada de Serviço**: Services compartilhados entre CLI e API para reutilização de lógica de negócio
-- **Frontend**: Usa localStorage para persistência local (integração com API em desenvolvimento)
+- **Frontend**: Consome a API REST (`VITE_API_URL`, padrão `http://localhost:8080`); só o token de login fica no sessionStorage
 - **Banco de Dados**: PostgreSQL com estrutura normalizada até 4FN
 - **Modelagem**: Desenvolvida em dbdiagram.io e exportada para SQL
 - **Build System**: Gradle para o backend, Vite para o frontend

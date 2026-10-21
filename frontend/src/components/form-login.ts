@@ -21,6 +21,8 @@ function renderLoginCandidatoHTML(app: HTMLDivElement){
     <form action="" id="form-login-candidato" class="form-login">
         <label for="cpf">CPF:</label>
         <input type="text" id="cpf-login-candidato">
+        <label for="senha-login">Senha:</label>
+        <input type="password" id="senha-login" autocomplete="current-password">
         <button type="submit">Login</button>
     </form>
     `
@@ -37,6 +39,8 @@ function renderLoginEmpresaHTML(app: HTMLDivElement){
     <form action="" id="form-login-empresa" class="form-login">
         <label for="cnpj">CNPJ:</label>
         <input type="text" id="cnpj-login-empresa">
+        <label for="senha-login">Senha:</label>
+        <input type="password" id="senha-login" autocomplete="current-password">
         <button type="submit">Login</button>
     </form>
     `

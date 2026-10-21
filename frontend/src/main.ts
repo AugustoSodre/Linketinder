@@ -1,14 +1,9 @@
 import {router} from "./router"
-import { listCandidatos, listEmpresas } from "./storage/lists"
+import { loadData } from "./api"
 
-const candidatosFromStorage = localStorage.getItem("listCandidatos")
-const empresasFromStorage = localStorage.getItem("listEmpresas")
-
-if (candidatosFromStorage) {
-    listCandidatos.splice(0, listCandidatos.length, ...JSON.parse(candidatosFromStorage))
-}
-if (empresasFromStorage) {
-    listEmpresas.splice(0, listEmpresas.length, ...JSON.parse(empresasFromStorage))
-}
-
-router()
+loadData()
+    .then(router)
+    .catch((e) => {
+        document.querySelector<HTMLDivElement>("#app")!.innerHTML =
+            `<p>Não foi possível conectar à API (${e.message}). Verifique se o backend está rodando.</p>`
+    })

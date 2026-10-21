@@ -79,7 +79,7 @@ export function createFormListeners(){
                     competenciasSelecionadasVaga.push(c.value)
                 }
             } else {
-                const compIndex = competenciasSelecionadas.indexOf(c.value)
+                const compIndex = competenciasSelecionadasVaga.indexOf(c.value)
                 if (competenciasSelecionadasVaga.includes(c.value)) {
                     competenciasSelecionadasVaga.splice(compIndex, 1)
                 }

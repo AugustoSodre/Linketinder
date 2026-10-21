@@ -1,13 +1,12 @@
 import { Candidato } from "../models/Candidato"
 import { Empresa } from "../models/Empresa"
 import { Vaga } from "../models/Vaga"
-import { listCandidatos, listEmpresas } from "../storage/lists"
+import { createCandidato, createEmpresa, login, toCompetenciasApi } from "../api"
 
 import { FieldRequiredHandler } from "../validators/chain/FieldRequiredHandler"
 import { RegexHandler } from "../validators/chain/RegexHandler"
 import { NumberRangeHandler } from "../validators/chain/NumberRangeHandler"
 import { UniqueHandler } from "../validators/chain/UniqueHandler"
-import { ExistenceHandler } from "../validators/chain/ExistenceHandler"
 
 export function handleFormCandidato(listCompetenciasCandidato: string[]){
     // read raw values from DOM
@@ -19,13 +18,14 @@ export function handleFormCandidato(listCompetenciasCandidato: string[]){
     const competencias = listCompetenciasCandidato
     const idadeRaw = (document.getElementById("idade") as HTMLInputElement)?.value ?? ''
     const cpfRaw = (document.getElementById("cpf") as HTMLInputElement)?.value ?? ''
+    const senha = (document.getElementById("senha") as HTMLInputElement)?.value ?? ''
 
     // normalize
     const cep = cepRaw.replaceAll('-', '').trim()
     const cpf = cpfRaw.replaceAll('.', '').replaceAll('-', '').trim()
     const idade = Number(idadeRaw)
 
-    const context: Record<string, any> = { nome, email, estado, cep, descricao, competencias, idade, cpf }
+    const context: Record<string, any> = { nome, email, estado, cep, descricao, competencias, idade, cpf, senha }
 
     // build chain: nome -> email -> estado -> cep -> descricao -> idade -> cpf format -> cpf unique
     const nomeHandler = new FieldRequiredHandler('nome', 'Nome inválido')
@@ -39,8 +39,9 @@ export function handleFormCandidato(listCompetenciasCandidato: string[]){
         .setNext(new NumberRangeHandler('idade', 0, 120, 'Idade inválida'))
         .setNext(new RegexHandler('cpf', /^\d{11}$/, 'CPF inválido'))
         .setNext(new UniqueHandler('cpf', 'candidato', 'CPF Já Cadastrado'))
+        .setNext(new RegexHandler('senha', /^.{6,}$/, 'A senha deve ter pelo menos 6 caracteres'))
 
-    nomeHandler.handle(context).then(res => {
+    nomeHandler.handle(context).then(async res => {
         if (!res.ok) {
             alert(res.message)
             return
@@ -48,9 +49,13 @@ export function handleFormCandidato(listCompetenciasCandidato: string[]){
 
         // all good: create and persist
         const newCandidato = new Candidato(nome, email, estado, cep, descricao, competencias, idade, cpf)
-        listCandidatos.push(newCandidato)
-        localStorage.setItem("listCandidatos", JSON.stringify(listCandidatos))
-        window.location.reload()
+        try {
+            await createCandidato({ ...newCandidato, senha, competencias: toCompetenciasApi(competencias) })
+            alert("Cadastro realizado! Faça login com seu CPF e senha.")
+            window.location.reload()
+        } catch (e) {
+            alert((e as Error).message)
+        }
     })
 
 }
@@ -63,6 +68,7 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
     const descricao = (document.getElementById("descricao") as HTMLInputElement)?.value ?? ''
     const pais = (document.getElementById("pais") as HTMLInputElement)?.value ?? ''
     const cnpjRaw = (document.getElementById("cnpj") as HTMLInputElement)?.value ?? ''
+    const senha = (document.getElementById("senha") as HTMLInputElement)?.value ?? ''
     const competencias = listCompetenciasEmpresa
 
     const nomeVaga = (document.getElementById("nome-vaga") as HTMLInputElement)?.value ?? ''
@@ -71,7 +77,7 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
     const cep = cepRaw.replaceAll('-', '').trim()
     const cnpj = cnpjRaw.replaceAll('.', '').replaceAll('-', '').replaceAll('/', '').trim()
 
-    const context: Record<string, any> = { nome, email, estado, cep, descricao, pais, cnpj, nomeVaga, descricaoVaga }
+    const context: Record<string, any> = { nome, email, estado, cep, descricao, pais, cnpj, senha, nomeVaga, descricaoVaga }
 
     // chain: nome -> email -> estado -> cep -> descricao -> pais -> cnpj format -> cnpj unique -> vaga fields
     const root = new FieldRequiredHandler('nome', 'Nome inválido')
@@ -85,18 +91,29 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
         .setNext(new RegexHandler('pais', /^[A-Z]{2}$/, 'País inválido'))
         .setNext(new RegexHandler('cnpj', /^\d{14}$/, 'CNPJ inválido'))
         .setNext(new UniqueHandler('cnpj', 'empresa', 'CNPJ Já Cadastrado'))
+        .setNext(new RegexHandler('senha', /^.{6,}$/, 'A senha deve ter pelo menos 6 caracteres'))
         .setNext(new FieldRequiredHandler('nomeVaga', 'Nome da vaga inválido'))
         .setNext(new FieldRequiredHandler('descricaoVaga', 'Descrição da vaga inválida'))
 
-    root.handle(context).then(res => {
+    root.handle(context).then(async res => {
         if (!res.ok) { alert(res.message); return }
 
         const vaga = new Vaga(nomeVaga, descricaoVaga, listCompetenciasVaga)
         const newEmpresa = new Empresa(nome, email, estado, cep, descricao, competencias, pais, cnpj, vaga)
 
-        listEmpresas.push(newEmpresa)
-        localStorage.setItem("listEmpresas", JSON.stringify(listEmpresas))
-        window.location.reload()
+        try {
+            // A API cria a empresa e suas vagas numa única requisição
+            await createEmpresa({
+                ...newEmpresa,
+                senha,
+                competencias: toCompetenciasApi(competencias),
+                vagas: [{ ...vaga, estado, competencias: toCompetenciasApi(listCompetenciasVaga) }]
+            })
+            alert("Cadastro realizado! Faça login com seu CNPJ e senha.")
+            window.location.reload()
+        } catch (e) {
+            alert((e as Error).message)
+        }
     })
 
 }
@@ -104,16 +121,20 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
 export function handleFormLoginCandidato(){
     const cpfRaw = (document.getElementById("cpf-login-candidato") as HTMLInputElement)?.value ?? ''
     const cpf = cpfRaw.replaceAll('.', '').replaceAll('-', '').trim()
-    const context: Record<string, any> = { cpf }
+    const senha = (document.getElementById("senha-login") as HTMLInputElement)?.value ?? ''
+    const context: Record<string, any> = { cpf, senha }
 
     const root = new RegexHandler('cpf', /^\d{11}$/, 'CPF inválido')
-    root.setNext(new ExistenceHandler('cpf', 'candidato', 'CPF não encontrado'))
+    root.setNext(new FieldRequiredHandler('senha', 'Informe a senha'))
 
-    root.handle(context).then(res => {
+    root.handle(context).then(async res => {
         if (!res.ok) { alert(res.message); return }
-        // success: context.currentUser populated by ExistenceHandler
-        localStorage.setItem('currentUser', JSON.stringify(context.currentUser))
-        window.location.reload()
+        try {
+            await login({ cpf, senha })
+            window.location.reload()
+        } catch {
+            alert('CPF ou senha inválidos')
+        }
     })
 
 }
@@ -122,15 +143,20 @@ export function handleFormLoginCandidato(){
 export function handleFormLoginEmpresa(){
     const cnpjRaw = (document.getElementById("cnpj-login-empresa") as HTMLInputElement)?.value ?? ''
     const cnpj = cnpjRaw.replaceAll('.', '').replaceAll('-', '').replaceAll('/', '').trim()
-    const context: Record<string, any> = { cnpj }
+    const senha = (document.getElementById("senha-login") as HTMLInputElement)?.value ?? ''
+    const context: Record<string, any> = { cnpj, senha }
 
     const root = new RegexHandler('cnpj', /^\d{14}$/, 'CNPJ inválido')
-    root.setNext(new ExistenceHandler('cnpj', 'empresa', 'CNPJ não encontrado'))
+    root.setNext(new FieldRequiredHandler('senha', 'Informe a senha'))
 
-    root.handle(context).then(res => {
+    root.handle(context).then(async res => {
         if (!res.ok) { alert(res.message); return }
-        localStorage.setItem('currentUser', JSON.stringify(context.currentUser))
-        window.location.reload()
+        try {
+            await login({ cnpj, senha })
+            window.location.reload()
+        } catch {
+            alert('CNPJ ou senha inválidos')
+        }
     })
 
 }

@@ -1,45 +1,23 @@
 import { listarCandidatos, listarVagas } from "../components/listar"
-import { listCandidatos, listEmpresas } from "../storage/lists"
+import { clearSession, deleteCurrentUser, getSession } from "../api"
 
-export function createHomeListeners(currentUser: any){
+export function createHomeListeners(){
 
     document.getElementById("btn-logout")?.addEventListener("click", () => {
-        localStorage.removeItem("currentUser")
+        clearSession()
         window.location.reload()
     })
 
-    document.getElementById("btn-delete")?.addEventListener("click", () => {
-        if(currentUser.vaga){
-            for(let i = 0; i < listEmpresas.length; i++){
-                const c: any = listEmpresas[i]
+    document.getElementById("btn-delete")?.addEventListener("click", async () => {
+        const session = getSession()
+        if(!session || !confirm("Excluir seu perfil?")) return
 
-                console.log(c)
-
-                if (c.cnpj == currentUser.cnpj){
-                    listEmpresas.splice(i, 1)
-                }
-            }
-
-            localStorage.removeItem("currentUser")
-            localStorage.setItem("listEmpresas", JSON.stringify(listEmpresas))
+        try {
+            await deleteCurrentUser(session)
+            clearSession()
             window.location.reload()
-
-        }
-        else{
-            
-            for(let i = 0; i < listCandidatos.length; i++){
-                const c: any = listCandidatos[i]
-
-                console.log(c)
-
-                if (c.cpf == currentUser.cpf){
-                    listCandidatos.splice(i, 1)
-                }
-            }
-
-            localStorage.removeItem("currentUser")
-            localStorage.setItem("listCandidatos", JSON.stringify(listCandidatos))
-            window.location.reload()
+        } catch (e) {
+            alert((e as Error).message)
         }
     })
 
@@ -62,7 +40,7 @@ export function renderHomeHeaderHTML(): string{
 
 export function renderHomeLeftProfileHTML(currentUser: any): string{
     let text: string = ""
-    if(currentUser.vaga){
+    if(currentUser.tipo === "empresa"){
         text = `
         <div id="profile-left" class="profile-column">
         <div class="profile-item" id="item-nome">
@@ -133,7 +111,7 @@ export function renderHomeLeftProfileHTML(currentUser: any): string{
 export function renderHomeRightProfileHTML(currentUser: any){
     let text = ""
 
-    if(currentUser.vaga){
+    if(currentUser.tipo === "empresa"){
         text = `
         <div id="profile-right" class="profile-column">
             <div class="profile-item" id="item-cpf">

@@ -24,7 +24,7 @@ export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
 
     app.innerHTML = text
 
-    createHomeListeners(currentUser)
+    createHomeListeners()
 }
 
 export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
@@ -49,7 +49,7 @@ export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
 
     app.innerHTML = text
 
-    createHomeListeners(currentUser)
+    createHomeListeners()
     generateCandidatosCompetenciaGraphListener()
 }
 

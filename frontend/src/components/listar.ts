@@ -3,12 +3,10 @@ import { listCandidatos, listEmpresas } from "../storage/lists"
 
 export function listarVagas(currentUser: any): string{
     let text: string = ""
-    let vagaAtual: any
 
-    for(const empresa of listEmpresas){
-            let empresaAtual: any = (empresa as any)
-            vagaAtual = (empresa as any).vaga
-    
+    for(const empresaAtual of listEmpresas){
+        for(const vagaAtual of empresaAtual.vagas){
+
             text += `<div class="vaga-div" id="vaga-empresa">`
     
             text += `
@@ -48,11 +46,10 @@ export function listarVagas(currentUser: any): string{
             
         
             `
-    
-    
         }
+    }
 
-        return text
+    return text
 }
 
 export function listarCandidatos(currentUser: any): string{
@@ -96,6 +93,9 @@ function calcAfinidade(objBase: any, objAlvo: any){
 
     let numTotalCompetencias = competenciasAlvo.length
     let numCompetenciasComum = 0
+
+    // Evita "NaN%" quando o alvo não tem competências
+    if(numTotalCompetencias === 0) return "0.00%"
 
     competenciasBase.forEach((c) => {
         if(competenciasAlvo.includes(c)){

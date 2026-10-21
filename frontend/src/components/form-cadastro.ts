@@ -43,6 +43,11 @@ export function renderFormCandidato(app: HTMLDivElement){
           <label for="cpf">CPF:</label>
           <input type="text" id="cpf" name="cpf" required>
         </div>
+
+        <div class="form-item">
+          <label for="senha">Senha (mín. 6 caracteres):</label>
+          <input type="password" id="senha" name="senha" minlength="6" autocomplete="new-password" required>
+        </div>
         
         <div class="form-item">
             <label for="competencias-candidato">Competências:</label>
@@ -110,6 +115,11 @@ export function renderFormEmpresa(app: HTMLDivElement){
           <div class="form-item">
           <label for="cnpj">CNPJ:</label>
           <input type="text" id="cnpj" name="cnpj" required>
+          </div>
+
+          <div class="form-item">
+          <label for="senha">Senha (mín. 6 caracteres):</label>
+          <input type="password" id="senha" name="senha" minlength="6" autocomplete="new-password" required>
           </div>
 
           <div class="form-item">
