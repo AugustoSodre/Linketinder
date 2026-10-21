@@ -3,6 +3,7 @@ package com.augusto.linketinder.service;
 import com.augusto.linketinder.API.CandidatoControllerAPI;
 import com.augusto.linketinder.dao.CandidatoDAO;
 import com.augusto.linketinder.dao.EmpresaDAO;
+import com.augusto.linketinder.dao.VagaDAO;
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider;
 import com.augusto.linketinder.dao.connectionProvider.H2ConnectionProvider;
 import com.sun.net.httpserver.Headers;
@@ -77,6 +78,8 @@ class AuthServiceTest {
 
         assertThrows(IllegalArgumentException.class,
                 () -> service.updateCandidato(1, "senha = 'x', nome", "x"));
+        assertThrows(IllegalArgumentException.class,
+                () -> new VagaService((VagaDAO) null).updateVaga(1, "nome = 'x', descricao", "x"));
     }
 
     @Test
