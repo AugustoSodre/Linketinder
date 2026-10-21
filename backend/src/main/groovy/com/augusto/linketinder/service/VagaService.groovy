@@ -26,6 +26,10 @@ class VagaService {
         }
     }
 
+    Vaga getVagaById(int id){
+        return vagaDao.findById(id)
+    }
+
     List<Vaga> getVagaList(){
         return vagaDao.listAll()
     }

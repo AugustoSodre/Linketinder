@@ -87,8 +87,7 @@ class EmpresaControllerAPI implements HttpHandler {
     }
 
     private void handleGetById(HttpExchange exchange, int id) {
-        def empresas = empresaService.getEmpresaList()
-        def empresa = empresas.find { it.id == id }
+        def empresa = empresaService.getEmpresaById(id)
         
         if (empresa) {
             def empresaJson = empresaToJson(empresa)
@@ -197,8 +196,7 @@ class EmpresaControllerAPI implements HttpHandler {
     }
 
     private boolean empresaExists(int id) {
-        def empresas = empresaService.getEmpresaList()
-        return empresas.any { it.id == id }
+        return empresaService.getEmpresaById(id) != null
     }
 
     private Map empresaToJson(Empresa empresa) {

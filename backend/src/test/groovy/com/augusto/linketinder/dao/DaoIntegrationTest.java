@@ -164,6 +164,10 @@ class DaoIntegrationTest {
         assertNotNull(empresas.get(0).getListaVaga());
         assertEquals(1, empresas.get(0).getListaVaga().size());
         assertEquals(2, empresas.get(0).getCompetencias().size());
+
+        assertEquals("Tech Corp", empresaDao.findById(empresa.getId()).getNome());
+        assertEquals("Desenvolvedor Groovy", vagaDao.findById(vaga.getId()).getNome());
+        assertEquals(null, empresaDao.findById(9999));
     }
 
     @Test

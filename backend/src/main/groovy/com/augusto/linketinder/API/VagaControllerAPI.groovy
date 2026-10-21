@@ -85,8 +85,7 @@ class VagaControllerAPI implements HttpHandler {
     }
 
     private void handleGetById(HttpExchange exchange, int id) {
-        def vagas = vagaService.getVagaList()
-        def vaga = vagas.find { it.id == id }
+        def vaga = vagaService.getVagaById(id)
         
         if (vaga) {
             def vagaJson = vagaToJson(vaga)
@@ -207,13 +206,12 @@ class VagaControllerAPI implements HttpHandler {
     }
 
     private boolean isDonaDaVaga(HttpExchange exchange, int id) {
-        def vaga = vagaService.getVagaList().find { it.id == id }
+        def vaga = vagaService.getVagaById(id)
         return vaga?.id_empresa == AuthService.getSession(exchange).id
     }
 
     private boolean vagaExists(int id) {
-        def vagas = vagaService.getVagaList()
-        return vagas.any { it.id == id }
+        return vagaService.getVagaById(id) != null
     }
 
     private Map vagaToJson(Vaga vaga) {

@@ -23,6 +23,10 @@ class CandidatoService {
         println("Candidato adicionado com sucesso!")
     }
 
+    Candidato getCandidatoById(int id){
+        return candidatoDao.findById(id)
+    }
+
     List<Candidato> getCandidatoList(){
         try{
             return candidatoDao.listAll()

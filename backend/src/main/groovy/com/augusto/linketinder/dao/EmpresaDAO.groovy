@@ -88,17 +88,25 @@ class EmpresaDAO extends BaseDao {
         }
     }
 
-    List<Empresa> listAll() throws SQLException {
-        final String sql = "SELECT * FROM empresa ORDER BY id"
+    Empresa findById(int id) throws SQLException {
+        return listAll(id)[0]
+    }
+
+    // Sem id lista todos; com id traz só aquele registro (evita carregar a tabela inteira)
+    List<Empresa> listAll(Integer id = null) throws SQLException {
+        final String sql = id == null ? "SELECT * FROM empresa ORDER BY id" : "SELECT * FROM empresa WHERE id = ?"
         List<Empresa> empresas = []
 
         Connection conn = null
-        Statement stmt = null
+        PreparedStatement stmt = null
         ResultSet rs = null
         try {
             conn = getConnection()
-            stmt = conn.createStatement()
-            rs = stmt.executeQuery(sql)
+            stmt = conn.prepareStatement(sql)
+            if (id != null) {
+                stmt.setInt(1, id)
+            }
+            rs = stmt.executeQuery()
 
             while (rs.next()) {
                 int empresaId = rs.getInt("id")

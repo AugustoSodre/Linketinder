@@ -75,17 +75,25 @@ class CandidatoDAO extends BaseDao {
         }
     }
 
-    List<Candidato> listAll() throws SQLException {
-        final String sql = "SELECT * FROM candidato ORDER BY id"
+    Candidato findById(int id) throws SQLException {
+        return listAll(id)[0]
+    }
+
+    // Sem id lista todos; com id traz só aquele registro (evita carregar a tabela inteira)
+    List<Candidato> listAll(Integer id = null) throws SQLException {
+        final String sql = id == null ? "SELECT * FROM candidato ORDER BY id" : "SELECT * FROM candidato WHERE id = ?"
         List<Candidato> candidatos = []
 
         Connection conn = null
-        Statement stmt = null
+        PreparedStatement stmt = null
         ResultSet rs = null
         try {
             conn = getConnection()
-            stmt = conn.createStatement()
-            rs = stmt.executeQuery(sql)
+            stmt = conn.prepareStatement(sql)
+            if (id != null) {
+                stmt.setInt(1, id)
+            }
+            rs = stmt.executeQuery()
 
             while (rs.next()) {
                 int candidatoId = rs.getInt("id")

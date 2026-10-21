@@ -23,6 +23,10 @@ class EmpresaService {
         println("Empresa adicionada com sucesso!")
     }
 
+    Empresa getEmpresaById(int id){
+        return empresaDao.findById(id)
+    }
+
     List<Empresa> getEmpresaList(){
         return empresaDao.listAll()
     }

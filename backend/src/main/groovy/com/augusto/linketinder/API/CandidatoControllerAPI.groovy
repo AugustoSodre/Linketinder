@@ -86,8 +86,7 @@ class CandidatoControllerAPI implements HttpHandler {
     }
 
     private void handleGetById(HttpExchange exchange, int id) {
-        def candidatos = candidatoService.getCandidatoList()
-        def candidato = candidatos.find { it.id == id }
+        def candidato = candidatoService.getCandidatoById(id)
         
         if (candidato) {
             def candidatoJson = candidatoToJson(candidato)
@@ -196,8 +195,7 @@ class CandidatoControllerAPI implements HttpHandler {
     }
 
     private boolean candidatoExists(int id) {
-        def candidatos = candidatoService.getCandidatoList()
-        return candidatos.any { it.id == id }
+        return candidatoService.getCandidatoById(id) != null
     }
 
     private Map candidatoToJson(Candidato candidato) {
