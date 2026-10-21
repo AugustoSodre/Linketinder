@@ -8,7 +8,7 @@ Linketinder conecta candidatos e empresas por meio de um backend em Groovy (CLI)
 
 ## 🚀 Tecnologias
 
-- Backend: Groovy 3, Gradle, API REST (HttpServer), testes unitários em Spock/GroovyTest
+- Backend: Groovy 5, Gradle, API REST (HttpServer), testes com JUnit 5 + Mockito + H2
 - Frontend: TypeScript, Vite, HTML5, CSS3, localStorage
 - Banco de dados: PostgreSQL 15+, scripts SQL versionados
 - Ferramentas de apoio: IntelliJ IDEA, pgAdmin, dbdiagram.io
