@@ -4,22 +4,14 @@ import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Candidato
 import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.CandidatoService
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.SerializationFeature
 import com.sun.net.httpserver.HttpExchange
-import com.sun.net.httpserver.HttpHandler
 
-class CandidatoControllerAPI implements HttpHandler {
+class CandidatoControllerAPI extends BaseControllerAPI {
     
     private final CandidatoService candidatoService
-    private final ObjectMapper objectMapper
 
     CandidatoControllerAPI() {
         this.candidatoService = new CandidatoService()
-        this.objectMapper = new ObjectMapper()
-        
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT)
-        objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
     }
 
     @Override
@@ -162,36 +154,6 @@ class CandidatoControllerAPI implements HttpHandler {
         } else {
             sendErrorResponse(exchange, 404, "Rota não encontrada")
         }
-    }
-
-    private String getRequestBody(HttpExchange exchange) {
-        return exchange.requestBody.text
-    }
-
-    private void addCorsHeaders(HttpExchange exchange) {
-        exchange.responseHeaders.add("Access-Control-Allow-Origin", "*")
-        exchange.responseHeaders.add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-        exchange.responseHeaders.add("Access-Control-Allow-Headers", "Content-Type, Authorization")
-    }
-
-    private void sendJsonResponse(HttpExchange exchange, int status, Object data) {
-        def response = objectMapper.writeValueAsString(data)
-        sendResponse(exchange, status, response)
-    }
-
-    private void sendErrorResponse(HttpExchange exchange, int status, String message) {
-        def response = objectMapper.writeValueAsString([error: message, status: status])
-        sendResponse(exchange, status, response)
-    }
-
-    private void sendResponse(HttpExchange exchange, int status, String response) {
-        exchange.responseHeaders.add("Content-Type", "application/json; charset=UTF-8")
-        
-        byte[] bytes = response.getBytes("UTF-8")
-        exchange.sendResponseHeaders(status, bytes.length)
-        exchange.responseBody.withCloseable { it.write(bytes) }
-        
-        println "Resposta enviada: ${status} - ${bytes.length} bytes"
     }
 
     private boolean candidatoExists(int id) {
