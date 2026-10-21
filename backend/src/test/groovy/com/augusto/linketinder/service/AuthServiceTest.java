@@ -83,6 +83,24 @@ class AuthServiceTest {
     }
 
     @Test
+    void checkAccessShouldOnlyAllowTheOwner() {
+        Map<?, ?> sessao = authService.login("12345678901", null, "123456");
+        int id = (Integer) sessao.get("id");
+        Headers headers = new Headers();
+        headers.add("Authorization", "Bearer " + sessao.get("token"));
+        HttpExchange exchange = mock(HttpExchange.class);
+        when(exchange.getRequestHeaders()).thenReturn(headers);
+
+        assertEquals(0, AuthService.checkAccess(exchange, "candidato", id));
+        assertEquals(403, AuthService.checkAccess(exchange, "candidato", id + 1));
+        assertEquals(403, AuthService.checkAccess(exchange, "empresa", null));
+
+        HttpExchange semToken = mock(HttpExchange.class);
+        when(semToken.getRequestHeaders()).thenReturn(new Headers());
+        assertEquals(401, AuthService.checkAccess(semToken, "candidato", id));
+    }
+
+    @Test
     void deleteWithoutTokenShouldReturn401() throws Exception {
         HttpExchange exchange = mock(HttpExchange.class);
         when(exchange.getRequestMethod()).thenReturn("DELETE");

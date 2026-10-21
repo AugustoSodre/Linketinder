@@ -37,10 +37,14 @@ class CandidatoControllerAPI implements HttpHandler {
                 exchange.close()
                 return
             }
-            // Cadastro (POST) é público; alterar e remover exigem login
-            if (method in ["PUT", "DELETE"] && !AuthService.isAuthorized(exchange)) {
-                sendErrorResponse(exchange, 401, "Não autorizado")
-                return
+            // Cadastro (POST) é público; alterar e remover só o próprio perfil
+            if (method in ["PUT", "DELETE"]) {
+                def idPath = path.find('\\d+$')
+                int status = AuthService.checkAccess(exchange, "candidato", idPath ? idPath.toInteger() : null)
+                if (status) {
+                    sendErrorResponse(exchange, status, status == 401 ? "Não autorizado" : "Acesso negado")
+                    return
+                }
             }
 
             switch (method) {

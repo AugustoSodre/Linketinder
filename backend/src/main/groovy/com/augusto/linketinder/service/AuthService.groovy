@@ -65,8 +65,21 @@ class AuthService {
         return [token: token, tipo: tipo, id: credenciais.id]
     }
 
-    static boolean isAuthorized(HttpExchange exchange) {
+    // Retorna [tipo, id] do usuário logado ou null se o token for ausente/inválido
+    static Map getSession(HttpExchange exchange) {
         def header = exchange.requestHeaders.getFirst("Authorization")
-        return header?.startsWith("Bearer ") && tokens.containsKey(header.substring(7))
+        return header?.startsWith("Bearer ") ? tokens[header.substring(7)] : null
+    }
+
+    // 0 = liberado, 401 = sem login, 403 = logado mas não é o dono (tipo/id diferentes)
+    static int checkAccess(HttpExchange exchange, String tipo, Integer id) {
+        def sessao = getSession(exchange)
+        if (!sessao) {
+            return 401
+        }
+        if (sessao.tipo != tipo || (id != null && sessao.id != id)) {
+            return 403
+        }
+        return 0
     }
 }

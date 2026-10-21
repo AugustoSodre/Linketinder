@@ -278,6 +278,7 @@ A API foi desenvolvida utilizando uma arquitetura em camadas com separação cla
 - Senhas são salvas como hash **PBKDF2 (HMAC-SHA256)** com salt aleatório (`AuthService`), nunca em texto puro, e nunca aparecem nas respostas da API.
 - `POST /login` com `{"cpf": "...", "senha": "..."}` (candidato) ou `{"cnpj": "...", "senha": "..."}` (empresa) retorna `{"token", "tipo", "id"}`; credenciais erradas retornam `401`.
 - Envie o token no header `Authorization: Bearer <token>` para rotas protegidas: `PUT`/`DELETE` em candidatos e empresas e `POST`/`PUT`/`DELETE` em vagas. Cadastro (`POST /candidatos`, `POST /empresas`) e todos os `GET` são públicos.
+- Cada usuário só altera/remove o próprio perfil, e cada empresa só cria/altera/remove as próprias vagas; caso contrário a API retorna `403`.
 - Os tokens ficam só em memória: reiniciar o servidor exige novo login.
 - `GET /competencias` lista as competências (`id`, `nome`) usadas nos cadastros.
 

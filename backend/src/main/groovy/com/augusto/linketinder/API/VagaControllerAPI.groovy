@@ -37,9 +37,13 @@ class VagaControllerAPI implements HttpHandler {
                 exchange.close()
                 return
             }
-            if (method in ["POST", "PUT", "DELETE"] && !AuthService.isAuthorized(exchange)) {
-                sendErrorResponse(exchange, 401, "Não autorizado")
-                return
+            // Só empresas mexem em vagas; o dono de cada vaga é conferido em handlePost/handlePut/handleDelete
+            if (method in ["POST", "PUT", "DELETE"]) {
+                int status = AuthService.checkAccess(exchange, "empresa", null)
+                if (status) {
+                    sendErrorResponse(exchange, status, status == 401 ? "Não autorizado" : "Acesso negado")
+                    return
+                }
             }
 
             switch (method) {
@@ -98,6 +102,10 @@ class VagaControllerAPI implements HttpHandler {
             def data = objectMapper.readValue(body, Map.class)
 
             def vaga = mapToVaga(data)
+            if (vaga.id_empresa != AuthService.getSession(exchange).id) {
+                sendErrorResponse(exchange, 403, "Acesso negado")
+                return
+            }
             vagaService.createVaga(vaga)
             
             sendJsonResponse(exchange, 201, [message: "Vaga criada com sucesso", data: data])
@@ -117,12 +125,17 @@ class VagaControllerAPI implements HttpHandler {
                 sendErrorResponse(exchange, 404, "Vaga não encontrada")
                 return
             }
-            
+            if (!isDonaDaVaga(exchange, id)) {
+                sendErrorResponse(exchange, 403, "Acesso negado")
+                return
+            }
+
             def camposValidos = vagaService.getCamposVaga()
             def camposAtualizados = []
-            
+
             data.each { key, value ->
-                if (key != 'id' && key != 'competencias') {
+                // id_empresa fica de fora para a vaga não ser transferida para outra empresa
+                if (key != 'id' && key != 'competencias' && key != 'id_empresa') {
                     // Mapeia o nome do campo do JSON para o nome da coluna no BD
                     def nomeColuna = camposValidos[key] ?: key
                     
@@ -153,7 +166,11 @@ class VagaControllerAPI implements HttpHandler {
                 sendErrorResponse(exchange, 404, "Vaga não encontrada")
                 return
             }
-            
+            if (!isDonaDaVaga(exchange, id)) {
+                sendErrorResponse(exchange, 403, "Acesso negado")
+                return
+            }
+
             vagaService.deleteVaga(id)
 
             sendJsonResponse(exchange, 200, [message: "Vaga removida", id: id])
@@ -190,6 +207,11 @@ class VagaControllerAPI implements HttpHandler {
         exchange.responseBody.withCloseable { it.write(bytes) }
         
         println "Resposta enviada: ${status} - ${bytes.length} bytes"
+    }
+
+    private boolean isDonaDaVaga(HttpExchange exchange, int id) {
+        def vaga = vagaService.getVagaList().find { it.id == id }
+        return vaga?.id_empresa == AuthService.getSession(exchange).id
     }
 
     private boolean vagaExists(int id) {
