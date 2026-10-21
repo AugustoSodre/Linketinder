@@ -59,7 +59,11 @@ class VagaController {
         viewHelper.printAllAvailableCompetencias(listaComp)
         vaga.competencias = inputService.getCompetenciasInput(listaComp)
 
-        vagaService.createVaga(vaga)
+        try {
+            vagaService.createVaga(vaga)
+        } catch (Exception e) {
+            println("Erro ao adicionar vaga! " + e.message)
+        }
     }
 
     void readVaga(){

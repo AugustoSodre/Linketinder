@@ -18,12 +18,8 @@ class VagaService {
     }
 
     void createVaga(Vaga vaga){
-        try{
-            vagaDao.insert(vaga)
-            println("Vaga adicionada com sucesso!")
-        } catch (Exception e){
-            println("Erro ao adicionar vaga! " + e.message)
-        }
+        vagaDao.insert(vaga)
+        println("Vaga adicionada com sucesso!")
     }
 
     Vaga getVagaById(int id){
