@@ -124,22 +124,20 @@ class CandidatoControllerAPI implements HttpHandler {
             }
             
             def camposValidos = candidatoService.getCamposCandidato()
-            def camposAtualizados = []
-            
-            data.each { key, value ->
-                if (key != 'id' && key != 'competencias') {
-                    // Mapeia o nome do campo do JSON para o nome da coluna no BD
-                    def nomeColuna = camposValidos[key] ?: key
-                    
-                    try {
-                        candidatoService.updateCandidato(id, nomeColuna as String, value)
-                        camposAtualizados << key
-                    } catch (Exception e) {
-                        println "Erro ao atualizar campo '${key}': ${e.message}"
-                    }
-                }
+            def campos = data.findAll { key, value -> key != 'id' && key != 'competencias' }
+
+            // Rejeita tudo antes de alterar qualquer coluna, para não deixar o registro pela metade
+            def invalidos = campos.keySet().findAll { !((camposValidos[it] ?: it) in camposValidos.values()) }
+            if (invalidos) {
+                sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
+                return
             }
-            
+
+            campos.each { key, value ->
+                candidatoService.updateCandidato(id, (camposValidos[key] ?: key) as String, value)
+            }
+            def camposAtualizados = campos.keySet()
+
             sendJsonResponse(exchange, 200, [
                 message: "Candidato atualizado com sucesso", 
                 id: id, 
