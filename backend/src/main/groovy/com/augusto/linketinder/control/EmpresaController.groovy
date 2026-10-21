@@ -68,7 +68,11 @@ class EmpresaController {
         empresaView.printMessage("Digite a senha da Empresa: ")
         pessoa.senha = inputService.getSenhaInput()
 
-        empresaService.createEmpresa(pessoa)
+        try {
+            empresaService.createEmpresa(pessoa)
+        } catch (Exception e) {
+            println("Erro ao adicionar empresa! " + e.message)
+        }
     }
 
     void readEmpresa(){

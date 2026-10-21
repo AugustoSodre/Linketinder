@@ -18,12 +18,9 @@ class CandidatoService {
     }
 
     void createCandidato(Candidato candidato){
-        try{
-            candidatoDao.insert(candidato)
-            println("Candidato adicionado com sucesso!")
-        } catch (Exception e){
-            println("Erro ao adicionar candidato! " + e.message)
-        }
+        candidato.senha = AuthService.hash(candidato.senha)
+        candidatoDao.insert(candidato)
+        println("Candidato adicionado com sucesso!")
     }
 
     List<Candidato> getCandidatoList(){
@@ -50,6 +47,13 @@ class CandidatoService {
     }
 
     void updateCandidato(int id, String coluna, Object novoValor){
+        // O nome da coluna vai direto no SQL, então só aceitamos colunas conhecidas
+        if (!(coluna in getCamposCandidato().values())) {
+            throw new IllegalArgumentException("Campo inválido: " + coluna)
+        }
+        if (coluna == 'senha') {
+            novoValor = AuthService.hash(novoValor as String)
+        }
         try{
             candidatoDao.updateField(id, coluna, novoValor)
         } catch (Exception e){

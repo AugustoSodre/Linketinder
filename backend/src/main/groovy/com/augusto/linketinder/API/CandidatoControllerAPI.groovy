@@ -2,6 +2,7 @@ package com.augusto.linketinder.API
 
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.CandidatoService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -30,7 +31,18 @@ class CandidatoControllerAPI implements HttpHandler {
         try {
             def method = exchange.requestMethod
             def path = exchange.requestURI.path.replaceAll('/+$', '') // Remove trailing slashes
-            
+
+            if (method == "OPTIONS") {
+                exchange.sendResponseHeaders(204, -1)
+                exchange.close()
+                return
+            }
+            // Cadastro (POST) é público; alterar e remover exigem login
+            if (method in ["PUT", "DELETE"] && !AuthService.isAuthorized(exchange)) {
+                sendErrorResponse(exchange, 401, "Não autorizado")
+                return
+            }
+
             switch (method) {
                 case "GET":
                     handleGet(exchange, path)
@@ -89,7 +101,7 @@ class CandidatoControllerAPI implements HttpHandler {
             def candidato = mapToCandidato(data)
             candidatoService.createCandidato(candidato)
             
-            sendJsonResponse(exchange, 201, [message: "Candidato criado com sucesso", data: data])
+            sendJsonResponse(exchange, 201, [message: "Candidato criado com sucesso", data: candidatoToJson(candidato)])
         } else {
             sendErrorResponse(exchange, 404, "Rota não encontrada")
         }

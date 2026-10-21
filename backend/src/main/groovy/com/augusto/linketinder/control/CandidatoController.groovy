@@ -68,7 +68,11 @@ class CandidatoController {
         print("Digite a senha do Candidato: ")
         pessoa.senha = inputService.getSenhaInput()
 
-        candidatoService.createCandidato(pessoa)
+        try {
+            candidatoService.createCandidato(pessoa)
+        } catch (Exception e) {
+            println("Erro ao adicionar candidato! " + e.message)
+        }
     }
 
     void readCandidato(){

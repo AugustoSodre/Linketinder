@@ -1,4 +1,4 @@
-CREATE DATABASE linketinder;
+-- Rode dentro do banco linketinder (veja o README)
 
 CREATE TABLE competencia (
   id SERIAL PRIMARY KEY,
@@ -14,7 +14,7 @@ CREATE TABLE candidato (
   idade INTEGER NOT NULL,
   cpf VARCHAR(11) NOT NULL UNIQUE,
   descricao TEXT NOT NULL,
-  senha VARCHAR(6) NOT NULL
+  senha VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE empresa (
@@ -26,7 +26,7 @@ CREATE TABLE empresa (
   pais VARCHAR(2) NOT NULL,
   cnpj VARCHAR(14) NOT NULL UNIQUE,
   descricao TEXT NOT NULL,
-  senha VARCHAR(6) NOT NULL,
+  senha VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE vaga (
@@ -34,7 +34,8 @@ CREATE TABLE vaga (
   id_empresa INTEGER NOT NULL,
   nome VARCHAR(255) NOT NULL,
   descricao TEXT NOT NULL,
-  local VARCHAR(255) NOT NULL,
+  cidade VARCHAR(255),
+  estado VARCHAR(2),
   CONSTRAINT fk_vaga_empresa 
     FOREIGN KEY (id_empresa) 
     REFERENCES empresa (id) 

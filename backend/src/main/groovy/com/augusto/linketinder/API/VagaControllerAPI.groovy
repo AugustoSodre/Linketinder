@@ -2,6 +2,7 @@ package com.augusto.linketinder.API
 
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
+import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.VagaService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -30,7 +31,17 @@ class VagaControllerAPI implements HttpHandler {
         try {
             def method = exchange.requestMethod
             def path = exchange.requestURI.path.replaceAll('/+$', '') // Remove trailing slashes
-            
+
+            if (method == "OPTIONS") {
+                exchange.sendResponseHeaders(204, -1)
+                exchange.close()
+                return
+            }
+            if (method in ["POST", "PUT", "DELETE"] && !AuthService.isAuthorized(exchange)) {
+                sendErrorResponse(exchange, 401, "Não autorizado")
+                return
+            }
+
             switch (method) {
                 case "GET":
                     handleGet(exchange, path)

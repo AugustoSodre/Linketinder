@@ -3,6 +3,7 @@ package com.augusto.linketinder.API
 import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Empresa
+import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.EmpresaService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -31,7 +32,18 @@ class EmpresaControllerAPI implements HttpHandler {
         try {
             def method = exchange.requestMethod
             def path = exchange.requestURI.path.replaceAll('/+$', '') // Remove trailing slashes
-            
+
+            if (method == "OPTIONS") {
+                exchange.sendResponseHeaders(204, -1)
+                exchange.close()
+                return
+            }
+            // Cadastro (POST) é público; alterar e remover exigem login
+            if (method in ["PUT", "DELETE"] && !AuthService.isAuthorized(exchange)) {
+                sendErrorResponse(exchange, 401, "Não autorizado")
+                return
+            }
+
             switch (method) {
                 case "GET":
                     handleGet(exchange, path)
@@ -90,7 +102,7 @@ class EmpresaControllerAPI implements HttpHandler {
             def empresa = mapToEmpresa(data)
             empresaService.createEmpresa(empresa)
             
-            sendJsonResponse(exchange, 201, [message: "Empresa criada com sucesso", data: data])
+            sendJsonResponse(exchange, 201, [message: "Empresa criada com sucesso", data: empresaToJson(empresa)])
         } else {
             sendErrorResponse(exchange, 404, "Rota não encontrada")
         }

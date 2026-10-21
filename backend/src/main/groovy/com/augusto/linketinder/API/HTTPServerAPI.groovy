@@ -18,6 +18,8 @@ class HTTPServerAPI {
         httpServer.createContext("/candidatos", new CandidatoControllerAPI())
         httpServer.createContext("/empresas", new EmpresaControllerAPI())
         httpServer.createContext("/vagas", new VagaControllerAPI())
+        httpServer.createContext("/competencias", new CompetenciaControllerAPI())
+        httpServer.createContext("/login", new LoginControllerAPI())
     }
 
     void start() {

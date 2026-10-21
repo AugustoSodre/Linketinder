@@ -148,27 +148,24 @@ Pré-requisitos: JDK 8+ e Gradle Wrapper (já incluso).
 cd backend
 ./gradlew run            # executa a CLI
 
-# Rodar testes (usa H2 por padrão quando DB_PROVIDER=h2)
-export DB_PROVIDER=h2
+# Rodar testes (os testes de DAO já usam H2 em memória; não exporte DB_PROVIDER=h2,
+# pois dois testes verificam o provider padrão)
 ./gradlew test
-
-# Alternativa via propriedade JVM
-./gradlew -DDB_PROVIDER=h2 test
 ```
 
 **Executar API REST:**
 ```bash
 cd backend
-./gradlew build          # compila o projeto
+./gradlew installDist    # compila e copia o projeto + dependências para build/install
 
 # Inicia o servidor (porta padrão: 8080)
-java -cp "build/classes/groovy/main:build/libs/*" com.augusto.linketinder.Server
+java -cp "build/install/linketinder-backend/lib/*" com.augusto.linketinder.Server
 
 # Ou especifica uma porta diferente
-java -cp "build/classes/groovy/main:build/libs/*" com.augusto.linketinder.Server 9090
+java -cp "build/install/linketinder-backend/lib/*" com.augusto.linketinder.Server 9090
 
 # Ou usa variável de ambiente
-PORT=9090 java -cp "build/classes/groovy/main:build/libs/*" com.augusto.linketinder.Server
+PORT=9090 java -cp "build/install/linketinder-backend/lib/*" com.augusto.linketinder.Server
 ```
 
 > 📖 Para mais detalhes sobre execução e configuração do backend, consulte [backend/README.md](backend/README.md)
@@ -194,7 +191,8 @@ npm run preview   # serve build de produção
 **Configuração inicial:**
 
 ```bash
-# criar banco
+# (re)criar banco — apaga os dados existentes
+psql -U postgres -c "DROP DATABASE IF EXISTS linketinder;"
 psql -U postgres -c "CREATE DATABASE linketinder;"
 
 # criar estrutura
@@ -225,6 +223,7 @@ SELECT * FROM vaga;
 - 5 vagas de emprego
 - 6 competências técnicas
 - Relacionamentos configurados entre todas as entidades
+- Senha de todos os usuários de exemplo: `123456` (salva como hash PBKDF2)
 
 ## 🌐 Acesso à Aplicação
 
@@ -272,6 +271,19 @@ A API foi desenvolvida utilizando uma arquitetura em camadas com separação cla
 - ✅ **Conversão automática de tipos**: Maps JSON → Objetos Groovy e vice-versa
 - ✅ **Relacionamentos**: Suporte completo a listas aninhadas (competências, vagas)
 - ✅ **CORS**: Configurado para permitir integração com frontends em diferentes origens
+
+### 🔐 Autenticação
+
+- Senhas são salvas como hash **PBKDF2 (HMAC-SHA256)** com salt aleatório (`AuthService`), nunca em texto puro, e nunca aparecem nas respostas da API.
+- `POST /login` com `{"cpf": "...", "senha": "..."}` (candidato) ou `{"cnpj": "...", "senha": "..."}` (empresa) retorna `{"token", "tipo", "id"}`; credenciais erradas retornam `401`.
+- Envie o token no header `Authorization: Bearer <token>` para rotas protegidas: `PUT`/`DELETE` em candidatos e empresas e `POST`/`PUT`/`DELETE` em vagas. Cadastro (`POST /candidatos`, `POST /empresas`) e todos os `GET` são públicos.
+- Os tokens ficam só em memória: reiniciar o servidor exige novo login.
+- `GET /competencias` lista as competências (`id`, `nome`) usadas nos cadastros.
+
+```bash
+curl -X POST http://localhost:8080/login -d '{"cpf":"12345678901","senha":"123456"}'
+curl -X DELETE http://localhost:8080/candidatos/1 -H "Authorization: Bearer <token>"
+```
 
 ### 👤 Candidatos
 

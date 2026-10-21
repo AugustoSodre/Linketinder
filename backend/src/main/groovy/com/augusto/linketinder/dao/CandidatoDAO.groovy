@@ -104,6 +104,25 @@ class CandidatoDAO extends BaseDao {
         return candidatos
     }
 
+    Map findCredenciaisByCpf(String cpf) throws SQLException {
+        final String sql = "SELECT id, senha FROM candidato WHERE cpf = ?"
+
+        Connection conn = null
+        PreparedStatement stmt = null
+        ResultSet rs = null
+        try {
+            conn = getConnection()
+            stmt = conn.prepareStatement(sql)
+            stmt.setString(1, cpf)
+            rs = stmt.executeQuery()
+            return rs.next() ? [id: rs.getInt("id"), senha: rs.getString("senha")] : null
+        } finally {
+            close(rs)
+            close(stmt)
+            close(conn)
+        }
+    }
+
     void updateField(int id, String campo, def novoValor) throws SQLException {
         final String sql = "UPDATE candidato SET ${campo} = ? WHERE id = ?"
 

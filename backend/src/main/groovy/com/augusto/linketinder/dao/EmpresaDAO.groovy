@@ -128,6 +128,25 @@ class EmpresaDAO extends BaseDao {
         return empresas
     }
 
+    Map findCredenciaisByCnpj(String cnpj) throws SQLException {
+        final String sql = "SELECT id, senha FROM empresa WHERE cnpj = ?"
+
+        Connection conn = null
+        PreparedStatement stmt = null
+        ResultSet rs = null
+        try {
+            conn = getConnection()
+            stmt = conn.prepareStatement(sql)
+            stmt.setString(1, cnpj)
+            rs = stmt.executeQuery()
+            return rs.next() ? [id: rs.getInt("id"), senha: rs.getString("senha")] : null
+        } finally {
+            close(rs)
+            close(stmt)
+            close(conn)
+        }
+    }
+
     void updateField(int id, String campo, def novoValor) throws SQLException {
         final String sql = "UPDATE empresa SET ${campo} = ? WHERE id = ?"
 

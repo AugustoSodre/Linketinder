@@ -18,12 +18,9 @@ class EmpresaService {
     }
 
     void createEmpresa(Empresa empresa){
-        try{
-            empresaDao.insert(empresa)
-            println("Empresa adicionada com sucesso!")
-        } catch (Exception e){
-            println("Erro ao adicionar empresa! " + e.message)
-        }
+        empresa.senha = AuthService.hash(empresa.senha)
+        empresaDao.insert(empresa)
+        println("Empresa adicionada com sucesso!")
     }
 
     List<Empresa> getEmpresaList(){
@@ -44,6 +41,13 @@ class EmpresaService {
     }
 
     void updateEmpresa(int id, String coluna, Object novoValor){
+        // O nome da coluna vai direto no SQL, então só aceitamos colunas conhecidas
+        if (!(coluna in getCamposEmpresa().values())) {
+            throw new IllegalArgumentException("Campo inválido: " + coluna)
+        }
+        if (coluna == 'senha') {
+            novoValor = AuthService.hash(novoValor as String)
+        }
         try{
             empresaDao.updateField(id, coluna, novoValor)
         } catch (Exception e){
