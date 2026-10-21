@@ -44,7 +44,6 @@ Linketinder/
 │       ├── models/             # Modelos/DTOs TypeScript
 │       ├── pages/              # Páginas SPA (login, cadastro, home, menu)
 │       ├── storage/            # Listas carregadas da API (src/api.ts faz as requisições)
-│       ├── templates/          # HTML partials injetados dinamicamente
 │       └── validators/         # Cadeia de validadores (Chain of Responsibility)
 ├── database/
 │   ├── scriptEstruturaBasica.sql
