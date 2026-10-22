@@ -1,0 +1,12 @@
+{
+  "nome": { "regex": "\\S", "mensagem": "Nome é obrigatório" },
+  "email": { "regex": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$", "mensagem": "Email inválido" },
+  "estado": { "regex": "^(AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)$", "mensagem": "Estado inválido (use a sigla, ex: SP)" },
+  "cep": { "regex": "^\\d{8}$", "mensagem": "CEP deve ter 8 dígitos" },
+  "cpf": { "regex": "^\\d{11}$", "mensagem": "CPF deve ter 11 dígitos" },
+  "cnpj": { "regex": "^\\d{14}$", "mensagem": "CNPJ deve ter 14 dígitos" },
+  "pais": { "regex": "^[A-Z]{2}$", "mensagem": "País inválido (use a sigla, ex: BR)" },
+  "descricao": { "regex": "\\S", "mensagem": "Descrição é obrigatória" },
+  "senha": { "regex": "^.{6,}$", "mensagem": "A senha deve ter pelo menos 6 caracteres" },
+  "idade": { "min": 0, "max": 120, "mensagem": "Idade deve estar entre 0 e 120" }
+}

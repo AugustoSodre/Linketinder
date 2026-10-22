@@ -4,10 +4,8 @@ import { notify } from "../helpers/notify"
 import { marcadas, semPontuacao, valor } from "../helpers/dom"
 import type { BaseHandler } from "../validators/chain/BaseHandler"
 import { FieldRequiredHandler } from "../validators/chain/FieldRequiredHandler"
-import { RegexHandler } from "../validators/chain/RegexHandler"
-import { NumberRangeHandler } from "../validators/chain/NumberRangeHandler"
 import { UniqueHandler } from "../validators/chain/UniqueHandler"
-import { encadear, regraPais, regraSenha, regrasPessoa } from "../validators/regras"
+import { encadear, regra, regraSenha, regrasPessoa } from "../validators/regras"
 
 async function validarEEnviar(regras: BaseHandler[], context: Record<string, any>, enviar: () => Promise<unknown>, sucesso: string){
     const res = await encadear(regras).handle(context)
@@ -39,8 +37,8 @@ export function handleFormCandidato(){
 
     validarEEnviar([
             ...regrasPessoa(),
-            new NumberRangeHandler("idade", 0, 120, "Idade inválida"),
-            new RegexHandler("cpf", /^\d{11}$/, "CPF inválido"),
+            regra("idade"),
+            regra("cpf"),
             new UniqueHandler("cpf", "candidato", "CPF Já Cadastrado"),
             regraSenha(),
         ],
@@ -55,8 +53,8 @@ export function handleFormEmpresa(){
 
     validarEEnviar([
             ...regrasPessoa(),
-            regraPais(),
-            new RegexHandler("cnpj", /^\d{14}$/, "CNPJ inválido"),
+            regra("pais"),
+            regra("cnpj"),
             new UniqueHandler("cnpj", "empresa", "CNPJ Já Cadastrado"),
             regraSenha(),
             new FieldRequiredHandler("nomeVaga", "Nome da vaga inválido"),
@@ -82,7 +80,7 @@ export async function handleFormLogin(tipo: "candidato" | "empresa"){
     const rotulo = documento.toUpperCase()
 
     const res = await encadear([
-        new RegexHandler(documento, candidato ? /^\d{11}$/ : /^\d{14}$/, `${rotulo} inválido`),
+        regra(documento),
         new FieldRequiredHandler("senha", "Informe a senha"),
     ]).handle(credenciais)
     if (!res.ok) { notify(res.message); return }

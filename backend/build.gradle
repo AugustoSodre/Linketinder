@@ -31,6 +31,8 @@ application {
     mainClass = 'com.augusto.linketinder.App'
 }
 
+sourceSets.main.resources.srcDir '../shared'
+
 test {
     useJUnitPlatform()
 }

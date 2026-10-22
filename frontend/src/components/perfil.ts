@@ -5,9 +5,7 @@ import { createVaga, deleteVaga, getSession, toCompetenciasApi, updateCurrentUse
 import { refresh } from "../router"
 import { marcadas, semPontuacao, valor } from "../helpers/dom"
 import { FieldRequiredHandler } from "../validators/chain/FieldRequiredHandler"
-import { RegexHandler } from "../validators/chain/RegexHandler"
-import { NumberRangeHandler } from "../validators/chain/NumberRangeHandler"
-import { encadear, regraPais, regraSenha, regrasPessoa } from "../validators/regras"
+import { encadear, regra, regraSenha, regrasPessoa } from "../validators/regras"
 import type { Vaga } from "../models/types"
 
 const input = (id: string) => document.getElementById(id) as HTMLInputElement
@@ -103,7 +101,7 @@ export function createPerfilListeners(currentUser: any){
 
         const res = await encadear([
             ...regrasPessoa(),
-            empresa ? regraPais() : new NumberRangeHandler("idade", 0, 120, "Idade inválida"),
+            regra(empresa ? "pais" : "idade"),
             regraSenha(true),
         ]).handle({ ...campos, senha })
         if (!res.ok) { notify(res.message); return }
@@ -157,10 +155,10 @@ export function createVagasListeners(currentUser: any){
         const campos = { nome: valor("vaga-nome"), descricao: valor("vaga-descricao"), cidade: valor("vaga-cidade"), estado: valor("vaga-estado") }
 
         const res = await encadear([
-            new FieldRequiredHandler("nome", "Título da vaga inválido"),
-            new FieldRequiredHandler("descricao", "Descrição da vaga inválida"),
+            regra("nome"),
+            regra("descricao"),
             new FieldRequiredHandler("cidade", "Cidade da vaga inválida"),
-            new RegexHandler("estado", /^[A-Z]{2}$/, "Estado inválido"),
+            regra("estado"),
         ]).handle(campos)
         if (!res.ok) { notify(res.message); return }
 

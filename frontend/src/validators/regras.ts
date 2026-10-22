@@ -1,24 +1,23 @@
 import type { BaseHandler } from "./chain/BaseHandler"
-import { FieldRequiredHandler } from "./chain/FieldRequiredHandler"
+import { NumberRangeHandler } from "./chain/NumberRangeHandler"
 import { RegexHandler } from "./chain/RegexHandler"
+import regras from "../../../shared/regras.json"
+
+type Campo = keyof typeof regras
 
 export function encadear(handlers: BaseHandler[]): BaseHandler {
     handlers.reduce((anterior, proximo) => anterior.setNext(proximo))
     return handlers[0]
 }
 
-export function regrasPessoa(): BaseHandler[] {
-    return [
-        new FieldRequiredHandler("nome", "Nome inválido"),
-        new RegexHandler("nome", /^[a-zA-ZÀ-ÿ\s]+$/, "Nome com caractere inválido"),
-        new RegexHandler("email", /^[\w.]+@\w+\.\w+(\.\w{2,3})?$/, "Email inválido"),
-        new RegexHandler("estado", /^[A-Z]{2}$/, "Estado inválido"),
-        new RegexHandler("cep", /^\d{8}$/, "CEP inválido"),
-        new FieldRequiredHandler("descricao", "Descrição inválida"),
-    ]
+export function regra(campo: Campo): BaseHandler {
+    const r = regras[campo]
+    return "regex" in r
+        ? new RegexHandler(campo, new RegExp(r.regex), r.mensagem)
+        : new NumberRangeHandler(campo, r.min, r.max, r.mensagem)
 }
 
-export const regraPais = () => new RegexHandler("pais", /^[A-Z]{2}$/, "País inválido")
+export const regrasPessoa = () => (["nome", "email", "estado", "cep", "descricao"] as Campo[]).map(regra)
 
 export const regraSenha = (opcional = false) =>
-    new RegexHandler("senha", opcional ? /^(.{6,})?$/ : /^.{6,}$/, "A senha deve ter pelo menos 6 caracteres")
+    opcional ? new RegexHandler("senha", new RegExp(`^$|${regras.senha.regex}`), regras.senha.mensagem) : regra("senha")

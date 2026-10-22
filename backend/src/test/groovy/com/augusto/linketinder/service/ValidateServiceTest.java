@@ -38,6 +38,20 @@ class ValidateServiceTest {
     }
 
     @Test
+    void erroDoCampoSegueAsRegrasCompartilhadasComOFrontend() throws Exception {
+        java.util.Map<String, java.util.Map<String, Object>> regras = new com.fasterxml.jackson.databind.ObjectMapper()
+                .readValue(java.nio.file.Path.of("../shared/regras.json").toFile(), java.util.Map.class);
+
+        assertFalse(regras.isEmpty());
+        regras.forEach((campo, regra) -> assertEquals(regra.get("mensagem"), validateService.erroDoCampo(campo, null), campo));
+
+        assertNull(validateService.erroDoCampo("email", "jim.halpert@dunder-mifflin.com"));
+        assertNotNull(validateService.erroDoCampo("estado", "XX"));
+        assertNull(validateService.erroDoCampo("idade", 120));
+        assertNotNull(validateService.erroDoCampo("idade", 121));
+    }
+
+    @Test
     void isEmailValid() {
         assertFalse(validateService.isEmailValid(""));
         assertFalse(validateService.isEmailValid("@"));

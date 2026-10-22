@@ -1,6 +1,7 @@
 package com.augusto.linketinder.service
 
 import com.augusto.linketinder.model.Competencia
+import groovy.json.JsonSlurper
 
 class ValidateService {
 
@@ -118,21 +119,17 @@ class ValidateService {
         return descricao.trim().length() >= 1
     }
 
+    private static final Map<String, Map> REGRAS = new JsonSlurper().parse(ValidateService.getResource('/regras.json')) as Map
+
     String erroDoCampo(String campo, Object valor) {
-        String texto = valor instanceof String ? valor : null
-        switch (campo) {
-            case 'nome': return isNomeValid(texto) ? null : 'Nome é obrigatório'
-            case 'email': return isEmailValid(texto) ? null : 'Email inválido'
-            case 'estado': return isEstadoValid(texto) ? null : 'Estado inválido (use a sigla, ex: SP)'
-            case 'cep': return (texto ?: '') ==~ /^\d{8}$/ ? null : 'CEP deve ter 8 dígitos'
-            case 'cpf': return (texto ?: '') ==~ /^\d{11}$/ ? null : 'CPF deve ter 11 dígitos'
-            case 'cnpj': return (texto ?: '') ==~ /^\d{14}$/ ? null : 'CNPJ deve ter 14 dígitos'
-            case 'pais': return (texto ?: '') ==~ /^[A-Z]{2}$/ ? null : 'País inválido (use a sigla, ex: BR)'
-            case 'idade': return valor instanceof Integer && isIdadeValid(valor as int) ? null : 'Idade deve estar entre 0 e 120'
-            case 'descricao': return isDescricaoValid(texto) ? null : 'Descrição é obrigatória'
-            case 'senha': return texto?.length() >= 6 ? null : 'A senha deve ter pelo menos 6 caracteres'
-            default: return null
+        Map regra = REGRAS[campo]
+        if (!regra) {
+            return null
         }
+        boolean ok = campo == 'idade'
+                ? valor instanceof Integer && valor >= regra.min && valor <= regra.max
+                : valor instanceof String && valor =~ regra.regex
+        return ok ? null : regra.mensagem
     }
 
     List<String> validarCampos(Map data, List<String> obrigatorios) {
