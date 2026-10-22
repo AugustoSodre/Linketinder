@@ -26,7 +26,7 @@ class CandidatoControllerAPI extends CrudControllerAPI {
     protected Object buscar(int id) { candidatoService.getCandidatoById(id) }
 
     @Override
-    protected Map<String, String> camposValidos() { candidatoService.getCamposCandidato() }
+    protected List<String> camposValidos() { candidatoService.getCamposCandidato() }
 
     @Override
     protected void atualizar(int id, String coluna, Object valor) { candidatoService.updateCandidato(id, coluna, valor) }

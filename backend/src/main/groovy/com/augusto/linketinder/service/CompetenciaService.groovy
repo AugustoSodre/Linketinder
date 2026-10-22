@@ -15,38 +15,7 @@ class CompetenciaService {
         this(DaoFactory.getCompetenciaDAO())
     }
 
-    void createCompetencia(Competencia competencia){
-        try{
-            competenciaDao.insert(competencia)
-            println("Competência adicionada com sucesso!")
-        } catch (Exception e){
-            println("Erro ao adicionar competência! " + e.message)
-        }
-    }
-
     List<Competencia> getCompetenciaList(){
         return competenciaDao.listAll()
     }
-
-    void updateCompetenciaNome(int id, String novoNome){
-        competenciaDao.updateName(id, novoNome)
-    }
-
-    String listarRelacionamentos(String objeto) {
-        return competenciaDao.listRelations(objeto)
-    }
-
-    void adicionarRelacionamento(String objeto, int idCompetencia, int idObjeto) {
-        competenciaDao.addRelation(objeto, idCompetencia, idObjeto)
-    }
-
-    void removerRelacionamento(String objeto, int idCompetencia, int idObjeto) {
-        competenciaDao.removeRelation(objeto, idCompetencia, idObjeto)
-    }
-
-    void deleteCompetencia(int id){
-        competenciaDao.removeAllRelationsFromCompetencia(id)
-        competenciaDao.delete(id)
-    }
-
 }

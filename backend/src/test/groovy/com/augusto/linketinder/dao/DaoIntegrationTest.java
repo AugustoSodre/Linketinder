@@ -174,11 +174,7 @@ class DaoIntegrationTest {
     }
 
     @Test
-    void shouldManageCompetenciaRelationsUpdatesAndDeletes() throws SQLException {
-        Competencia java = new Competencia("Java");
-        competenciaDao.insert(java);
-        competenciaDao.updateName(java.getId(), "Java 21");
-
+    void shouldUpdateAndDeleteCandidato() throws SQLException {
         Candidato candidato = new Candidato();
         candidato.setNome("Ana");
         candidato.setEmail("ana@example.com");
@@ -190,20 +186,6 @@ class DaoIntegrationTest {
         candidato.setSenha("senha123");
         candidato.setCompetencias(List.of());
         candidatoDao.insert(candidato);
-
-        competenciaDao.addRelation("candidato", java.getId(), candidato.getId());
-        assertEquals("*competência*                  *candidato*\n" + java.getId() + " - Java 21               " + candidato.getId() + " - Ana\n",
-                competenciaDao.listRelations("candidato"));
-        assertEquals("Java 21", candidatoDao.findById(candidato.getId()).getCompetencias().get(0).getNome());
-
-        competenciaDao.removeRelation("candidato", java.getId(), candidato.getId());
-        assertEquals(0, competenciaDao.listByCandidato(candidato.getId()).size());
-        assertThrows(IllegalArgumentException.class, () -> competenciaDao.addRelation("planeta", 1, 1));
-
-        competenciaDao.addRelation("candidato", java.getId(), candidato.getId());
-        competenciaDao.removeAllRelationsFromCompetencia(java.getId());
-        competenciaDao.delete(java.getId());
-        assertEquals(0, competenciaDao.listAll().size());
 
         candidatoDao.updateField(candidato.getId(), "idade", 31);
         candidatoDao.updateField(candidato.getId(), "nome", "Ana Maria");

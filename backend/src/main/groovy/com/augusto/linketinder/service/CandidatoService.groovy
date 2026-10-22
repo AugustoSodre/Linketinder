@@ -18,7 +18,6 @@ class CandidatoService {
     void createCandidato(Candidato candidato){
         candidato.senha = AuthService.hash(candidato.senha)
         candidatoDao.insert(candidato)
-        println("Candidato adicionado com sucesso!")
     }
 
     Candidato getCandidatoById(int id){
@@ -29,21 +28,12 @@ class CandidatoService {
         return candidatoDao.listAll()
     }
 
-    Map<String, String> getCamposCandidato() {
-        return [
-                'nome'     : 'nome',
-                'email'    : 'email',
-                'estado'   : 'estado',
-                'cep'      : 'cep',
-                'idade'    : 'idade',
-                'cpf'      : 'cpf',
-                'descrição': 'descricao',
-                'senha'    : 'senha'
-        ]
+    List<String> getCamposCandidato() {
+        return ['nome', 'email', 'estado', 'cep', 'idade', 'cpf', 'descricao', 'senha']
     }
 
     void updateCandidato(int id, String coluna, Object novoValor){
-        if (!(coluna in getCamposCandidato().values())) {
+        if (!(coluna in getCamposCandidato())) {
             throw new IllegalArgumentException("Campo inválido: " + coluna)
         }
         if (coluna == 'senha') {

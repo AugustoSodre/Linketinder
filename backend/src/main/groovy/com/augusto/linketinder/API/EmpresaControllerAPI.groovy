@@ -26,7 +26,7 @@ class EmpresaControllerAPI extends CrudControllerAPI {
     protected Object buscar(int id) { empresaService.getEmpresaById(id) }
 
     @Override
-    protected Map<String, String> camposValidos() { empresaService.getCamposEmpresa() }
+    protected List<String> camposValidos() { empresaService.getCamposEmpresa() }
 
     @Override
     protected List<String> camposIgnorados() { super.camposIgnorados() + 'listaVaga' }

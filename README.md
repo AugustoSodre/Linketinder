@@ -4,7 +4,7 @@
 
 ## 📋 Sobre o projeto
 
-Linketinder conecta candidatos e empresas por meio de um backend em Groovy (CLI) e um frontend moderno em TypeScript. O frontend consome a API REST do backend, que persiste os dados no PostgreSQL.
+Linketinder conecta candidatos e empresas por meio de uma API REST em Groovy e um frontend em TypeScript, que é a única interface do sistema. O frontend consome a API REST, que persiste os dados no PostgreSQL.
 
 ## 🚀 Tecnologias
 
@@ -24,12 +24,9 @@ Linketinder/
 │   └── src/
 │       ├── main/groovy/com/augusto/linketinder/
 │       │   ├── API/            # Controllers REST API
-│       │   ├── control/        # Controllers da CLI
 │       │   ├── dao/            # DAOs, factories e providers de conexão
 │       │   ├── model/          # Modelos do domínio (pessoa, vaga, competência)
 │       │   ├── service/        # Camada de serviço
-│       │   ├── view/           # Views para interação via terminal
-│       │   ├── App.groovy      # Entrada principal da aplicação CLI
 │       │   └── Server.groovy   # Servidor HTTP da API REST (inicia HTTPServerAPI)
 │       └── test/groovy/        # Testes (usa H2 in-memory)
 ├── frontend/
@@ -54,10 +51,9 @@ Linketinder/
 
 ## 🏗️ Arquitetura
 
-### Backend (CLI + API REST em Groovy)
-- **CLI**: Padrão MVC aplicado com controllers coordenando fluxo da linha de comando e views para interação textual.
+### Backend (API REST em Groovy)
 - **API REST**: Controllers dedicados (`CandidatoControllerAPI`, `EmpresaControllerAPI`, `VagaControllerAPI`) implementando HttpHandler para servir endpoints JSON.
-- **Camada de Serviço**: Services (`CandidatoService`, `EmpresaService`, `VagaService`) encapsulam lógica de negócio e são compartilhados entre CLI e API.
+- **Camada de Serviço**: Services (`CandidatoService`, `EmpresaService`, `VagaService`) encapsulam lógica de negócio e são usados pelos controllers da API.
 - **Serialização JSON**: Jackson ObjectMapper para conversão bidirecional entre objetos Groovy e JSON.
 - **CORS**: Headers configurados para permitir integração com frontend em diferentes origens.
 - **Validações**: Verificação de existência de recursos antes de atualizar/deletar.
@@ -94,7 +90,7 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 ## 🧩 Padrões de projeto em uso
 - **Factory**: `DAOFactory`, `DataSourceFactory`, `FormFactory`, `PageFactory`.
 - **DAO**: encapsula persistência e mantém controllers enxutos.
-- **Service Layer**: camada intermediária entre controllers e DAOs, compartilhada entre CLI e API.
+- **Service Layer**: camada intermediária entre controllers e DAOs.
 - **Provider**: `ConnectionProvider` para abstrair fonte de dados (JDBC x H2).
 - **Handler**: `HttpHandler` para processamento de requisições HTTP na API REST.
 - **Chain of Responsibility**: validadores sequenciais no frontend.
@@ -103,15 +99,7 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 
 ## ⚙️ Funcionalidades
 
-### Backend (CLI + API REST Groovy)
-**CLI:**
-- ✅ Cadastro de candidatos e empresas via linha de comando
-- ✅ Visualização de registros
-- ✅ Gerenciamento CRUD completo
-- ✅ Sistema de competências
-- ✅ Integração com PostgreSQL e H2 (testes)
-
-**API REST:**
+### Backend (API REST Groovy)
 - ✅ Endpoints RESTful completos para Candidatos, Empresas e Vagas
 - ✅ Operações CRUD via HTTP (GET, POST, PUT, DELETE)
 - ✅ Serialização/Deserialização JSON automática
@@ -144,18 +132,12 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 ### Backend (Groovy)
 Pré-requisitos: JDK 8+ e Gradle Wrapper (já incluso).
 
-**Executar CLI:**
 ```bash
 cd backend
-./gradlew run            # executa a CLI
+./gradlew run            # inicia a API REST na porta 8080 (ou PORT=9090 ./gradlew run)
+./gradlew test           # testes (usam H2 em memória; não precisam do PostgreSQL)
 
-# Rodar testes (usam H2 em memória; não precisam do PostgreSQL)
-./gradlew test
-```
-
-**Executar API REST:**
-```bash
-cd backend
+# Alternativa sem o Gradle em execução:
 ./gradlew installDist    # compila e copia o projeto + dependências para build/install
 
 # Inicia o servidor (porta padrão: 8080)
@@ -229,11 +211,6 @@ SELECT * FROM vaga;
 ## 🌐 Acesso à Aplicação
 
 ### Backend
-**CLI:**
-- **Tipo**: Interface de linha de comando
-- **Execução**: Via terminal após executar `./gradlew run`
-
-**API REST:**
 - **Tipo**: Servidor HTTP
 - **URL base**: `http://localhost:8080`
 - **Formato**: JSON
@@ -487,7 +464,7 @@ curl http://localhost:8080/candidatos/1
 - `backend/test-update-vaga.json` - Exemplo para atualizar vaga
 
 ## ✅ Funcionalidades atuais
-- Cadastro, listagem e atualização básica de candidatos, empresas, vagas e competências pela CLI.
+- API REST com cadastro, listagem, atualização e exclusão de candidatos, empresas e vagas.
 - Interface web com páginas de login, cadastro, dashboard e gráficos.
 - Validação de formulários com cadeia configurável de regras.
 - Scripts SQL para criação e seed inicial do banco.
@@ -496,7 +473,7 @@ curl http://localhost:8080/candidatos/1
 
 O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 - Interface intuitiva e moderna (frontend web)
-- Sistema robusto de gerenciamento (backend CLI)
+- API REST com autenticação e validação
 - Banco de dados estruturado e normalizado
 - Futuro sistema de matching inteligente baseado em competências
 - Experiência completa de recrutamento
@@ -533,10 +510,8 @@ O Linketinder visa criar uma ponte entre candidatos e empresas através de:
 
 ## 📝 Notas Técnicas
 
-- **Arquitetura**: Projeto modularizado com separação clara entre backend (CLI + API REST), frontend e database
-- **Backend CLI**: Utiliza Banco de Dados conectado em PostgreSQL com arquitetura MVC
+- **Arquitetura**: Projeto modularizado com separação clara entre backend (API REST), frontend e database
 - **Backend API**: HttpServer nativo do Java com controllers RESTful, serialização JSON via Jackson
-- **Camada de Serviço**: Services compartilhados entre CLI e API para reutilização de lógica de negócio
 - **Frontend**: Consome a API REST (`VITE_API_URL`, padrão `http://localhost:8080`); só o token de login fica no sessionStorage
 - **Banco de Dados**: PostgreSQL com estrutura normalizada até 4FN
 - **Modelagem**: Desenvolvida em dbdiagram.io e exportada para SQL

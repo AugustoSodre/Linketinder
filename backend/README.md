@@ -1,12 +1,13 @@
 # Backend - Linketinder API
 
-Backend da aplicação Linketinder com suporte a CLI e API REST.
+API REST da aplicação Linketinder. A interface com o usuário é o frontend (`../frontend`).
 
 ## 🚀 Executar a Aplicação
 
-### API REST
-
 ```bash
+# Jeito mais simples (porta 8080, ou PORT=9090 ./gradlew run)
+./gradlew run
+
 # Compila o projeto e copia as dependências para build/install
 ./gradlew installDist
 
@@ -18,12 +19,6 @@ java -cp "build/install/linketinder-backend/lib/*" com.augusto.linketinder.Serve
 
 # Ou usa variável de ambiente
 PORT=9090 java -cp "build/install/linketinder-backend/lib/*" com.augusto.linketinder.Server
-```
-
-### CLI (Interface de Linha de Comando)
-
-```bash
-./gradlew run
 ```
 
 ## 🔌 Endpoints Disponíveis
@@ -75,18 +70,16 @@ curl -X DELETE http://localhost:8080/candidatos/<id> -H "Authorization: Bearer <
 src/main/groovy/com/augusto/linketinder/
 ├── API/                    # Controllers REST (HttpHandler)
 │   ├── BaseControllerAPI.groovy   # CORS, respostas JSON e validação comuns
+│   ├── CrudControllerAPI.groovy   # GET por id, PUT e DELETE comuns
 │   ├── CandidatoControllerAPI.groovy
 │   ├── EmpresaControllerAPI.groovy
 │   ├── VagaControllerAPI.groovy
 │   ├── CompetenciaControllerAPI.groovy
 │   ├── LoginControllerAPI.groovy
 │   └── HTTPServerAPI.groovy
-├── control/                # Controllers CLI
 ├── dao/                    # Data Access Objects
 ├── model/                  # Modelos do domínio
 ├── service/                # Camada de serviço (AuthService: hash de senha, tokens e bloqueio de login)
-├── view/                   # Views CLI
-├── App.groovy              # Entrada da CLI
 └── Server.groovy           # Entrada da API REST
 ```
 

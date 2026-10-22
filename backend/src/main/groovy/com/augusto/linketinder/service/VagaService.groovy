@@ -17,7 +17,6 @@ class VagaService {
 
     void createVaga(Vaga vaga){
         vagaDao.insert(vaga)
-        println("Vaga adicionada com sucesso!")
     }
 
     Vaga getVagaById(int id){
@@ -28,18 +27,12 @@ class VagaService {
         return vagaDao.listAll()
     }
 
-    Map<String, String> getCamposVaga() {
-        return [
-                'ID da empresa': 'id_empresa',
-                'nome'        : 'nome',
-                'descrição'   : 'descricao',
-                'cidade'      : 'cidade',
-                'estado'      : 'estado'
-        ]
+    List<String> getCamposVaga() {
+        return ['nome', 'descricao', 'cidade', 'estado']
     }
 
     void updateVaga(int id, String coluna, Object novoValor){
-        if (!(coluna in getCamposVaga().values())) {
+        if (!(coluna in getCamposVaga())) {
             throw new IllegalArgumentException("Campo inválido: " + coluna)
         }
         vagaDao.updateField(id, coluna, novoValor)

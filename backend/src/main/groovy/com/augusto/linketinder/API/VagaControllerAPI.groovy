@@ -29,7 +29,7 @@ class VagaControllerAPI extends CrudControllerAPI {
     protected Map toJson(Object entidade) { vagaToJson(entidade as Vaga) }
 
     @Override
-    protected Map<String, String> camposValidos() { vagaService.getCamposVaga() }
+    protected List<String> camposValidos() { vagaService.getCamposVaga() }
 
     @Override
     protected List<String> camposIgnorados() { super.camposIgnorados() + 'id_empresa' }

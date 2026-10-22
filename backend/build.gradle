@@ -29,15 +29,11 @@ dependencies {
 }
 
 application {
-    mainClass = 'com.augusto.linketinder.App'
+    mainClass = 'com.augusto.linketinder.Server'
 }
 
 sourceSets.main.resources.srcDir '../shared'
 
 test {
     useJUnitPlatform()
-}
-
-run {
-    standardInput = System.in
 }

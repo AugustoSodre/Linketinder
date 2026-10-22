@@ -18,7 +18,6 @@ class EmpresaService {
     void createEmpresa(Empresa empresa){
         empresa.senha = AuthService.hash(empresa.senha)
         empresaDao.insert(empresa)
-        println("Empresa adicionada com sucesso!")
     }
 
     Empresa getEmpresaById(int id){
@@ -29,21 +28,12 @@ class EmpresaService {
         return empresaDao.listAll()
     }
 
-    Map<String, String> getCamposEmpresa() {
-        return [
-                'nome'     : 'nome',
-                'email'    : 'email',
-                'estado'   : 'estado',
-                'cep'      : 'cep',
-                'país'     : 'pais',
-                'CNPJ'     : 'cnpj',
-                'descrição': 'descricao',
-                'senha'    : 'senha'
-        ]
+    List<String> getCamposEmpresa() {
+        return ['nome', 'email', 'estado', 'cep', 'pais', 'cnpj', 'descricao', 'senha']
     }
 
     void updateEmpresa(int id, String coluna, Object novoValor){
-        if (!(coluna in getCamposEmpresa().values())) {
+        if (!(coluna in getCamposEmpresa())) {
             throw new IllegalArgumentException("Campo inválido: " + coluna)
         }
         if (coluna == 'senha') {

@@ -20,7 +20,7 @@ abstract class CrudControllerAPI extends BaseControllerAPI {
 
     protected abstract Map toJson(Object entidade)
 
-    protected abstract Map<String, String> camposValidos()
+    protected abstract List<String> camposValidos()
 
     protected abstract void atualizar(int id, String coluna, Object valor)
 
@@ -64,7 +64,7 @@ abstract class CrudControllerAPI extends BaseControllerAPI {
 
         def validos = camposValidos()
         def campos = data.findAll { key, value -> !(key in camposIgnorados()) }
-        def invalidos = campos.keySet().findAll { !((validos[it] ?: it) in validos.values()) }
+        def invalidos = campos.keySet().findAll { !(it in validos) }
         if (invalidos) {
             sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
             return
@@ -74,7 +74,7 @@ abstract class CrudControllerAPI extends BaseControllerAPI {
         }
 
         try {
-            campos.each { key, value -> atualizar(id, (validos[key] ?: key) as String, value) }
+            campos.each { key, value -> atualizar(id, key as String, value) }
         } catch (Exception e) {
             if (!isDuplicado(e)) throw e
             sendErrorResponse(exchange, 409, "Valor já cadastrado por outro usuário")

@@ -64,41 +64,6 @@ class CompetenciaDAO extends BaseDao {
         removeByObject(VAGA, vagaId)
     }
 
-    void removeAllRelationsFromCompetencia(int competenciaId) throws SQLException {
-        RelationType.values().each { executar("DELETE FROM " + it.table + " WHERE id_competencia = ?", [competenciaId]) }
-    }
-
-    void addRelation(String objeto, int competenciaId, int objetoId) throws SQLException {
-        RelationType rel = relacao(objeto)
-        executar("INSERT INTO " + rel.table + "(id_competencia, " + rel.column + ") VALUES (?, ?)", [competenciaId, objetoId])
-    }
-
-    void removeRelation(String objeto, int competenciaId, int objetoId) throws SQLException {
-        RelationType rel = relacao(objeto)
-        executar("DELETE FROM " + rel.table + " WHERE id_competencia = ? AND " + rel.column + " = ?", [competenciaId, objetoId])
-    }
-
-    String listRelations(String objeto) throws SQLException {
-        RelationType rel = relacao(objeto)
-        final String sql = "SELECT rel.id_competencia, comp.nome AS nome_competencia, rel.${rel.column} AS id_objeto, obj.nome AS nome_objeto " +
-                "FROM ${rel.table} rel " +
-                "JOIN competencia comp ON rel.id_competencia = comp.id " +
-                "JOIN ${rel.objectName} obj ON rel.${rel.column} = obj.id " +
-                "ORDER BY comp.id, obj.id"
-
-        return "*competência*                  *${rel.objectName}*\n" + linhas(sql).collect {
-            "${it.id_competencia} - ${it.nome_competencia}               ${it.id_objeto} - ${it.nome_objeto}\n"
-        }.join()
-    }
-
-    void delete(int id) throws SQLException {
-        executar("DELETE FROM competencia WHERE id = ?", [id])
-    }
-
-    void updateName(int id, String novoNome) throws SQLException {
-        executar("UPDATE competencia SET nome = ? WHERE id = ?", [novoNome, id])
-    }
-
     Map<Integer, List<Competencia>> mapByCandidato() throws SQLException {
         return mapByRelation(CANDIDATO)
     }
@@ -109,14 +74,6 @@ class CompetenciaDAO extends BaseDao {
 
     Map<Integer, List<Competencia>> mapByVaga() throws SQLException {
         return mapByRelation(VAGA)
-    }
-
-    private static RelationType relacao(String objeto) {
-        RelationType rel = RelationType.fromObjectName(objeto)
-        if (rel == null) {
-            throw new IllegalArgumentException("Objeto inválido: ${objeto}")
-        }
-        return rel
     }
 
     private Map<Integer, List<Competencia>> mapByRelation(RelationType rel) throws SQLException {
