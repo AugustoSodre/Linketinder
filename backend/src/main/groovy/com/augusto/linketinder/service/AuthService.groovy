@@ -19,6 +19,11 @@ class AuthService {
     // shortcut: tokens vivem só em memória (somem quando o servidor reinicia); trocar por JWT ou tabela se precisar persistir
     private static final Map<String, Map> tokens = new ConcurrentHashMap<>()
 
+    // Proteção contra força bruta: após 5 senhas erradas, o CPF/CNPJ fica bloqueado por 5 minutos (contados da última falha)
+    public static final int MAX_FALHAS = 5
+    static final long BLOQUEIO_MS = 5 * 60 * 1000L
+    private static final Map<String, Map> falhas = new ConcurrentHashMap<>()
+
     private final CandidatoDAO candidatoDao
     private final EmpresaDAO empresaDao
 
@@ -54,13 +59,27 @@ class AuthService {
         return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).encoded
     }
 
-    // Retorna [token, tipo, id] ou null se as credenciais forem inválidas
+    // Retorna [token, tipo, id], null se as credenciais forem inválidas,
+    // ou [bloqueado: true] depois de MAX_FALHAS tentativas erradas seguidas para o mesmo CPF/CNPJ
     Map login(String cpf, String cnpj, String senha) {
         def tipo = cpf ? 'candidato' : 'empresa'
+        def chave = "${tipo}:${cpf ?: cnpj}".toString()
+        def agora = System.currentTimeMillis()
+
+        // Esquece tentativas antigas para o mapa não crescer sem limite
+        falhas.values().removeIf { it.ultima < agora - BLOQUEIO_MS }
+        if (falhas[chave]?.quantidade >= MAX_FALHAS) {
+            return [bloqueado: true]
+        }
+
         Map credenciais = cpf ? candidatoDao.findCredenciaisByCpf(cpf) : (cnpj ? empresaDao.findCredenciaisByCnpj(cnpj) : null)
         if (!credenciais || !verify(senha, credenciais.senha as String)) {
+            def registro = falhas.computeIfAbsent(chave) { [quantidade: 0] }
+            registro.quantidade = (registro.quantidade as int) + 1
+            registro.ultima = agora
             return null
         }
+        falhas.remove(chave)
         // Limpa tokens vencidos a cada login para o mapa não crescer sem limite
         tokens.values().removeIf { it.expira < System.currentTimeMillis() }
 

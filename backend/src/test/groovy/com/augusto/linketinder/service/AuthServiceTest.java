@@ -40,6 +40,8 @@ class AuthServiceTest {
             statement.execute("CREATE TABLE empresa (id SERIAL PRIMARY KEY, cnpj VARCHAR(14), senha VARCHAR(255))");
             statement.execute("INSERT INTO candidato (cpf, senha) VALUES ('12345678901', '" + AuthService.hash("123456") + "')");
             statement.execute("INSERT INTO empresa (cnpj, senha) VALUES ('12345678000101', '" + AuthService.hash("123456") + "')");
+            // Usada só no teste de bloqueio: o mapa de falhas é estático e vazaria para os outros testes
+            statement.execute("INSERT INTO empresa (cnpj, senha) VALUES ('22222222000122', '" + AuthService.hash("123456") + "')");
         }
 
         authService = new AuthService(new CandidatoDAO(dataSource), new EmpresaDAO(dataSource));
@@ -70,6 +72,17 @@ class AuthServiceTest {
         assertNull(authService.login("12345678901", null, "errada"));
         assertNull(authService.login("00000000000", null, "123456"));
         assertNull(authService.login(null, null, "123456"));
+    }
+
+    @Test
+    void loginShouldBlockAfterTooManyWrongPasswords() {
+        for (int i = 0; i < AuthService.MAX_FALHAS; i++) {
+            assertNull(authService.login(null, "22222222000122", "errada"));
+        }
+        // Nem a senha certa entra enquanto estiver bloqueado
+        assertEquals(Boolean.TRUE, authService.login(null, "22222222000122", "123456").get("bloqueado"));
+        // Outro usuário não é afetado
+        assertNotNull(authService.login("12345678901", null, "123456").get("token"));
     }
 
     @Test

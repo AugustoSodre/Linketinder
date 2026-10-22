@@ -35,7 +35,9 @@ class LoginControllerAPI extends BaseControllerAPI {
             def data = objectMapper.readValue(exchange.requestBody.text, Map.class)
             def resultado = authService.login(data.cpf as String, data.cnpj as String, data.senha as String)
 
-            if (resultado) {
+            if (resultado?.bloqueado) {
+                sendErrorResponse(exchange, 429, "Muitas tentativas de login. Tente novamente em alguns minutos.")
+            } else if (resultado) {
                 sendJsonResponse(exchange, 200, resultado)
             } else {
                 sendErrorResponse(exchange, 401, "Credenciais inválidas")
