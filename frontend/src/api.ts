@@ -75,6 +75,7 @@ export function updateCurrentUser(session: Session, campos: Record<string, unkno
     return request(`/${session.tipo}s/${session.id}`, "PUT", campos)
 }
 
+export const createCompetencia = (nome: string) => request("/competencias", "POST", { nome })
 export const createVaga = (vaga: unknown) => request("/vagas", "POST", vaga)
 export const updateVaga = (id: number, campos: Record<string, unknown>) => request(`/vagas/${id}`, "PUT", campos)
 export const deleteVaga = (id: number) => request(`/vagas/${id}`, "DELETE")

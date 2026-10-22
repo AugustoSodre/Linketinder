@@ -1,6 +1,6 @@
 import { createHomeListeners, renderHomeHeaderHTML, renderHomeLeftProfileHTML, renderHomeRightProfileHTML, renderHomeListaVagas, renderHomeListaCandidatos } from "../helpers/homeHelper"
 import { generateCandidatosCompetenciaGraphListener } from "../components/grafico"
-import { createPerfilListeners, createVagasListeners, renderEditarPerfilHTML, renderMinhasVagasHTML } from "../components/perfil"
+import { createNovaCompetenciaListener, createPerfilListeners, createVagasListeners, renderEditarPerfilHTML, renderMinhasVagasHTML, renderNovaCompetenciaHTML } from "../components/perfil"
 import type { UsuarioLogado } from "../models/types"
 
 export function renderHome(app: HTMLDivElement, currentUser: UsuarioLogado){
@@ -16,12 +16,14 @@ export function renderHome(app: HTMLDivElement, currentUser: UsuarioLogado){
             ${renderHomeLeftProfileHTML(currentUser)}
             ${renderHomeRightProfileHTML(currentUser)}
             ${renderEditarPerfilHTML(currentUser)}
+            ${renderNovaCompetenciaHTML()}
             ${conteudo}
         </div>
     </main>`
 
     createHomeListeners()
     createPerfilListeners(currentUser)
+    createNovaCompetenciaListener()
     if (currentUser.tipo === "empresa") {
         createVagasListeners(currentUser)
         generateCandidatosCompetenciaGraphListener()

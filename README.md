@@ -259,7 +259,8 @@ A API foi desenvolvida utilizando uma arquitetura em camadas com separação cla
 - Os dados enviados são validados na API: campo inválido retorna `400` com a mensagem (ex.: "CPF deve ter 11 dígitos"); CPF/CNPJ já cadastrado retorna `409`.
 - Após 5 senhas erradas seguidas para o mesmo CPF/CNPJ, o login fica bloqueado por 5 minutos (`429`).
 - Os tokens valem 8 horas e ficam só em memória: vencer ou reiniciar o servidor exige novo login (o frontend volta ao menu automaticamente).
-- `GET /competencias` lista as competências (`id`, `nome`) usadas nos cadastros.
+- `GET /competencias` lista as competências (`id`, `nome`) usadas nos cadastros. `POST /competencias` com `{"nome": "..."}` cria uma nova (exige login; nome repetido, sem diferenciar maiúsculas, dá 409). Não há renomear nem excluir.
+- `PUT` de candidato, empresa ou vaga aceita `competencias: [{id, nome}]` e substitui a lista inteira (ids inexistentes dão 400).
 
 ```bash
 curl -X POST http://localhost:8080/login -d '{"cpf":"12345678901","senha":"123456"}'

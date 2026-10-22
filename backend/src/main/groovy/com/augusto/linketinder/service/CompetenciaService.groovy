@@ -20,6 +20,16 @@ class CompetenciaService {
         return competenciaDao.listAll()
     }
 
+    boolean existeNome(String nome) {
+        return competenciaDao.listAll().any { it.nome.equalsIgnoreCase(nome) }
+    }
+
+    Competencia criar(String nome) {
+        def competencia = new Competencia(nome)
+        competenciaDao.insert(competencia)
+        return competencia
+    }
+
     boolean existem(List<Integer> ids) {
         return competenciaDao.listAll()*.id.containsAll(ids)
     }

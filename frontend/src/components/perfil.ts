@@ -1,7 +1,7 @@
 import { escapeHtml } from "../helpers/escapeHtml"
 import { generateCompetenciasText } from "../helpers/formHelper"
 import { notify } from "../helpers/notify"
-import { createVaga, deleteVaga, getSession, toCompetenciasApi, updateCurrentUser, updateVaga } from "../api"
+import { createCompetencia, createVaga, deleteVaga, getSession, toCompetenciasApi, updateCurrentUser, updateVaga } from "../api"
 import { refresh } from "../router"
 import { marcadas, semPontuacao, valor } from "../helpers/dom"
 import { FieldRequiredHandler } from "../validators/chain/FieldRequiredHandler"
@@ -44,6 +44,33 @@ export function renderEditarPerfilHTML(currentUser: UsuarioLogado): string{
             <button type="submit" class="btn" id="perfil-submit">Salvar alterações</button>
         </form>
     </details>`
+}
+
+export function renderNovaCompetenciaHTML(): string{
+    return `
+    <details class="perfil-section" id="nova-competencia">
+        <summary>Nova competência</summary>
+        <form id="form-nova-competencia">
+            ${campo("nova-competencia-nome", "Nome da competência:", "")}
+            <button type="submit" class="btn" id="nova-competencia-submit">Adicionar competência</button>
+        </form>
+    </details>`
+}
+
+export function createNovaCompetenciaListener(){
+    document.getElementById("form-nova-competencia")?.addEventListener("submit", async (e) => {
+        e.preventDefault()
+        const res = await regra("nome").handle({ nome: valor("nova-competencia-nome") })
+        if (!res.ok) { notify(res.message); return }
+
+        try {
+            await createCompetencia(valor("nova-competencia-nome"))
+            notify("Competência criada.", "ok")
+            await refresh()
+        } catch (err) {
+            notify((err as Error).message)
+        }
+    })
 }
 
 export function renderMinhasVagasHTML(currentUser: Empresa): string{

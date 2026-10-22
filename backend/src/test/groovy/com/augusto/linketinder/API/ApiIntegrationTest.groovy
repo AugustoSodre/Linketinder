@@ -155,6 +155,25 @@ class ApiIntegrationTest {
     }
 
     @Test
+    void usuarioLogadoCriaCompetenciaMasNaoAlteraNemApaga() {
+        def token = cadastraCandidatoELoga()
+
+        assertEquals(401, req('POST', '/competencias', [nome: 'Kotlin']).status)
+
+        def criada = req('POST', '/competencias', [nome: '  Kotlin '], token)
+        assertEquals(201, criada.status)
+        assertEquals('Kotlin', criada.json.data.nome)
+        assertEquals([[id: 1, nome: 'Java'], [id: 2, nome: 'Groovy'], [id: criada.json.data.id, nome: 'Kotlin']], req('GET', '/competencias').json)
+
+        assertEquals([error: 'Competência já cadastrada', status: 409], req('POST', '/competencias', [nome: 'kotlin'], token).json)
+        assertEquals([error: 'Nome é obrigatório', status: 400], req('POST', '/competencias', [nome: ' '], token).json)
+
+        assertEquals(405, req('PUT', '/competencias/1', [nome: 'C#'], token).status)
+        assertEquals(405, req('DELETE', '/competencias/1', null, token).status)
+        assertEquals(3, req('GET', '/competencias').json.size())
+    }
+
+    @Test
     void postVagaDeveDevolverAVagaCriadaComId() {
         def token = cadastraEmpresaELoga()
         def login = req('POST', '/login', [cnpj: '12345678000199', senha: '123456']).json

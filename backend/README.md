@@ -26,7 +26,7 @@ PORT=9090 java -cp "build/install/linketinder-backend/lib/*" com.augusto.linketi
 - **Candidatos**: `http://localhost:8080/candidatos`
 - **Empresas**: `http://localhost:8080/empresas`
 - **Vagas**: `http://localhost:8080/vagas`
-- **Competências**: `http://localhost:8080/competencias` (somente leitura)
+- **Competências**: `http://localhost:8080/competencias` (qualquer usuário logado cria com `POST`; não há renomear nem excluir)
 - **Login**: `POST http://localhost:8080/login`
 
 Alterar e remover exigem o token do login (`Authorization: Bearer <token>`), e cada usuário só mexe nos próprios dados. Detalhes e códigos de resposta (400, 401, 403, 409, 429) no [README principal](../README.md#-autenticação).
