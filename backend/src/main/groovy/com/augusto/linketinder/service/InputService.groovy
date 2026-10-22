@@ -60,7 +60,8 @@ class InputService {
     String getPaisInput(){
         String pais = ""
 
-        while(!validateService.isPaisValid(pais)){
+        // A coluna guarda a sigla de 2 letras (ex: BR)
+        while(!(validateService.isPaisValid(pais) && pais.length() == 2)){
             try{
                 pais = inputServiceCore.getStringInput()
             } catch (Exception e){
@@ -69,7 +70,7 @@ class InputService {
             }
         }
 
-        return pais
+        return pais.toUpperCase()
     }
 
     int getIntInput() {
@@ -138,7 +139,8 @@ class InputService {
             }
         }
 
-        return cep
+        // Aceita com ou sem pontuação, mas salva só os dígitos (formato das colunas no banco)
+        return cep.replaceAll(/\D/, '')
     }
 
     String getCpfInput(){
@@ -153,7 +155,8 @@ class InputService {
             }
         }
 
-        return cpf
+        // Aceita com ou sem pontuação, mas salva só os dígitos (formato das colunas no banco)
+        return cpf.replaceAll(/\D/, '')
     }
 
     String getCnpjInput(){
@@ -168,7 +171,8 @@ class InputService {
             }
         }
 
-        return cnpj
+        // Aceita com ou sem pontuação, mas salva só os dígitos (formato das colunas no banco)
+        return cnpj.replaceAll(/\D/, '')
     }
 
     List<Competencia> getCompetenciasInput(List<Competencia> listaComp) {

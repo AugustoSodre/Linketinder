@@ -80,7 +80,7 @@ class InputServiceTest {
     void testValidGetCepInput(String input) {
         mockBufferedReader(input + "\n");
         String result = inputService.getCepInput();
-        assertEquals(input, result);
+        assertEquals(input.replaceAll("\\D", ""), result);
     }
 
     @Test
@@ -89,7 +89,7 @@ class InputServiceTest {
         String validCEP = "66666-444";
         String input = invalidCEP + "\n" + validCEP + "\n";
         mockBufferedReader(input);
-        assertEquals(validCEP, inputService.getCepInput());
+        assertEquals(validCEP.replaceAll("\\D", ""), inputService.getCepInput());
     }
 
     @ParameterizedTest
@@ -178,7 +178,7 @@ class InputServiceTest {
     void testValidGetCpfInput(String input) {
         mockBufferedReader(input + "\n");
         String result = inputService.getCpfInput();
-        assertEquals(input.trim(), result);
+        assertEquals(input.replaceAll("\\D", ""), result);
     }
 
     @Test
@@ -187,7 +187,7 @@ class InputServiceTest {
         String validCPF = "123.456.789-10";
         String input = invalidCPF + "\n" + validCPF + "\n";
         mockBufferedReader(input);
-        assertEquals(validCPF, inputService.getCpfInput());
+        assertEquals(validCPF.replaceAll("\\D", ""), inputService.getCpfInput());
     }
 
     @ParameterizedTest
@@ -195,7 +195,7 @@ class InputServiceTest {
     void testValidGetCnpjInput(String input) {
         mockBufferedReader(input + "\n");
         String result = inputService.getCnpjInput();
-        assertEquals(input.trim(), result);
+        assertEquals(input.replaceAll("\\D", ""), result);
     }
 
     @Test
@@ -204,15 +204,21 @@ class InputServiceTest {
         String validCNPJ = "66.872.236/0001-26";
         String input = invalidCNPJ + "\n" + validCNPJ + "\n";
         mockBufferedReader(input);
-        assertEquals(validCNPJ, inputService.getCnpjInput());
+        assertEquals(validCNPJ.replaceAll("\\D", ""), inputService.getCnpjInput());
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"Brasil", "BR"})
+    @ValueSource(strings = {"BR", "br"})
     void testGetPaisInput(String input) {
         mockBufferedReader(input + "\n");
         String result = inputService.getPaisInput();
-        assertEquals(input.trim(), result);
+        assertEquals("BR", result);
+    }
+
+    @Test
+    void testGetPaisInputRejectsFullName() {
+        mockBufferedReader("Brasil\nBR\n");
+        assertEquals("BR", inputService.getPaisInput());
     }
 
     @Test
