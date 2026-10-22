@@ -185,7 +185,6 @@ class DaoIntegrationTest {
         empresa.setDescricao("Consultoria de tecnologia");
         empresa.setSenha("senhaSegura");
         empresa.setCompetencias(List.of());
-        // nome null viola o NOT NULL da vaga
         empresa.setListaVaga(List.of(new Vaga(0, null, "desc", "Recife", "PE", List.of())));
 
         assertThrows(Exception.class, () -> empresaDao.insert(empresa));
@@ -210,7 +209,6 @@ class DaoIntegrationTest {
                 statement.execute(sql);
             }
 
-            // Usa o mesmo script do banco real para o esquema de teste não ficar diferente do de produção
             String script = Files.readString(Path.of("../database/scriptEstruturaBasica.sql"));
             for (String sql : script.replaceAll("(?m)^--.*$", "").split(";")) {
                 if (!sql.isBlank()) {

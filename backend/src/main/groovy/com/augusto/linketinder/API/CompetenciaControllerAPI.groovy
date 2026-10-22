@@ -3,7 +3,6 @@ package com.augusto.linketinder.API
 import com.augusto.linketinder.service.CompetenciaService
 import com.sun.net.httpserver.HttpExchange
 
-// Somente leitura: o frontend precisa da lista (id + nome) para montar os checkboxes
 class CompetenciaControllerAPI extends BaseControllerAPI {
 
     private final CompetenciaService competenciaService = new CompetenciaService()

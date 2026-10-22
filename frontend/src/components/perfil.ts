@@ -136,7 +136,6 @@ export function createVagasListeners(currentUser: any){
             input("vaga-descricao").value = vaga.descricao
             input("vaga-cidade").value = vaga.cidade ?? ""
             input("vaga-estado").value = vaga.estado ?? ""
-            // PUT /vagas não altera competências, então a edição esconde os checkboxes
             document.getElementById("vaga-competencias-form")!.hidden = true
             document.getElementById("vaga-competencias-aviso")!.hidden = false
             document.getElementById("vaga-form-titulo")!.textContent = "Editar vaga"

@@ -118,8 +118,6 @@ class ValidateService {
         return descricao.trim().length() >= 1
     }
 
-    // Regras usadas pela API REST; os formatos batem com as colunas do banco (cpf 11, cnpj 14, cep 8 dígitos, siglas de 2 letras)
-    // Retorna a mensagem de erro do campo, ou null se estiver ok (ou se o campo não tiver regra)
     String erroDoCampo(String campo, Object valor) {
         String texto = valor instanceof String ? valor : null
         switch (campo) {
@@ -137,7 +135,6 @@ class ValidateService {
         }
     }
 
-    // Usado pela API: valida os obrigatórios e qualquer outro campo que veio preenchido; retorna as mensagens de erro
     List<String> validarCampos(Map data, List<String> obrigatorios) {
         def campos = (obrigatorios + data.keySet().findAll { data[it] != null }).unique()
         return campos.collect { erroDoCampo(it as String, data[it]) }.findAll { it != null }

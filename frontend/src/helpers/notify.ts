@@ -1,4 +1,3 @@
-// Mensagem na tela no lugar de alert(); fica fora do #app para sobreviver às re-renderizações
 export function notify(mensagem: string, tipo: "erro" | "ok" = "erro"){
     let el = document.getElementById("notify")
     if(!el){

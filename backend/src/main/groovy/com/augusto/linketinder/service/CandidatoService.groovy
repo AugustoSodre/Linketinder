@@ -51,7 +51,6 @@ class CandidatoService {
     }
 
     void updateCandidato(int id, String coluna, Object novoValor){
-        // O nome da coluna vai direto no SQL, então só aceitamos colunas conhecidas
         if (!(coluna in getCamposCandidato().values())) {
             throw new IllegalArgumentException("Campo inválido: " + coluna)
         }

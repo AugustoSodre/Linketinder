@@ -22,14 +22,13 @@ class VagaControllerAPI extends BaseControllerAPI {
 
         try {
             def method = exchange.requestMethod
-            def path = exchange.requestURI.path.replaceAll('/+$', '') // Remove trailing slashes
+            def path = exchange.requestURI.path.replaceAll('/+$', '')
 
             if (method == "OPTIONS") {
                 exchange.sendResponseHeaders(204, -1)
                 exchange.close()
                 return
             }
-            // Só empresas mexem em vagas; o dono de cada vaga é conferido em handlePost/handlePut/handleDelete
             if (method in ["POST", "PUT", "DELETE"]) {
                 int status = AuthService.checkAccess(exchange, "empresa", null)
                 if (status) {
@@ -128,7 +127,6 @@ class VagaControllerAPI extends BaseControllerAPI {
             def camposValidos = vagaService.getCamposVaga()
             def campos = data.findAll { key, value -> key != 'id' && key != 'competencias' && key != 'id_empresa' }
 
-            // Rejeita tudo antes de alterar qualquer coluna, para não deixar o registro pela metade
             def invalidos = campos.keySet().findAll { !((camposValidos[it] ?: it) in camposValidos.values()) }
             if (invalidos) {
                 sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
@@ -211,7 +209,6 @@ class VagaControllerAPI extends BaseControllerAPI {
         vaga.cidade = data.cidade
         vaga.estado = data.estado
         
-        // Converte a lista de competências de Map para objetos Competencia
         if (data.competencias && data.competencias instanceof List) {
             vaga.competencias = data.competencias.collect { comp ->
                 if (comp instanceof Map) {

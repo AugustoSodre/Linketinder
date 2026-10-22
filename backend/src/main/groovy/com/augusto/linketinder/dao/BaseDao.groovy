@@ -37,7 +37,6 @@ abstract class BaseDao {
         try {
             resource.close()
         } catch (Exception ignored) {
-            // Ignorado de propósito
         }
     }
 }

@@ -101,7 +101,6 @@ class CandidatoController {
         }
 
         Map<String, String> campos = candidatoService.getCamposCandidato()
-        // exibir opções numeradas
         println()
         int idx = 1
         List<Map.Entry<String, String>> entries = campos.entrySet().toList()
@@ -176,7 +175,6 @@ class CandidatoController {
         }
     }
 
-
     void atualizarCandidatoCampo(int id, String coluna, Object novoValor) {
         candidatoService.updateCandidato(id, coluna, novoValor)
     }
@@ -194,6 +192,5 @@ class CandidatoController {
         int id = inputService.getIntInput()
         candidatoService.deleteCandidato(id)
     }
-
 
 }

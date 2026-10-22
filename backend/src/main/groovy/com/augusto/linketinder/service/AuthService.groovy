@@ -16,10 +16,8 @@ class AuthService {
     private static final SecureRandom random = new SecureRandom()
     static long validadeTokenMs = 8 * 60 * 60 * 1000L
 
-    // shortcut: tokens vivem só em memória (somem quando o servidor reinicia); trocar por JWT ou tabela se precisar persistir
     private static final Map<String, Map> tokens = new ConcurrentHashMap<>()
 
-    // Proteção contra força bruta: após 5 senhas erradas, o CPF/CNPJ fica bloqueado por 5 minutos (contados da última falha)
     public static final int MAX_FALHAS = 5
     static final long BLOQUEIO_MS = 5 * 60 * 1000L
     private static final Map<String, Map> falhas = new ConcurrentHashMap<>()
@@ -36,7 +34,6 @@ class AuthService {
         this(DaoFactory.getCandidatoDAO(), DaoFactory.getEmpresaDAO())
     }
 
-    // Formato salvo no banco: iteracoes:saltBase64:hashBase64
     static String hash(String senha) {
         byte[] salt = new byte[16]
         random.nextBytes(salt)
@@ -59,14 +56,11 @@ class AuthService {
         return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256").generateSecret(spec).encoded
     }
 
-    // Retorna [token, tipo, id], null se as credenciais forem inválidas,
-    // ou [bloqueado: true] depois de MAX_FALHAS tentativas erradas seguidas para o mesmo CPF/CNPJ
     Map login(String cpf, String cnpj, String senha) {
         def tipo = cpf ? 'candidato' : 'empresa'
         def chave = "${tipo}:${cpf ?: cnpj}".toString()
         def agora = System.currentTimeMillis()
 
-        // Esquece tentativas antigas para o mapa não crescer sem limite
         falhas.values().removeIf { it.ultima < agora - BLOQUEIO_MS }
         if (falhas[chave]?.quantidade >= MAX_FALHAS) {
             return [bloqueado: true]
@@ -80,7 +74,6 @@ class AuthService {
             return null
         }
         falhas.remove(chave)
-        // Limpa tokens vencidos a cada login para o mapa não crescer sem limite
         tokens.values().removeIf { it.expira < System.currentTimeMillis() }
 
         def token = UUID.randomUUID().toString()
@@ -88,7 +81,6 @@ class AuthService {
         return [token: token, tipo: tipo, id: credenciais.id]
     }
 
-    // Retorna [tipo, id] do usuário logado ou null se o token for ausente, inválido ou vencido
     static Map getSession(HttpExchange exchange) {
         def header = exchange.requestHeaders.getFirst("Authorization")
         def sessao = header?.startsWith("Bearer ") ? tokens[header.substring(7)] : null
@@ -99,7 +91,6 @@ class AuthService {
         return sessao
     }
 
-    // 0 = liberado, 401 = sem login, 403 = logado mas não é o dono (tipo/id diferentes)
     static int checkAccess(HttpExchange exchange, String tipo, Integer id) {
         def sessao = getSession(exchange)
         if (!sessao) {

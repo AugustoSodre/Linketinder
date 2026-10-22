@@ -41,7 +41,6 @@ class VagaService {
     }
 
     void updateVaga(int id, String coluna, Object novoValor){
-        // O nome da coluna vai direto no SQL, então só aceitamos colunas conhecidas
         if (!(coluna in getCamposVaga().values())) {
             throw new IllegalArgumentException("Campo inválido: " + coluna)
         }

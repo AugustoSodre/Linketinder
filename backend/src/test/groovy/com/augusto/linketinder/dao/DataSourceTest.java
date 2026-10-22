@@ -36,8 +36,6 @@ class DataSourceTest {
 
     @Test
     void shouldConfigureAndReturnSingletonInstance() {
-        // A propriedade vence a variável de ambiente, então o teste passa mesmo com DB_PROVIDER=h2 exportado.
-        // Só confere o tipo: abrir conexão exigiria um PostgreSQL rodando.
         System.setProperty("DB_PROVIDER", "default");
         try {
             ConnectionProvider provider = ConnectionProviderFactory.getProvider();
@@ -54,7 +52,6 @@ class DataSourceTest {
         try {
             ConnectionProvider provider = ConnectionProviderFactory.getProvider();
             assertNotNull(provider);
-            // The provider should be H2 for this test
             assertTrue(provider instanceof H2ConnectionProvider);
             try (Connection c = provider.getConnection();
                  Statement s = c.createStatement();

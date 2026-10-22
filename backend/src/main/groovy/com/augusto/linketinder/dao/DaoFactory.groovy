@@ -3,7 +3,6 @@ package com.augusto.linketinder.dao
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProviderFactory
 
-
 class DaoFactory {
     
     static CandidatoDAO getCandidatoDAO() {
@@ -22,7 +21,6 @@ class DaoFactory {
         return new VagaDAO(ConnectionProviderFactory.getProvider())
     }
 
-    // Test Constructors
     static CompetenciaDAO createCompetenciaDAO(ConnectionProvider provider) {
         return new CompetenciaDAO(provider)
     }

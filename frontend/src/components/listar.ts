@@ -95,7 +95,6 @@ function calcAfinidade(objBase: any, objAlvo: any){
     let numTotalCompetencias = competenciasAlvo.length
     let numCompetenciasComum = 0
 
-    // Evita "NaN%" quando o alvo não tem competências
     if(numTotalCompetencias === 0) return "0.00%"
 
     competenciasBase.forEach((c) => {
@@ -109,7 +108,5 @@ function calcAfinidade(objBase: any, objAlvo: any){
     console.log(afinidade)
 
     return afinidade
-
-
 
 }

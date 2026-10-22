@@ -18,7 +18,6 @@ jobs:
           distribution: temurin
           java-version: 17
           cache: gradle
-      # Os testes usam H2 em memória, então não precisam de PostgreSQL
       - run: ./gradlew test
 
   frontend:
@@ -34,5 +33,4 @@ jobs:
           cache: npm
           cache-dependency-path: frontend/package-lock.json
       - run: npm ci
-      # tsc estrito + build do Vite
       - run: npm run build

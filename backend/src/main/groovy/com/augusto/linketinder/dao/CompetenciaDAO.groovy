@@ -199,7 +199,6 @@ class CompetenciaDAO extends BaseDao {
         }
     }
 
-    // Versões "em lote" para as listagens: uma consulta só, agrupada pelo id do candidato/empresa/vaga
     Map<Integer, List<Competencia>> mapByCandidato() throws SQLException {
         return mapByRelation("competencia_candidato", "id_candidato")
     }
@@ -353,5 +352,4 @@ class CompetenciaDAO extends BaseDao {
         )
     }
 
-    // relation resolution is now centralized in RelationType enum
 }

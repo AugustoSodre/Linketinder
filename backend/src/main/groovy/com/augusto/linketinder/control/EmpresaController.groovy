@@ -88,7 +88,6 @@ class EmpresaController {
     }
 
     void updateEmpresa(){
-        // keep interactive update in the view/controller pair if desired
         empresaView.printlnMessage('Atualizar Empresa via menu não implementada (use controller.updateEmpresa(id,col,valor))')
     }
 

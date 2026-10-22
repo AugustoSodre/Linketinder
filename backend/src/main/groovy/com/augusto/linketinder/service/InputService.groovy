@@ -60,7 +60,6 @@ class InputService {
     String getPaisInput(){
         String pais = ""
 
-        // A coluna guarda a sigla de 2 letras (ex: BR)
         while(!(validateService.isPaisValid(pais) && pais.length() == 2)){
             try{
                 pais = inputServiceCore.getStringInput()
@@ -139,7 +138,6 @@ class InputService {
             }
         }
 
-        // Aceita com ou sem pontuação, mas salva só os dígitos (formato das colunas no banco)
         return cep.replaceAll(/\D/, '')
     }
 
@@ -155,7 +153,6 @@ class InputService {
             }
         }
 
-        // Aceita com ou sem pontuação, mas salva só os dígitos (formato das colunas no banco)
         return cpf.replaceAll(/\D/, '')
     }
 
@@ -171,7 +168,6 @@ class InputService {
             }
         }
 
-        // Aceita com ou sem pontuação, mas salva só os dígitos (formato das colunas no banco)
         return cnpj.replaceAll(/\D/, '')
     }
 

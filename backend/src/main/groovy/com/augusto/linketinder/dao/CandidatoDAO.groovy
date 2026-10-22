@@ -67,7 +67,6 @@ class CandidatoDAO extends BaseDao {
             close(conn)
         }
 
-        // shortcut: desfaz com delete em vez de transação (cada DAO abre sua conexão); trocar por transação se os DAOs passarem a compartilhar a Connection
         try {
             competenciaDao.associateWithCandidato(candidato.id, candidato.competencias)
         } catch (Exception e) {
@@ -80,11 +79,9 @@ class CandidatoDAO extends BaseDao {
         return listAll(id)[0]
     }
 
-    // Sem id lista todos; com id traz só aquele registro (evita carregar a tabela inteira)
     List<Candidato> listAll(Integer id = null) throws SQLException {
         final String sql = id == null ? "SELECT * FROM candidato ORDER BY id" : "SELECT * FROM candidato WHERE id = ?"
         List<Candidato> candidatos = []
-        // Listando todos: carrega as competências de uma vez em vez de uma consulta por candidato
         Map<Integer, List<Competencia>> competencias = id == null ? competenciaDao.mapByCandidato() : null
 
         Connection conn = null

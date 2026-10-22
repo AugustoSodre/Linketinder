@@ -9,7 +9,6 @@ export function router(){
     const lista: { id: number }[] = session?.tipo === "empresa" ? listEmpresas : listCandidatos
     const user = session ? lista.find(u => u.id === session.id) : undefined
 
-    // Sessão de um usuário que não existe mais: volta ao menu
     if(session && !user) clearSession()
 
     const currentUser = user ? { ...user, tipo: session!.tipo } : undefined
@@ -23,7 +22,6 @@ export function router(){
     }
 }
 
-// Recarrega os dados da API e redesenha a tela, sem recarregar a página
 export async function refresh(){
     await loadData()
     router()

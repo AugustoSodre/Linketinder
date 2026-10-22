@@ -17,7 +17,6 @@ abstract class BaseControllerAPI implements HttpHandler {
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
     }
 
-    // Responde 400 e retorna true se algum campo for inválido
     protected boolean rejeitaInvalidos(HttpExchange exchange, Map data, List<String> obrigatorios) {
         def erros = validateService.validarCampos(data, obrigatorios)
         if (erros) {
@@ -26,7 +25,6 @@ abstract class BaseControllerAPI implements HttpHandler {
         return erros as boolean
     }
 
-    // 23505 = unique_violation (mesmo código no PostgreSQL e no H2)
     protected static boolean isDuplicado(Throwable e) {
         for (def causa = e; causa != null; causa = causa.cause) {
             if (causa instanceof SQLException && causa.SQLState == '23505') {

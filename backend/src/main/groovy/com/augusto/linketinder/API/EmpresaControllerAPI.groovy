@@ -23,14 +23,13 @@ class EmpresaControllerAPI extends BaseControllerAPI {
 
         try {
             def method = exchange.requestMethod
-            def path = exchange.requestURI.path.replaceAll('/+$', '') // Remove trailing slashes
+            def path = exchange.requestURI.path.replaceAll('/+$', '')
 
             if (method == "OPTIONS") {
                 exchange.sendResponseHeaders(204, -1)
                 exchange.close()
                 return
             }
-            // Cadastro (POST) é público; alterar e remover só o próprio perfil
             if (method in ["PUT", "DELETE"]) {
                 def idPath = path.find('\\d+$')
                 int status = AuthService.checkAccess(exchange, "empresa", idPath ? idPath.toInteger() : null)
@@ -137,7 +136,6 @@ class EmpresaControllerAPI extends BaseControllerAPI {
             def camposValidos = empresaService.getCamposEmpresa()
             def campos = data.findAll { key, value -> key != 'id' && key != 'competencias' && key != 'listaVaga' }
 
-            // Rejeita tudo antes de alterar qualquer coluna, para não deixar o registro pela metade
             def invalidos = campos.keySet().findAll { !((camposValidos[it] ?: it) in camposValidos.values()) }
             if (invalidos) {
                 sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
@@ -230,7 +228,6 @@ class EmpresaControllerAPI extends BaseControllerAPI {
         empresa.descricao = data.descricao
         empresa.senha = data.senha
         
-        // Converte a lista de competências de Map para objetos Competencia
         if (data.competencias && data.competencias instanceof List) {
             empresa.competencias = data.competencias.collect { comp ->
                 if (comp instanceof Map) {
@@ -243,18 +240,16 @@ class EmpresaControllerAPI extends BaseControllerAPI {
             empresa.competencias = []
         }
         
-        // Converte a lista de vagas de Map para objetos Vaga
         if (data.vagas && data.vagas instanceof List) {
             empresa.listaVaga = data.vagas.collect { vaga ->
                 if (vaga instanceof Map) {
                     def vagaObj = new Vaga()
-                    vagaObj.id_empresa = 0  // Será definido no DAO
+                    vagaObj.id_empresa = 0
                     vagaObj.nome = vaga.nome
                     vagaObj.descricao = vaga.descricao
                     vagaObj.cidade = vaga.cidade
                     vagaObj.estado = vaga.estado
                     
-                    // Converte competências da vaga
                     if (vaga.competencias && vaga.competencias instanceof List) {
                         vagaObj.competencias = vaga.competencias.collect { comp ->
                             if (comp instanceof Map) {

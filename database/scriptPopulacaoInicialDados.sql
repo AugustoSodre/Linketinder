@@ -1,4 +1,3 @@
--- Inserindo Competências
 INSERT INTO competencia(nome) VALUES ('Angular');
 INSERT INTO competencia(nome) VALUES ('React');
 INSERT INTO competencia(nome) VALUES ('Django');
@@ -6,7 +5,6 @@ INSERT INTO competencia(nome) VALUES ('Springboot');
 INSERT INTO competencia(nome) VALUES ('Linux');
 INSERT INTO competencia(nome) VALUES ('PowerBI');
 
--- Inserindo 5 Candidatos (senha de todos os usuarios de exemplo: 123456, salva como hash PBKDF2)
 INSERT INTO candidato (nome, email, estado, cep, idade, cpf, descricao, senha) 
 VALUES ('Jim Halpert', 'jim@office.com', 'SP', '18503001', 32, '12345678901', 'Vendedor experiente com habilidades em pegadinhas.', '120000:wkTZYLbouaRU2lVn3jtk1g==:FbfksaGG2sH/yIsCYKfVh8MzKRhyw7lXlk/xcw8e0Tk=');
 
@@ -22,7 +20,6 @@ VALUES ('Ryan Howard', 'ryan@office.com', 'DF', '10001001', 28, '45678901234', '
 INSERT INTO candidato (nome, email, estado, cep, idade, cpf, descricao, senha) 
 VALUES ('Angela Martin', 'angela@office.com', 'SP', '18503004', 35, '56789012345', 'Amo gatos e organização.', '120000:Lx26B9VpnmPvxI38arsGtQ==:YN6S0gwTzWQ5KNI1hCheUYi2plmXKCVnXaOzPaNEb90=');
 
--- Inserindo 5 Empresas (ANTES das vagas, pois as vagas dependem do id_empresa)
 INSERT INTO empresa (nome, email, estado, cep, pais, cnpj, descricao, senha) 
 VALUES ('Dunder Mifflin', 'contato@dundermifflin.com', 'SP', '18503100', 'US', '12345678000101', 'Empresa de papel líder da Pensilvânia.', '120000:wSo7BkoxoIS7VQewJxVcZA==:0nNY1AdfZJQhWpWNZ0ipmBxpJfdQQUrc29Rl1sPO0cA=');
 
@@ -38,7 +35,6 @@ VALUES ('Vance Refrigeration', 'bob@vancerefrigeration.com', 'SP', '18503300', '
 INSERT INTO empresa (nome, email, estado, cep, pais, cnpj, descricao, senha) 
 VALUES ('Base Investimentos', 'base@investimentos.com', 'DF', '70670707', 'BR', '56789012000105', 'Startup de construção civil.', '120000:mxaO5ME66IVoZGJboyR/3g==:MUJNJkl8n1JvbHavscpPci7ygLxR3+Qk8CZisyNguHQ=');
 
--- Inserindo 5 Vagas (agora com id_empresa referenciando as empresas criadas)
 INSERT INTO vaga (id_empresa, nome, descricao, cidade, estado)
 VALUES (1, 'Desenvolvedor Frontend', 'Buscamos desenvolvedor para criar interfaces incríveis com React.', 'Scranton', 'PA');
 
@@ -54,7 +50,6 @@ VALUES (4, 'Engenheiro DevOps', 'Profissional para gerenciar infraestrutura Linu
 INSERT INTO vaga (id_empresa, nome, descricao, cidade, estado)
 VALUES (5, 'Desenvolvedor Backend', 'Desenvolvedor experiente em Springboot e Django.', 'Philadelphia', 'PA');
 
--- Associando competências aos candidatos
 INSERT INTO competencia_candidato (id_competencia, id_candidato) VALUES (2, 1);
 INSERT INTO competencia_candidato (id_competencia, id_candidato) VALUES (1, 1);
 
@@ -72,7 +67,6 @@ INSERT INTO competencia_candidato (id_competencia, id_candidato) VALUES (2, 4);
 INSERT INTO competencia_candidato (id_competencia, id_candidato) VALUES (6, 5);
 INSERT INTO competencia_candidato (id_competencia, id_candidato) VALUES (4, 5);
 
--- Associando competências às vagas
 INSERT INTO competencia_vaga (id_competencia, id_vaga) VALUES (2, 1);
 
 INSERT INTO competencia_vaga (id_competencia, id_vaga) VALUES (6, 2);
@@ -86,7 +80,6 @@ INSERT INTO competencia_vaga (id_competencia, id_vaga) VALUES (4, 4);
 INSERT INTO competencia_vaga (id_competencia, id_vaga) VALUES (4, 5);
 INSERT INTO competencia_vaga (id_competencia, id_vaga) VALUES (3, 5);
 
--- Associando competências às empresas
 INSERT INTO competencia_empresa (id_competencia, id_empresa) VALUES (2, 1);
 INSERT INTO competencia_empresa (id_competencia, id_empresa) VALUES (1, 1);
 

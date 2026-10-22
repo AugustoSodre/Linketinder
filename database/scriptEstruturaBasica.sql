@@ -1,5 +1,3 @@
--- Rode dentro do banco linketinder (veja o README)
-
 CREATE TABLE competencia (
   id SERIAL PRIMARY KEY,
   nome VARCHAR(255) NOT NULL

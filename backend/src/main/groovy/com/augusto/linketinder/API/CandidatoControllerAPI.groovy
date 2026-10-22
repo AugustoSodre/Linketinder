@@ -22,14 +22,13 @@ class CandidatoControllerAPI extends BaseControllerAPI {
 
         try {
             def method = exchange.requestMethod
-            def path = exchange.requestURI.path.replaceAll('/+$', '') // Remove trailing slashes
+            def path = exchange.requestURI.path.replaceAll('/+$', '')
 
             if (method == "OPTIONS") {
                 exchange.sendResponseHeaders(204, -1)
                 exchange.close()
                 return
             }
-            // Cadastro (POST) é público; alterar e remover só o próprio perfil
             if (method in ["PUT", "DELETE"]) {
                 def idPath = path.find('\\d+$')
                 int status = AuthService.checkAccess(exchange, "candidato", idPath ? idPath.toInteger() : null)
@@ -127,7 +126,6 @@ class CandidatoControllerAPI extends BaseControllerAPI {
             def camposValidos = candidatoService.getCamposCandidato()
             def campos = data.findAll { key, value -> key != 'id' && key != 'competencias' }
 
-            // Rejeita tudo antes de alterar qualquer coluna, para não deixar o registro pela metade
             def invalidos = campos.keySet().findAll { !((camposValidos[it] ?: it) in camposValidos.values()) }
             if (invalidos) {
                 sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")

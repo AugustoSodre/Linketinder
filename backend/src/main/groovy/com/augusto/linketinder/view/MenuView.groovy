@@ -17,10 +17,6 @@ class MenuView {
 		this.menuController = menuController
 	}
 
-	/**
-	 * Shows the main menu and delegates submenu choices to the controller.
-	 * Returns true when the user chooses to exit (0).
-	 */
 	boolean showMainMenu() {
 		printMainOptions()
 		int option = inputService.getIntInput()

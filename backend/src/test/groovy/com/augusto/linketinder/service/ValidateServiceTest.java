@@ -33,7 +33,6 @@ class ValidateServiceTest {
         invalido.remove("nome");
         assertEquals(3, validateService.validarCampos(invalido, obrigatorios).size());
 
-        // Em atualização parcial só os campos enviados são conferidos
         assertTrue(validateService.validarCampos(java.util.Map.of("cep", "12345678"), java.util.List.of()).isEmpty());
         assertEquals(1, validateService.validarCampos(java.util.Map.of("idade", "abc"), java.util.List.of()).size());
     }
@@ -160,8 +159,5 @@ class ValidateServiceTest {
         assertTrue(validateService.isPaisValid("aLaN"));
         assertTrue(validateService.isPaisValid("LAra"));
     }
-
-
-
 
 }

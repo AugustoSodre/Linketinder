@@ -1,4 +1,3 @@
-// Formato do JSON da API depois do loadData() (competências já convertidas para nomes)
 export type Vaga = {
     id: number
     id_empresa: number

@@ -5,7 +5,6 @@ import { renderLogin } from "../pages/login";
 
 export type PageName = "menu" | "home" | "cadastro" | "login";
 
-// Returns a page renderer function with signature (app, payload?) => void
 export class PageFactory {
   static create(page: PageName): ((app: HTMLDivElement, payload?: any) => void) | null {
     switch (page) {

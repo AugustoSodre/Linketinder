@@ -77,7 +77,7 @@ class MenuController {
                 vagaController.readVaga()
                 break
             case 3:
-                vagaController.atualizarVagaCampo(0, null, null) // keep placeholder behavior
+                vagaController.atualizarVagaCampo(0, null, null)
                 break
             case 4:
                 vagaController.deleteVaga()
@@ -98,7 +98,7 @@ class MenuController {
                 competenciaController.readCompetencia()
                 break
             case 3:
-                competenciaController.atualizarCompetenciaNome(0, null) // placeholder
+                competenciaController.atualizarCompetenciaNome(0, null)
                 break
             case 4:
                 competenciaController.deleteCompetencia()

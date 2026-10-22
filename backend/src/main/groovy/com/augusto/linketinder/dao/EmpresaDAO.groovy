@@ -74,11 +74,9 @@ class EmpresaDAO extends BaseDao {
             close(conn)
         }
 
-        // shortcut: desfaz com delete em vez de transação (cada DAO abre sua conexão); trocar por transação se os DAOs passarem a compartilhar a Connection
         try {
             competenciaDao.associateWithEmpresa(empresa.id, empresa.competencias)
 
-            // Insere as vagas da empresa
             empresa.listaVaga?.each { vaga ->
                 vaga.id_empresa = empresa.id
                 vagaDao.insert(vaga)
@@ -93,11 +91,9 @@ class EmpresaDAO extends BaseDao {
         return listAll(id)[0]
     }
 
-    // Sem id lista todos; com id traz só aquele registro (evita carregar a tabela inteira)
     List<Empresa> listAll(Integer id = null) throws SQLException {
         final String sql = id == null ? "SELECT * FROM empresa ORDER BY id" : "SELECT * FROM empresa WHERE id = ?"
         List<Empresa> empresas = []
-        // Listando todas: vagas e competências vêm em poucas consultas em vez de várias por empresa
         Map<Integer, List<Vaga>> vagasPorEmpresa = id == null ? vagaDao.listAll().groupBy { it.id_empresa } : null
         Map<Integer, List<Competencia>> competencias = id == null ? competenciaDao.mapByEmpresa() : null
 

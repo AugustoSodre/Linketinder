@@ -12,7 +12,6 @@ trait Pessoa {
     List<Competencia> competencias
     String senha
 
-    //Implementar metodo 'curtir'
     def curtir(){}
 
 }

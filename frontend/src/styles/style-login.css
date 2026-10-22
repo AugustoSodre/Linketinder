@@ -1,7 +1,3 @@
-/* Login Page Specific Styles */
-
-/* Login Form Container */
-
 h2{
     align-items: center;
 }
@@ -24,7 +20,6 @@ h2{
     font-weight: 600;
 }
 
-/* Login Form Fields */
 .form-login label {
     display: block;
     color: var(--text-secondary);
@@ -50,7 +45,6 @@ h2{
     box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
 }
 
-/* Login Button */
 .form-login button[type="submit"] {
     width: 100%;
     background-color: var(--accent-primary);
@@ -75,7 +69,6 @@ h2{
     transform: translateY(0);
 }
 
-/* Login Page Layout */
 #form-login-candidato {
     animation: slideIn 0.5s ease-out;
 }
@@ -91,7 +84,6 @@ h2{
     }
 }
 
-/* Responsive Login Form */
 @media (max-width: 768px) {
     .form-login {
         margin: 1rem;
@@ -106,7 +98,6 @@ h2{
     }
 }
 
-/* Login Error/Success Messages */
 .login-message {
     padding: 0.75rem;
     margin-bottom: 1rem;

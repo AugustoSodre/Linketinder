@@ -8,7 +8,6 @@ import { NumberRangeHandler } from "../validators/chain/NumberRangeHandler"
 import { UniqueHandler } from "../validators/chain/UniqueHandler"
 
 export function handleFormCandidato(listCompetenciasCandidato: string[]){
-    // read raw values from DOM
     const nome = (document.getElementById("nome") as HTMLInputElement)?.value ?? ''
     const email = (document.getElementById("email") as HTMLInputElement)?.value ?? ''
     const estado = (document.getElementById("estado") as HTMLInputElement)?.value ?? ''
@@ -19,14 +18,12 @@ export function handleFormCandidato(listCompetenciasCandidato: string[]){
     const cpfRaw = (document.getElementById("cpf") as HTMLInputElement)?.value ?? ''
     const senha = (document.getElementById("senha") as HTMLInputElement)?.value ?? ''
 
-    // normalize
     const cep = cepRaw.replaceAll('-', '').trim()
     const cpf = cpfRaw.replaceAll('.', '').replaceAll('-', '').trim()
     const idade = Number(idadeRaw)
 
     const context: Record<string, any> = { nome, email, estado, cep, descricao, competencias, idade, cpf, senha }
 
-    // build chain: nome -> email -> estado -> cep -> descricao -> idade -> cpf format -> cpf unique
     const nomeHandler = new FieldRequiredHandler('nome', 'Nome inválido')
     nomeHandler
         .setNext(new RegexHandler('nome', /^[a-zA-ZÀ-ÿ\s]+$/, 'Nome com caractere Inválido'))
@@ -46,7 +43,6 @@ export function handleFormCandidato(listCompetenciasCandidato: string[]){
             return
         }
 
-        // all good: create and persist
         try {
             await createCandidato({ nome, email, estado, cep, descricao, idade, cpf, senha, competencias: toCompetenciasApi(competencias) })
             notify("Cadastro realizado! Faça login com seu CPF e senha.", "ok")
@@ -78,7 +74,6 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
 
     const context: Record<string, any> = { nome, email, estado, cep, descricao, pais, cnpj, senha, nomeVaga, descricaoVaga, cidadeVaga }
 
-    // chain: nome -> email -> estado -> cep -> descricao -> pais -> cnpj format -> cnpj unique -> vaga fields
     const root = new FieldRequiredHandler('nome', 'Nome inválido')
     root
         .setNext(new RegexHandler('nome', /^[a-zA-ZÀ-ÿ\s]+$/, 'Nome com caractere Inválido'))
@@ -99,7 +94,6 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
         if (!res.ok) { notify(res.message); return }
 
         try {
-            // A API cria a empresa e suas vagas numa única requisição
             await createEmpresa({
                 nome, email, estado, cep, descricao, pais, cnpj, senha,
                 competencias: toCompetenciasApi(competencias),
@@ -129,13 +123,11 @@ export function handleFormLoginCandidato(){
             await login({ cpf, senha })
             await refresh()
         } catch (e) {
-            // 401 = senha errada; outros (ex.: 429 muitas tentativas) mostram a mensagem da API
             notify((e as any).status === 401 ? 'CPF ou senha inválidos' : (e as Error).message)
         }
     })
 
 }
-
 
 export function handleFormLoginEmpresa(){
     const cnpjRaw = (document.getElementById("cnpj-login-empresa") as HTMLInputElement)?.value ?? ''
@@ -152,7 +144,6 @@ export function handleFormLoginEmpresa(){
             await login({ cnpj, senha })
             await refresh()
         } catch (e) {
-            // 401 = senha errada; outros (ex.: 429 muitas tentativas) mostram a mensagem da API
             notify((e as any).status === 401 ? 'CNPJ ou senha inválidos' : (e as Error).message)
         }
     })

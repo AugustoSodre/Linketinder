@@ -6,7 +6,6 @@ const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080"
 
 export type Session = { token: string, tipo: "candidato" | "empresa", id: number }
 
-// Competências chegam da API como {id, nome}; o resto do frontend trabalha só com os nomes
 let competenciasApi: { id: number, nome: string }[] = []
 
 export function getSession(): Session | null {
@@ -25,12 +24,11 @@ async function request(path: string, method: string = "GET", body?: unknown): Pr
 
     const res = await fetch(API_URL + path, { method, headers, body: body ? JSON.stringify(body) : undefined })
     const data = await res.json().catch(() => null)
-    // Token vencido (ou servidor reiniciado): sai da conta em vez de deixar a tela num estado logado falso
     if (res.status === 401 && session) {
         clearSession()
         notify("Sua sessão expirou. Faça login novamente.")
         refresh()
-        return new Promise(() => {}) // a tela volta ao menu; não deixa quem chamou mostrar outra mensagem
+        return new Promise(() => {})
     }
     if (!res.ok) throw Object.assign(new Error(data?.error ?? `Erro ${res.status}`), { status: res.status })
     return data

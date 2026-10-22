@@ -18,7 +18,6 @@ class CandidatoControllerTest {
 
     @Test
     void atualizarCandidatoCampoShouldDelegateToService() {
-        // Arrange - create a spy-like CandidatoService that records calls
         AtomicBoolean called = new AtomicBoolean(false);
         AtomicInteger capturedId = new AtomicInteger(-1);
         AtomicReference<String> capturedCol = new AtomicReference<>();
@@ -39,10 +38,8 @@ class CandidatoControllerTest {
 
         CandidatoController controller = new CandidatoController(viewHelper, null, spyService, candidatoView, inputService);
 
-        // Act
         controller.atualizarCandidatoCampo(42, "nome", "Novo Nome");
 
-        // Assert
         assertTrue(called.get(), "Expected CandidatoService.updateCandidato to be called");
         assertEquals(42, capturedId.get());
         assertEquals("nome", capturedCol.get());

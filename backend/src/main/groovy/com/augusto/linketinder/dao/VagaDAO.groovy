@@ -71,11 +71,9 @@ class VagaDAO extends BaseDao {
         return listAll(id)[0]
     }
 
-    // Sem id lista todos; com id traz só aquele registro (evita carregar a tabela inteira)
     List<Vaga> listAll(Integer id = null) throws SQLException {
         final String sql = id == null ? "SELECT * FROM vaga ORDER BY id" : "SELECT * FROM vaga WHERE id = ?"
         List<Vaga> vagas = []
-        // Listando todas: carrega as competências de uma vez em vez de uma consulta por vaga
         Map<Integer, List<Competencia>> competencias = id == null ? competenciaDao.mapByVaga() : null
 
         Connection conn = null
