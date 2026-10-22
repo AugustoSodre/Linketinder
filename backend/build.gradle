@@ -13,6 +13,7 @@ repositories {
 dependencies {
     implementation 'org.apache.groovy:groovy:5.0.0'
     implementation 'org.apache.groovy:groovy-json:5.0.0'
+    implementation 'org.apache.groovy:groovy-sql:5.0.0'
     
     // Jackson para JSON - biblioteca profissional e robusta
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.0'

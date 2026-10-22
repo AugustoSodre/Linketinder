@@ -174,6 +174,79 @@ class DaoIntegrationTest {
     }
 
     @Test
+    void shouldManageCompetenciaRelationsUpdatesAndDeletes() throws SQLException {
+        Competencia java = new Competencia("Java");
+        competenciaDao.insert(java);
+        competenciaDao.updateName(java.getId(), "Java 21");
+
+        Candidato candidato = new Candidato();
+        candidato.setNome("Ana");
+        candidato.setEmail("ana@example.com");
+        candidato.setEstado("SP");
+        candidato.setCep("01000000");
+        candidato.setDescricao("Backend dev");
+        candidato.setCpf("12345678900");
+        candidato.setIdade(30);
+        candidato.setSenha("senha123");
+        candidato.setCompetencias(List.of());
+        candidatoDao.insert(candidato);
+
+        competenciaDao.addRelation("candidato", java.getId(), candidato.getId());
+        assertEquals("*competência*                  *candidato*\n" + java.getId() + " - Java 21               " + candidato.getId() + " - Ana\n",
+                competenciaDao.listRelations("candidato"));
+        assertEquals("Java 21", candidatoDao.findById(candidato.getId()).getCompetencias().get(0).getNome());
+
+        competenciaDao.removeRelation("candidato", java.getId(), candidato.getId());
+        assertEquals(0, competenciaDao.listByCandidato(candidato.getId()).size());
+        assertThrows(IllegalArgumentException.class, () -> competenciaDao.addRelation("planeta", 1, 1));
+
+        competenciaDao.addRelation("candidato", java.getId(), candidato.getId());
+        competenciaDao.removeAllRelationsFromCompetencia(java.getId());
+        competenciaDao.delete(java.getId());
+        assertEquals(0, competenciaDao.listAll().size());
+
+        candidatoDao.updateField(candidato.getId(), "idade", 31);
+        candidatoDao.updateField(candidato.getId(), "nome", "Ana Maria");
+        Candidato atualizado = candidatoDao.findById(candidato.getId());
+        assertEquals(31, atualizado.getIdade());
+        assertEquals("Ana Maria", atualizado.getNome());
+        assertEquals(candidato.getId(), candidatoDao.findCredenciaisByCpf("12345678900").get("id"));
+        assertEquals(null, candidatoDao.findCredenciaisByCpf("00000000000"));
+
+        candidatoDao.delete(candidato.getId());
+        assertEquals(0, candidatoDao.listAll().size());
+    }
+
+    @Test
+    void shouldDeleteEmpresaWithItsVagas() throws SQLException {
+        Competencia sql = new Competencia("SQL");
+        competenciaDao.insert(sql);
+
+        Empresa empresa = new Empresa();
+        empresa.setNome("Tech Corp");
+        empresa.setEmail("contato@techcorp.com");
+        empresa.setEstado("PE");
+        empresa.setCep("50000000");
+        empresa.setPais("BR");
+        empresa.setCnpj("12345678000199");
+        empresa.setDescricao("Consultoria de tecnologia");
+        empresa.setSenha("senhaSegura");
+        empresa.setCompetencias(List.of(sql));
+        empresa.setListaVaga(List.of(new Vaga(0, "Dev", "desc", "Recife", "PE", List.of(sql))));
+        empresaDao.insert(empresa);
+
+        vagaDao.updateField(empresa.getListaVaga().get(0).getId(), "cidade", "Olinda");
+        assertEquals("Olinda", vagaDao.listAll().get(0).getCidade());
+        assertEquals("BR", empresaDao.findById(empresa.getId()).getPais());
+
+        empresaDao.delete(empresa.getId());
+        assertEquals(0, empresaDao.listAll().size());
+        assertEquals(0, vagaDao.listAll().size());
+        assertEquals(0, competenciaDao.mapByVaga().size());
+        assertEquals(0, competenciaDao.mapByEmpresa().size());
+    }
+
+    @Test
     void shouldNotKeepEmpresaWhenVagaInsertFails() {
         Empresa empresa = new Empresa();
         empresa.setNome("Tech Corp");
