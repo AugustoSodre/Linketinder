@@ -60,8 +60,8 @@ class VagaControllerAPI extends BaseControllerAPI {
                 return
             }
             vagaService.createVaga(vaga)
-            
-            sendJsonResponse(exchange, 201, [message: "Vaga criada com sucesso", data: data])
+
+            sendJsonResponse(exchange, 201, [message: "Vaga criada com sucesso", data: vagaToJson(vaga)])
         } else {
             sendNotFound(exchange)
         }
