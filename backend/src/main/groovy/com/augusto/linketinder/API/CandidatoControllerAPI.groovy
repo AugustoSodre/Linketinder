@@ -1,6 +1,5 @@
 package com.augusto.linketinder.API
 
-import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Candidato
 import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.CandidatoService
@@ -15,53 +14,12 @@ class CandidatoControllerAPI extends BaseControllerAPI {
     }
 
     @Override
-    void handle(HttpExchange exchange) throws IOException {
-        println "[${new Date()}] ${exchange.requestMethod} ${exchange.requestURI}"
-        
-        addCorsHeaders(exchange)
-
-        try {
-            def method = exchange.requestMethod
-            def path = exchange.requestURI.path.replaceAll('/+$', '')
-
-            if (method == "OPTIONS") {
-                exchange.sendResponseHeaders(204, -1)
-                exchange.close()
-                return
-            }
-            if (method in ["PUT", "DELETE"]) {
-                def idPath = path.find('\\d+$')
-                int status = AuthService.checkAccess(exchange, "candidato", idPath ? idPath.toInteger() : null)
-                if (status) {
-                    sendErrorResponse(exchange, status, status == 401 ? "Não autorizado" : "Acesso negado")
-                    return
-                }
-            }
-
-            switch (method) {
-                case "GET":
-                    handleGet(exchange, path)
-                    break
-                case "POST":
-                    handlePost(exchange, path)
-                    break
-                case "PUT":
-                    handlePut(exchange, path)
-                    break
-                case "DELETE":
-                    handleDelete(exchange, path)
-                    break
-                default:
-                    sendErrorResponse(exchange, 405, "Method Not Allowed")
-            }
-        } catch (Exception e) {
-            println "Erro ao processar requisição: ${e.message}"
-            e.printStackTrace()
-            sendErrorResponse(exchange, 500, "Erro interno.")
-        }
+    protected int verificarAcesso(HttpExchange exchange, String method, String path) {
+        return method in ["PUT", "DELETE"] ? AuthService.checkAccess(exchange, "candidato", idDoPath(path)) : 0
     }
 
-    private void handleGet(HttpExchange exchange, String path) {
+    @Override
+    protected void handleGet(HttpExchange exchange, String path) {
         if (path == "/candidatos") {
             def candidatos = candidatoService.getCandidatoList()
             def candidatosJson = candidatos.collect { candidato ->
@@ -69,10 +27,10 @@ class CandidatoControllerAPI extends BaseControllerAPI {
             }
             sendJsonResponse(exchange, 200, candidatosJson)
         } else if (path.matches('/candidatos/\\d+')) {
-            def id = path.split('/').last().toInteger()
+            def id = idDoPath(path)
             handleGetById(exchange, id)
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
@@ -87,7 +45,8 @@ class CandidatoControllerAPI extends BaseControllerAPI {
         }
     }
 
-    private void handlePost(HttpExchange exchange, String path) {
+    @Override
+    protected void handlePost(HttpExchange exchange, String path) {
         if (path == "/candidatos") {
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
@@ -107,13 +66,14 @@ class CandidatoControllerAPI extends BaseControllerAPI {
             
             sendJsonResponse(exchange, 201, [message: "Candidato criado com sucesso", data: candidatoToJson(candidato)])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
-    private void handlePut(HttpExchange exchange, String path) {
+    @Override
+    protected void handlePut(HttpExchange exchange, String path) {
         if (path.matches('/candidatos/\\d+')) {
-            int id = path.split('/').last().toInteger()
+            int id = idDoPath(path)
 
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
@@ -152,13 +112,14 @@ class CandidatoControllerAPI extends BaseControllerAPI {
                 camposAtualizados: camposAtualizados
             ])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
-    private void handleDelete(HttpExchange exchange, String path) {
+    @Override
+    protected void handleDelete(HttpExchange exchange, String path) {
         if (path.matches('/candidatos/\\d+')) {
-            def id = path.split('/').last().toInteger()
+            def id = idDoPath(path)
             
             if (!candidatoExists(id)) {
                 sendErrorResponse(exchange, 404, "Candidato não encontrado")
@@ -169,7 +130,7 @@ class CandidatoControllerAPI extends BaseControllerAPI {
 
             sendJsonResponse(exchange, 200, [message: "Candidato removido", id: id])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
@@ -187,9 +148,7 @@ class CandidatoControllerAPI extends BaseControllerAPI {
             cpf: candidato.cpf,
             idade: candidato.idade,
             descricao: candidato.descricao,
-            competencias: candidato.competencias?.collect { comp ->
-                [id: comp.id, nome: comp.nome]
-            } ?: []
+            competencias: competenciasToJson(candidato.competencias)
         ]
     }
 
@@ -204,17 +163,7 @@ class CandidatoControllerAPI extends BaseControllerAPI {
         candidato.descricao = data.descricao
         candidato.senha = data.senha
         
-        if (data.competencias && data.competencias instanceof List) {
-            candidato.competencias = data.competencias.collect { comp ->
-                if (comp instanceof Map) {
-                    new Competencia(comp.id as Integer, comp.nome)
-                } else {
-                    comp as Competencia
-                }
-            }
-        } else {
-            candidato.competencias = []
-        }
+        candidato.competencias = toCompetencias(data.competencias)
         
         return candidato
     }

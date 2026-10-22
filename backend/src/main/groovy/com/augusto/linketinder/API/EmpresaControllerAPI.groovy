@@ -1,7 +1,5 @@
 package com.augusto.linketinder.API
 
-import com.augusto.linketinder.model.Competencia
-import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Empresa
 import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.EmpresaService
@@ -16,53 +14,12 @@ class EmpresaControllerAPI extends BaseControllerAPI {
     }
 
     @Override
-    void handle(HttpExchange exchange) throws IOException {
-        println "[${new Date()}] ${exchange.requestMethod} ${exchange.requestURI}"
-        
-        addCorsHeaders(exchange)
-
-        try {
-            def method = exchange.requestMethod
-            def path = exchange.requestURI.path.replaceAll('/+$', '')
-
-            if (method == "OPTIONS") {
-                exchange.sendResponseHeaders(204, -1)
-                exchange.close()
-                return
-            }
-            if (method in ["PUT", "DELETE"]) {
-                def idPath = path.find('\\d+$')
-                int status = AuthService.checkAccess(exchange, "empresa", idPath ? idPath.toInteger() : null)
-                if (status) {
-                    sendErrorResponse(exchange, status, status == 401 ? "Não autorizado" : "Acesso negado")
-                    return
-                }
-            }
-
-            switch (method) {
-                case "GET":
-                    handleGet(exchange, path)
-                    break
-                case "POST":
-                    handlePost(exchange, path)
-                    break
-                case "PUT":
-                    handlePut(exchange, path)
-                    break
-                case "DELETE":
-                    handleDelete(exchange, path)
-                    break
-                default:
-                    sendErrorResponse(exchange, 405, "Method Not Allowed")
-            }
-        } catch (Exception e) {
-            println "Erro ao processar requisição: ${e.message}"
-            e.printStackTrace()
-            sendErrorResponse(exchange, 500, "Erro interno.")
-        }
+    protected int verificarAcesso(HttpExchange exchange, String method, String path) {
+        return method in ["PUT", "DELETE"] ? AuthService.checkAccess(exchange, "empresa", idDoPath(path)) : 0
     }
 
-    private void handleGet(HttpExchange exchange, String path) {
+    @Override
+    protected void handleGet(HttpExchange exchange, String path) {
         if (path == "/empresas") {
             def empresas = empresaService.getEmpresaList()
             def empresasJson = empresas.collect { empresa ->
@@ -70,10 +27,10 @@ class EmpresaControllerAPI extends BaseControllerAPI {
             }
             sendJsonResponse(exchange, 200, empresasJson)
         } else if (path.matches('/empresas/\\d+')) {
-            def id = path.split('/').last().toInteger()
+            def id = idDoPath(path)
             handleGetById(exchange, id)
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
@@ -88,7 +45,8 @@ class EmpresaControllerAPI extends BaseControllerAPI {
         }
     }
 
-    private void handlePost(HttpExchange exchange, String path) {
+    @Override
+    protected void handlePost(HttpExchange exchange, String path) {
         if (path == "/empresas") {
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
@@ -117,13 +75,14 @@ class EmpresaControllerAPI extends BaseControllerAPI {
             
             sendJsonResponse(exchange, 201, [message: "Empresa criada com sucesso", data: empresaToJson(empresa)])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
-    private void handlePut(HttpExchange exchange, String path) {
+    @Override
+    protected void handlePut(HttpExchange exchange, String path) {
         if (path.matches('/empresas/\\d+')) {
-            int id = path.split('/').last().toInteger()
+            int id = idDoPath(path)
 
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
@@ -162,13 +121,14 @@ class EmpresaControllerAPI extends BaseControllerAPI {
                 camposAtualizados: camposAtualizados
             ])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
-    private void handleDelete(HttpExchange exchange, String path) {
+    @Override
+    protected void handleDelete(HttpExchange exchange, String path) {
         if (path.matches('/empresas/\\d+')) {
-            def id = path.split('/').last().toInteger()
+            def id = idDoPath(path)
             
             if (!empresaExists(id)) {
                 sendErrorResponse(exchange, 404, "Empresa não encontrada")
@@ -179,7 +139,7 @@ class EmpresaControllerAPI extends BaseControllerAPI {
 
             sendJsonResponse(exchange, 200, [message: "Empresa removida", id: id])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
@@ -197,27 +157,12 @@ class EmpresaControllerAPI extends BaseControllerAPI {
             pais: empresa.pais,
             cnpj: empresa.cnpj,
             descricao: empresa.descricao,
-            competencias: empresa.competencias?.collect { comp ->
-                [id: comp.id, nome: comp.nome]
-            } ?: [],
-            vagas: empresa.listaVaga?.collect { vaga ->
-                [
-                    id: vaga.id,
-                    id_empresa: vaga.id_empresa,
-                    nome: vaga.nome,
-                    descricao: vaga.descricao,
-                    cidade: vaga.cidade,
-                    estado: vaga.estado,
-                    competencias: vaga.competencias?.collect { comp ->
-                        [id: comp.id, nome: comp.nome]
-                    } ?: []
-                ]
-            } ?: []
+            competencias: competenciasToJson(empresa.competencias),
+            vagas: (empresa.listaVaga ?: []).collect { vagaToJson(it) }
         ]
     }
 
     private Empresa mapToEmpresa(Map data) {
-        
         def empresa = new Empresa()
         empresa.nome = data.nome
         empresa.email = data.email
@@ -227,50 +172,9 @@ class EmpresaControllerAPI extends BaseControllerAPI {
         empresa.cnpj = data.cnpj
         empresa.descricao = data.descricao
         empresa.senha = data.senha
+        empresa.competencias = toCompetencias(data.competencias)
         
-        if (data.competencias && data.competencias instanceof List) {
-            empresa.competencias = data.competencias.collect { comp ->
-                if (comp instanceof Map) {
-                    new Competencia(comp.id as Integer, comp.nome)
-                } else {
-                    comp as Competencia
-                }
-            }
-        } else {
-            empresa.competencias = []
-        }
-        
-        if (data.vagas && data.vagas instanceof List) {
-            empresa.listaVaga = data.vagas.collect { vaga ->
-                if (vaga instanceof Map) {
-                    def vagaObj = new Vaga()
-                    vagaObj.id_empresa = 0
-                    vagaObj.nome = vaga.nome
-                    vagaObj.descricao = vaga.descricao
-                    vagaObj.cidade = vaga.cidade
-                    vagaObj.estado = vaga.estado
-                    
-                    if (vaga.competencias && vaga.competencias instanceof List) {
-                        vagaObj.competencias = vaga.competencias.collect { comp ->
-                            if (comp instanceof Map) {
-                                new Competencia(comp.id as Integer, comp.nome)
-                            } else {
-                                comp as Competencia
-                            }
-                        }
-                    } else {
-                        vagaObj.competencias = []
-                    }
-                    
-                    return vagaObj
-                } else {
-                    return vaga as Vaga
-                }
-            }
-        } else {
-            empresa.listaVaga = []
-        }
-        
+        empresa.listaVaga = (data.vagas ?: []).collect { toVaga(it as Map) }
         return empresa
     }
 }

@@ -1,7 +1,5 @@
 package com.augusto.linketinder.API
 
-import com.augusto.linketinder.model.Competencia
-import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.VagaService
 import com.sun.net.httpserver.HttpExchange
@@ -15,52 +13,12 @@ class VagaControllerAPI extends BaseControllerAPI {
     }
 
     @Override
-    void handle(HttpExchange exchange) throws IOException {
-        println "[${new Date()}] ${exchange.requestMethod} ${exchange.requestURI}"
-        
-        addCorsHeaders(exchange)
-
-        try {
-            def method = exchange.requestMethod
-            def path = exchange.requestURI.path.replaceAll('/+$', '')
-
-            if (method == "OPTIONS") {
-                exchange.sendResponseHeaders(204, -1)
-                exchange.close()
-                return
-            }
-            if (method in ["POST", "PUT", "DELETE"]) {
-                int status = AuthService.checkAccess(exchange, "empresa", null)
-                if (status) {
-                    sendErrorResponse(exchange, status, status == 401 ? "Não autorizado" : "Acesso negado")
-                    return
-                }
-            }
-
-            switch (method) {
-                case "GET":
-                    handleGet(exchange, path)
-                    break
-                case "POST":
-                    handlePost(exchange, path)
-                    break
-                case "PUT":
-                    handlePut(exchange, path)
-                    break
-                case "DELETE":
-                    handleDelete(exchange, path)
-                    break
-                default:
-                    sendErrorResponse(exchange, 405, "Method Not Allowed")
-            }
-        } catch (Exception e) {
-            println "Erro ao processar requisição: ${e.message}"
-            e.printStackTrace()
-            sendErrorResponse(exchange, 500, "Erro interno.")
-        }
+    protected int verificarAcesso(HttpExchange exchange, String method, String path) {
+        return method in ["POST", "PUT", "DELETE"] ? AuthService.checkAccess(exchange, "empresa", null) : 0
     }
 
-    private void handleGet(HttpExchange exchange, String path) {
+    @Override
+    protected void handleGet(HttpExchange exchange, String path) {
         if (path == "/vagas") {
             def vagas = vagaService.getVagaList()
             def vagasJson = vagas.collect { vaga ->
@@ -68,10 +26,10 @@ class VagaControllerAPI extends BaseControllerAPI {
             }
             sendJsonResponse(exchange, 200, vagasJson)
         } else if (path.matches('/vagas/\\d+')) {
-            def id = path.split('/').last().toInteger()
+            def id = idDoPath(path)
             handleGetById(exchange, id)
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
@@ -86,7 +44,8 @@ class VagaControllerAPI extends BaseControllerAPI {
         }
     }
 
-    private void handlePost(HttpExchange exchange, String path) {
+    @Override
+    protected void handlePost(HttpExchange exchange, String path) {
         if (path == "/vagas") {
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
@@ -95,7 +54,7 @@ class VagaControllerAPI extends BaseControllerAPI {
                 return
             }
 
-            def vaga = mapToVaga(data)
+            def vaga = toVaga(data)
             if (vaga.id_empresa != AuthService.getSession(exchange).id) {
                 sendErrorResponse(exchange, 403, "Acesso negado")
                 return
@@ -104,13 +63,14 @@ class VagaControllerAPI extends BaseControllerAPI {
             
             sendJsonResponse(exchange, 201, [message: "Vaga criada com sucesso", data: data])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
-    private void handlePut(HttpExchange exchange, String path) {
+    @Override
+    protected void handlePut(HttpExchange exchange, String path) {
         if (path.matches('/vagas/\\d+')) {
-            int id = path.split('/').last().toInteger()
+            int id = idDoPath(path)
 
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
@@ -153,13 +113,14 @@ class VagaControllerAPI extends BaseControllerAPI {
                 camposAtualizados: camposAtualizados
             ])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
-    private void handleDelete(HttpExchange exchange, String path) {
+    @Override
+    protected void handleDelete(HttpExchange exchange, String path) {
         if (path.matches('/vagas/\\d+')) {
-            def id = path.split('/').last().toInteger()
+            def id = idDoPath(path)
             
             if (!vagaExists(id)) {
                 sendErrorResponse(exchange, 404, "Vaga não encontrada")
@@ -174,7 +135,7 @@ class VagaControllerAPI extends BaseControllerAPI {
 
             sendJsonResponse(exchange, 200, [message: "Vaga removida", id: id])
         } else {
-            sendErrorResponse(exchange, 404, "Rota não encontrada")
+            sendNotFound(exchange)
         }
     }
 
@@ -185,42 +146,5 @@ class VagaControllerAPI extends BaseControllerAPI {
 
     private boolean vagaExists(int id) {
         return vagaService.getVagaById(id) != null
-    }
-
-    private Map vagaToJson(Vaga vaga) {
-        return [
-            id: vaga.id,
-            id_empresa: vaga.id_empresa,
-            nome: vaga.nome,
-            descricao: vaga.descricao,
-            cidade: vaga.cidade,
-            estado: vaga.estado,
-            competencias: vaga.competencias?.collect { comp ->
-                [id: comp.id, nome: comp.nome]
-            } ?: []
-        ]
-    }
-
-    private Vaga mapToVaga(Map data) {
-        def vaga = new Vaga()
-        vaga.id_empresa = data.id_empresa as Integer
-        vaga.nome = data.nome
-        vaga.descricao = data.descricao
-        vaga.cidade = data.cidade
-        vaga.estado = data.estado
-        
-        if (data.competencias && data.competencias instanceof List) {
-            vaga.competencias = data.competencias.collect { comp ->
-                if (comp instanceof Map) {
-                    new Competencia(comp.id as Integer, comp.nome)
-                } else {
-                    comp as Competencia
-                }
-            }
-        } else {
-            vaga.competencias = []
-        }
-        
-        return vaga
     }
 }

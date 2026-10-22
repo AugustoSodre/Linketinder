@@ -16,36 +16,16 @@ class LoginControllerAPI extends BaseControllerAPI {
     }
 
     @Override
-    void handle(HttpExchange exchange) throws IOException {
-        println "[${new Date()}] ${exchange.requestMethod} ${exchange.requestURI}"
+    protected void handlePost(HttpExchange exchange, String path) {
+        def data = objectMapper.readValue(getRequestBody(exchange), Map.class)
+        def resultado = authService.login(data.cpf as String, data.cnpj as String, data.senha as String)
 
-        addCorsHeaders(exchange)
-
-        try {
-            if (exchange.requestMethod == "OPTIONS") {
-                exchange.sendResponseHeaders(204, -1)
-                exchange.close()
-                return
-            }
-            if (exchange.requestMethod != "POST") {
-                sendErrorResponse(exchange, 405, "Method Not Allowed")
-                return
-            }
-
-            def data = objectMapper.readValue(exchange.requestBody.text, Map.class)
-            def resultado = authService.login(data.cpf as String, data.cnpj as String, data.senha as String)
-
-            if (resultado?.bloqueado) {
-                sendErrorResponse(exchange, 429, "Muitas tentativas de login. Tente novamente em alguns minutos.")
-            } else if (resultado) {
-                sendJsonResponse(exchange, 200, resultado)
-            } else {
-                sendErrorResponse(exchange, 401, "Credenciais inválidas")
-            }
-        } catch (Exception e) {
-            println "Erro ao processar login: ${e.message}"
-            e.printStackTrace()
-            sendErrorResponse(exchange, 500, "Erro interno.")
+        if (resultado?.bloqueado) {
+            sendErrorResponse(exchange, 429, "Muitas tentativas de login. Tente novamente em alguns minutos.")
+        } else if (resultado) {
+            sendJsonResponse(exchange, 200, resultado)
+        } else {
+            sendErrorResponse(exchange, 401, "Credenciais inválidas")
         }
     }
 }
