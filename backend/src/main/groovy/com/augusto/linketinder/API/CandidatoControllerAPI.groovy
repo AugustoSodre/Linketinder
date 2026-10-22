@@ -5,11 +5,12 @@ import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.CandidatoService
 import com.sun.net.httpserver.HttpExchange
 
-class CandidatoControllerAPI extends BaseControllerAPI {
-    
+class CandidatoControllerAPI extends CrudControllerAPI {
+
     private final CandidatoService candidatoService
 
     CandidatoControllerAPI() {
+        super("/candidatos", "Candidato", "o")
         this.candidatoService = new CandidatoService()
     }
 
@@ -19,31 +20,19 @@ class CandidatoControllerAPI extends BaseControllerAPI {
     }
 
     @Override
-    protected void handleGet(HttpExchange exchange, String path) {
-        if (path == "/candidatos") {
-            def candidatos = candidatoService.getCandidatoList()
-            def candidatosJson = candidatos.collect { candidato ->
-                candidatoToJson(candidato)
-            }
-            sendJsonResponse(exchange, 200, candidatosJson)
-        } else if (path.matches('/candidatos/\\d+')) {
-            def id = idDoPath(path)
-            handleGetById(exchange, id)
-        } else {
-            sendNotFound(exchange)
-        }
-    }
+    protected List listar() { candidatoService.getCandidatoList() }
 
-    private void handleGetById(HttpExchange exchange, int id) {
-        def candidato = candidatoService.getCandidatoById(id)
-        
-        if (candidato) {
-            def candidatoJson = candidatoToJson(candidato)
-            sendJsonResponse(exchange, 200, candidatoJson)
-        } else {
-            sendErrorResponse(exchange, 404, "Candidato não encontrado")
-        }
-    }
+    @Override
+    protected Object buscar(int id) { candidatoService.getCandidatoById(id) }
+
+    @Override
+    protected Map<String, String> camposValidos() { candidatoService.getCamposCandidato() }
+
+    @Override
+    protected void atualizar(int id, String coluna, Object valor) { candidatoService.updateCandidato(id, coluna, valor) }
+
+    @Override
+    protected void remover(int id) { candidatoService.deleteCandidato(id) }
 
     @Override
     protected void handlePost(HttpExchange exchange, String path) {
@@ -63,82 +52,16 @@ class CandidatoControllerAPI extends BaseControllerAPI {
                 sendErrorResponse(exchange, 409, "CPF já cadastrado")
                 return
             }
-            
-            sendJsonResponse(exchange, 201, [message: "Candidato criado com sucesso", data: candidatoToJson(candidato)])
+
+            sendJsonResponse(exchange, 201, [message: "Candidato criado com sucesso", data: toJson(candidato)])
         } else {
             sendNotFound(exchange)
         }
     }
 
     @Override
-    protected void handlePut(HttpExchange exchange, String path) {
-        if (path.matches('/candidatos/\\d+')) {
-            int id = idDoPath(path)
-
-            def body = getRequestBody(exchange)
-            def data = objectMapper.readValue(body, Map.class)
-            
-            if (!candidatoExists(id)) {
-                sendErrorResponse(exchange, 404, "Candidato não encontrado")
-                return
-            }
-            
-            def camposValidos = candidatoService.getCamposCandidato()
-            def campos = data.findAll { key, value -> key != 'id' && key != 'competencias' }
-
-            def invalidos = campos.keySet().findAll { !((camposValidos[it] ?: it) in camposValidos.values()) }
-            if (invalidos) {
-                sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
-                return
-            }
-            if (rejeitaInvalidos(exchange, campos, campos.keySet() as List<String>)) {
-                return
-            }
-
-            try {
-                campos.each { key, value ->
-                    candidatoService.updateCandidato(id, (camposValidos[key] ?: key) as String, value)
-                }
-            } catch (Exception e) {
-                if (!isDuplicado(e)) throw e
-                sendErrorResponse(exchange, 409, "Valor já cadastrado por outro usuário")
-                return
-            }
-            def camposAtualizados = campos.keySet()
-
-            sendJsonResponse(exchange, 200, [
-                message: "Candidato atualizado com sucesso", 
-                id: id, 
-                camposAtualizados: camposAtualizados
-            ])
-        } else {
-            sendNotFound(exchange)
-        }
-    }
-
-    @Override
-    protected void handleDelete(HttpExchange exchange, String path) {
-        if (path.matches('/candidatos/\\d+')) {
-            def id = idDoPath(path)
-            
-            if (!candidatoExists(id)) {
-                sendErrorResponse(exchange, 404, "Candidato não encontrado")
-                return
-            }
-            
-            candidatoService.deleteCandidato(id)
-
-            sendJsonResponse(exchange, 200, [message: "Candidato removido", id: id])
-        } else {
-            sendNotFound(exchange)
-        }
-    }
-
-    private boolean candidatoExists(int id) {
-        return candidatoService.getCandidatoById(id) != null
-    }
-
-    private Map candidatoToJson(Candidato candidato) {
+    protected Map toJson(Object entidade) {
+        Candidato candidato = entidade as Candidato
         return [
             id: candidato.id,
             nome: candidato.nome,
@@ -162,9 +85,9 @@ class CandidatoControllerAPI extends BaseControllerAPI {
         candidato.idade = data.idade as Integer
         candidato.descricao = data.descricao
         candidato.senha = data.senha
-        
+
         candidato.competencias = toCompetencias(data.competencias)
-        
+
         return candidato
     }
 }
