@@ -1,114 +1,30 @@
 import { escapeHtml } from "./escapeHtml"
-import { handleFormCandidato, handleFormLoginCandidato, handleFormLoginEmpresa } from "../handlers/formHandler";
-import { handleFormEmpresa } from "../handlers/formHandler";
-import { listCompetenciasDisponiveis } from "../storage/lists";
+import { handleFormCandidato, handleFormEmpresa, handleFormLogin } from "../handlers/formHandler"
+import { listCompetenciasDisponiveis } from "../storage/lists"
 
-export let competenciasSelecionadas: string[] = []
-export let competenciasSelecionadasVaga: string[] = []
+const handlersPorFormulario: Record<string, () => void> = {
+    "form-cadastro-candidato": handleFormCandidato,
+    "form-cadastro-empresa": handleFormEmpresa,
+    "form-login-candidato": () => handleFormLogin("candidato"),
+    "form-login-empresa": () => handleFormLogin("empresa"),
+}
 
 export function createFormListeners(){
-    competenciasSelecionadas.length = 0
-    competenciasSelecionadasVaga.length = 0
-
-    const formCadastroCandidato = document.getElementById("form-cadastro-candidato")
-    const formCadastroEmpresa   = document.getElementById("form-cadastro-empresa")
-    const formLoginCandidato    = document.getElementById("form-login-candidato")
-    const formLoginEmpresa      = document.getElementById("form-login-empresa")
-
-    if(formCadastroCandidato){
-
-        formCadastroCandidato.addEventListener("submit", (e) => {
+    for (const [id, handler] of Object.entries(handlersPorFormulario)) {
+        document.getElementById(id)?.addEventListener("submit", (e) => {
             e.preventDefault()
-
-            handleFormCandidato(competenciasSelecionadas);
+            handler()
         })
-        
-    } else if(formCadastroEmpresa){
-
-        formCadastroEmpresa.addEventListener("submit", (e) => {
-            e.preventDefault()
-
-            handleFormEmpresa(competenciasSelecionadas, competenciasSelecionadasVaga);
-        })
-
-    } else if(formLoginCandidato){
-        
-        formLoginCandidato.addEventListener("submit", (e) => {
-            e.preventDefault()
-
-            handleFormLoginCandidato()
-        })
-
-    } else if(formLoginEmpresa){
-        
-        formLoginEmpresa.addEventListener("submit", (e) => {
-            e.preventDefault()
-
-            handleFormLoginEmpresa()
-        })
-
     }
-
-    let competencias = document.querySelectorAll<HTMLInputElement>(".competencia-empresa")
-
-    if(competencias.length == 0){
-        competencias = document.querySelectorAll<HTMLInputElement>(".competencia-candidato")
-    }
-
-    Array.from(competencias).forEach((c) => {
-        c.addEventListener("change", function (){
-            console.log("Clicou na vaga")
-            if (c.checked) {
-                if (!competenciasSelecionadas.includes(c.value)) {
-                    competenciasSelecionadas.push(c.value)
-                }
-            } else {
-                const compIndex = competenciasSelecionadas.indexOf(c.value)
-                if (competenciasSelecionadas.includes(c.value)) {
-                    competenciasSelecionadas.splice(compIndex, 1)
-                }
-            }
-
-        })
-    })
-
-    const competenciasVaga = document.querySelectorAll<HTMLInputElement>(".competencia-vaga")
-
-    if(competenciasVaga){
-        Array.from(competenciasVaga).forEach((c) => {
-        c.addEventListener("change", function (){
-
-            if (c.checked) {
-                if (!competenciasSelecionadasVaga.includes(c.value)) {
-                    competenciasSelecionadasVaga.push(c.value)
-                }
-            } else {
-                const compIndex = competenciasSelecionadasVaga.indexOf(c.value)
-                if (competenciasSelecionadasVaga.includes(c.value)) {
-                    competenciasSelecionadasVaga.splice(compIndex, 1)
-                }
-            }
-
-        })
-    })
-    }
-    
-
 }
 
 export function generateCompetenciasText(sufixo: string): string{
-    const competencias: string[] = listCompetenciasDisponiveis
-
-    let text:string = ""
-
-    competencias.forEach((competencia) => {
-        text += `
-        <div id="competencia-div">
-            <label for="${escapeHtml(competencia)}">${escapeHtml(competencia)}</label>
-            <input type="checkbox" id="${escapeHtml(competencia)}" name="${escapeHtml(competencia)}" value="${escapeHtml(competencia)}" class="competencia-${sufixo}">
-          </div>
-        `
-    })
-
-    return text
+    return listCompetenciasDisponiveis.map((competencia) => {
+        const id = escapeHtml(`competencia-${sufixo}-${competencia}`)
+        return `
+        <div class="competencia-div">
+            <label for="${id}">${escapeHtml(competencia)}</label>
+            <input type="checkbox" id="${id}" value="${escapeHtml(competencia)}" class="competencia-${sufixo}">
+        </div>`
+    }).join("")
 }

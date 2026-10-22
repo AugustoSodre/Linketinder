@@ -42,176 +42,53 @@ export function renderHomeHeaderHTML(): string{
     return text
 }
 
+const itemPerfil = (campo: string, label: string, valor: unknown) => `
+        <div class="profile-item" id="item-${campo}">
+            <label>${label}</label>
+            <p id="${campo}">${escapeHtml(valor)}</p>
+        </div>`
+
 export function renderHomeLeftProfileHTML(currentUser: any): string{
-    let text: string = ""
-    if(currentUser.tipo === "empresa"){
-        text = `
-        <div id="profile-left" class="profile-column">
-        <div class="profile-item" id="item-nome">
-            <label for="nome">Nome Empresa:</label>
-            <p id="nome">${escapeHtml(currentUser.nome)}</p>
-        </div>
-
-        <div class="profile-item" id="item-email">
-            <label for="email">Email:</label>
-            <p id="email">${escapeHtml(currentUser.email)}</p>
-        </div>
-
-        <div class="profile-item" id="item-estado">
-            <label for="estado">Estado:</label>
-            <p id="estado">${escapeHtml(currentUser.estado)}</p>
-        </div>
-
-        <div class="profile-item" id="item-cep">
-            <label for="cep">CEP:</label>
-            <p id="cep">${escapeHtml(currentUser.cep)}</p>
-        </div>
-
-        <div class="profile-item" id="item-pais">
-            <label for="pais">País:</label>
-            <p id="pais">${escapeHtml(currentUser.pais)}</p>
-        </div>
-
-        </div>
-        `
-    } 
-
-    else{
-        text = `
-        <div id="profile-left" class="profile-column">
-            <div class="profile-item" id="item-nome">
-              <label for="nome">Nome:</label>
-              <p id="nome">${escapeHtml(currentUser.nome)}</p>
-            </div>
-
-            <div class="profile-item" id="item-email">
-              <label for="email">Email:</label>
-              <p id="email">${escapeHtml(currentUser.email)}</p>
-            </div>
-
-            <div class="profile-item" id="item-estado">
-              <label for="estado">Estado:</label>
-              <p id="estado">${escapeHtml(currentUser.estado)}</p>
-            </div>
-
-            <div class="profile-item" id="item-cep">
-              <label for="cep">CEP:</label>
-              <p id="cep">${escapeHtml(currentUser.cep)}</p>
-            </div>
-
-            <div class="profile-item" id="item-idade">
-              <label for="idade">Idade:</label>
-              <p id="idade">${escapeHtml(currentUser.idade)}</p>
-            </div>
-            
-          </div>
-    `
-    }
-    
-
-    return text
+    const empresa = currentUser.tipo === "empresa"
+    return `
+    <div id="profile-left" class="profile-column">
+        ${itemPerfil("nome", empresa ? "Nome Empresa:" : "Nome:", currentUser.nome)}
+        ${itemPerfil("email", "Email:", currentUser.email)}
+        ${itemPerfil("estado", "Estado:", currentUser.estado)}
+        ${itemPerfil("cep", "CEP:", currentUser.cep)}
+        ${empresa ? itemPerfil("pais", "País:", currentUser.pais) : itemPerfil("idade", "Idade:", currentUser.idade)}
+    </div>`
 }
 
-export function renderHomeRightProfileHTML(currentUser: any){
-    let text = ""
-
-    if(currentUser.tipo === "empresa"){
-        text = `
-        <div id="profile-right" class="profile-column">
-            <div class="profile-item" id="item-cpf">
-                <label for="cpf">CNPJ:</label>
-                <p id="cpf">${escapeHtml(currentUser.cnpj)}</p>
-            </div>
-
-            <div class="profile-item" id="item-descricao">
-                <label for="descricao">Descrição:</label>
-                <p id="descricao">${escapeHtml(currentUser.descricao)}</p>
-            </div>
-
-            <div class="profile-item" id="profile-competencias">
-                <label for="competencias">Competências:</label>
-                <ul id="competencias" class="skills">
-                `
-        text += generateCompetenciasList(currentUser)
-
-        text+=
-                `
-                </ul>
-            </div>
+export function renderHomeRightProfileHTML(currentUser: any): string{
+    const empresa = currentUser.tipo === "empresa"
+    return `
+    <div id="profile-right" class="profile-column">
+        ${empresa ? itemPerfil("cpf", "CNPJ:", currentUser.cnpj) : itemPerfil("cpf", "CPF:", currentUser.cpf)}
+        ${itemPerfil("descricao", "Descrição:", currentUser.descricao)}
+        <div class="profile-item" id="profile-competencias">
+            <label>Competências:</label>
+            ${generateCompetenciasList(currentUser)}
         </div>
-        `
-        
-        text +=
-        `
-        </div>
-        `
-    } 
-
-    else{
-        text = `
-        <div id="profile-right" class="profile-column">
-            <div class="profile-item" id="item-cpf">
-              <label for="cpf">CPF:</label>
-              <p id="cpf">${escapeHtml(currentUser.cpf)}</p>
-            </div>
-
-            <div class="profile-item" id="item-descricao">
-              <label for="descricao">Descrição:</label>
-              <p id="descricao">${escapeHtml(currentUser.descricao)}</p>
-            </div>
-        `
-        text += `
-
-            <div class="profile-item" id="profile-competencias">
-              <label for="competencias">Competências:</label>
-              `
-        text += generateCompetenciasList(currentUser)
-
-        text += `
-            </div>
-          </div>
-        `
-    }
-
-    return text
+    </div>`
 }
 
 export function renderHomeListaVagas(currentUser: any): string{
-    let text = ""
-
-    text += `
+    return `
     <div class="list-vagas" id="list-vagas-container">
-        <h2 for="vagas">Vagas</h2>
-    `
-    
-    text += listarVagas(currentUser)
-    
-    return text
-
+        <h2>Vagas</h2>
+        ${listarVagas(currentUser)}
+    </div>`
 }
 
 export function renderHomeListaCandidatos(currentUser: any): string{
-    let text: string = `
+    return `
     <div class="list-candidatos" id="list-candidatos-container">
-    <h2 for="candidatos">Candidatos Disponíveis</h2>
-    `;
-
-    text += listarCandidatos(currentUser)
-
-    text += `</div>`;
-
-    return text;
+        <h2>Candidatos Disponíveis</h2>
+        ${listarCandidatos(currentUser)}
+    </div>`
 }
 
-export function generateCompetenciasList(currentUser: any): string{
-
-    let text = `<ul id="competencias" class="skills">`
-
-    currentUser.competencias.forEach((c: any) => {
-        text += `<li class="skill" id="skill-${escapeHtml(c)}">${escapeHtml(c)}</li>`
-    })
-
-    text += `</ul>`
-
-    return text
+export function generateCompetenciasList(pessoa: { competencias: string[] }): string{
+    return `<ul class="skills">${pessoa.competencias.map(c => `<li class="skill">${escapeHtml(c)}</li>`).join("")}</ul>`
 }

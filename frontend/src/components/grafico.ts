@@ -1,4 +1,3 @@
-
 import { Chart, registerables } from "chart.js";
 import type {ChartConfiguration} from "chart.js"
 import { listCandidatos, listCompetenciasDisponiveis } from "../storage/lists";
@@ -38,25 +37,7 @@ export function generateCandidatosCompetenciaGraphListener(){
 
 }
 
-function contarNumeroCompetenciasCandidatos(){
-    const hashListaCompetencias: Map<string, number> = new Map();
-
-    listCompetenciasDisponiveis.forEach(comp => {
-        hashListaCompetencias.set(comp, 0);
-    })
-
-    console.log(listCandidatos)
-
-    for (const c of listCandidatos){
-        const candidato = c as any;
-        for(const cp of candidato.competencias){
-            const competencia = cp as any;
-            if(hashListaCompetencias.has(competencia)){
-                const numAtualComp = hashListaCompetencias.get(competencia) ?? 0;
-                hashListaCompetencias.set(competencia, numAtualComp + 1);
-            }
-        }
-    }
-
-    return hashListaCompetencias;
+function contarNumeroCompetenciasCandidatos(): Map<string, number>{
+    return new Map(listCompetenciasDisponiveis.map(competencia =>
+        [competencia, listCandidatos.filter(c => c.competencias.includes(competencia)).length]))
 }

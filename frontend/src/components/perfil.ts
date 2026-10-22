@@ -3,13 +3,14 @@ import { generateCompetenciasText } from "../helpers/formHelper"
 import { notify } from "../helpers/notify"
 import { createVaga, deleteVaga, getSession, toCompetenciasApi, updateCurrentUser, updateVaga } from "../api"
 import { refresh } from "../router"
+import { marcadas, semPontuacao, valor } from "../helpers/dom"
 import { FieldRequiredHandler } from "../validators/chain/FieldRequiredHandler"
 import { RegexHandler } from "../validators/chain/RegexHandler"
 import { NumberRangeHandler } from "../validators/chain/NumberRangeHandler"
+import { encadear, regraPais, regraSenha, regrasPessoa } from "../validators/regras"
 import type { Vaga } from "../models/types"
 
 const input = (id: string) => document.getElementById(id) as HTMLInputElement
-const valor = (id: string) => input(id)?.value.trim() ?? ""
 
 function campo(id: string, label: string, value: unknown, type: string = "text"){
     return `
@@ -92,7 +93,7 @@ export function createPerfilListeners(currentUser: any){
             nome: valor("perfil-nome"),
             email: valor("perfil-email"),
             estado: valor("perfil-estado"),
-            cep: valor("perfil-cep").replaceAll("-", ""),
+            cep: semPontuacao(valor("perfil-cep")),
             descricao: valor("perfil-descricao"),
         }
         if (empresa) campos.pais = valor("perfil-pais")
@@ -100,18 +101,11 @@ export function createPerfilListeners(currentUser: any){
         const senha = input("perfil-senha").value
         if (senha) campos.senha = senha
 
-        const root = new FieldRequiredHandler("nome", "Nome inválido")
-        root.setNext(new RegexHandler("nome", /^[a-zA-ZÀ-ÿ\s]+$/, "Nome com caractere inválido"))
-            .setNext(new RegexHandler("email", /^[\w.]+@\w+\.\w+(\.\w{2,3})?$/, "Email inválido"))
-            .setNext(new RegexHandler("estado", /^[A-Z]{2}$/, "Estado inválido"))
-            .setNext(new RegexHandler("cep", /^\d{8}$/, "CEP inválido"))
-            .setNext(new FieldRequiredHandler("descricao", "Descrição inválida"))
-            .setNext(empresa
-                ? new RegexHandler("pais", /^[A-Z]{2}$/, "País inválido")
-                : new NumberRangeHandler("idade", 0, 120, "Idade inválida"))
-            .setNext(new RegexHandler("senha", /^(.{6,})?$/, "A senha deve ter pelo menos 6 caracteres"))
-
-        const res = await root.handle({ ...campos, senha })
+        const res = await encadear([
+            ...regrasPessoa(),
+            empresa ? regraPais() : new NumberRangeHandler("idade", 0, 120, "Idade inválida"),
+            regraSenha(true),
+        ]).handle({ ...campos, senha })
         if (!res.ok) { notify(res.message); return }
 
         try {
@@ -162,19 +156,19 @@ export function createVagasListeners(currentUser: any){
         const id = valor("vaga-id")
         const campos = { nome: valor("vaga-nome"), descricao: valor("vaga-descricao"), cidade: valor("vaga-cidade"), estado: valor("vaga-estado") }
 
-        const root = new FieldRequiredHandler("nome", "Título da vaga inválido")
-        root.setNext(new FieldRequiredHandler("descricao", "Descrição da vaga inválida"))
-            .setNext(new FieldRequiredHandler("cidade", "Cidade da vaga inválida"))
-            .setNext(new RegexHandler("estado", /^[A-Z]{2}$/, "Estado inválido"))
-        const res = await root.handle(campos)
+        const res = await encadear([
+            new FieldRequiredHandler("nome", "Título da vaga inválido"),
+            new FieldRequiredHandler("descricao", "Descrição da vaga inválida"),
+            new FieldRequiredHandler("cidade", "Cidade da vaga inválida"),
+            new RegexHandler("estado", /^[A-Z]{2}$/, "Estado inválido"),
+        ]).handle(campos)
         if (!res.ok) { notify(res.message); return }
 
         try {
             if (id) {
                 await updateVaga(Number(id), campos)
             } else {
-                const nomes = Array.from(document.querySelectorAll<HTMLInputElement>(".competencia-nova-vaga:checked")).map(c => c.value)
-                await createVaga({ ...campos, id_empresa: currentUser.id, competencias: toCompetenciasApi(nomes) })
+                await createVaga({ ...campos, id_empresa: currentUser.id, competencias: toCompetenciasApi(marcadas("competencia-nova-vaga")) })
             }
             notify(id ? "Vaga atualizada." : "Vaga criada.", "ok")
             await refresh()
