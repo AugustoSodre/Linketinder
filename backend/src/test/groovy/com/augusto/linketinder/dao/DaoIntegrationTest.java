@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider;
 import com.augusto.linketinder.dao.connectionProvider.H2ConnectionProvider;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -33,7 +36,7 @@ class DaoIntegrationTest {
     private EmpresaDAO empresaDao;
 
     @BeforeEach
-    void setUp() throws SQLException {
+    void setUp() throws SQLException, IOException {
     dataSource = new H2ConnectionProvider(
         "jdbc:h2:mem:linketinder;MODE=PostgreSQL;DATABASE_TO_UPPER=false;DB_CLOSE_DELAY=-1",
         "sa",
@@ -73,9 +76,9 @@ class DaoIntegrationTest {
         candidato.setNome("Ana");
         candidato.setEmail("ana@example.com");
         candidato.setEstado("SP");
-        candidato.setCep("01000-000");
+        candidato.setCep("01000000");
         candidato.setDescricao("Backend dev");
-        candidato.setCpf("123.456.789-00");
+        candidato.setCpf("12345678900");
         candidato.setIdade(30);
         candidato.setSenha("senha123");
         candidato.setCompetencias(Arrays.asList(groovy, java));
@@ -111,9 +114,9 @@ class DaoIntegrationTest {
         empresa.setNome("Tech Corp");
         empresa.setEmail("contato@techcorp.com");
         empresa.setEstado("PE");
-        empresa.setCep("50000-000");
-        empresa.setPais("Brasil");
-        empresa.setCnpj("12.345.678/0001-99");
+        empresa.setCep("50000000");
+        empresa.setPais("BR");
+        empresa.setCnpj("12345678000199");
         empresa.setDescricao("Consultoria de tecnologia");
         empresa.setSenha("senhaSegura");
         empresa.setCompetencias(Arrays.asList(sql, agile));
@@ -189,7 +192,7 @@ class DaoIntegrationTest {
         assertDoesNotThrow(() -> assertEquals(0, empresaDao.listAll().size()));
     }
 
-    private void recreateSchema() throws SQLException {
+    private void recreateSchema() throws SQLException, IOException {
         try (Connection connection = dataSource.getConnection();
              Statement statement = connection.createStatement()) {
 
@@ -207,67 +210,12 @@ class DaoIntegrationTest {
                 statement.execute(sql);
             }
 
-            String[] createStatements = {
-                    "CREATE TABLE competencia (" +
-                            "id SERIAL PRIMARY KEY," +
-                            "nome VARCHAR(255) NOT NULL" +
-                            ")",
-                    "CREATE TABLE candidato (" +
-                            "id SERIAL PRIMARY KEY," +
-                            "nome VARCHAR(255) NOT NULL," +
-                            "email VARCHAR(255) NOT NULL," +
-                            "estado VARCHAR(2) NOT NULL," +
-                            "cep VARCHAR(12) NOT NULL," +
-                            "idade INT NOT NULL," +
-                            "cpf VARCHAR(20) NOT NULL," +
-                            "descricao VARCHAR(255)," +
-                            "senha VARCHAR(255) NOT NULL" +
-                            ")",
-                    "CREATE TABLE empresa (" +
-                            "id SERIAL PRIMARY KEY," +
-                            "nome VARCHAR(255) NOT NULL," +
-                            "email VARCHAR(255) NOT NULL," +
-                            "estado VARCHAR(2) NOT NULL," +
-                            "cep VARCHAR(12) NOT NULL," +
-                            "pais VARCHAR(60) NOT NULL," +
-                            "cnpj VARCHAR(32) NOT NULL," +
-                            "descricao VARCHAR(255)," +
-                            "senha VARCHAR(255) NOT NULL" +
-                            ")",
-                    "CREATE TABLE vaga (" +
-                            "id SERIAL PRIMARY KEY," +
-                            "id_empresa INT NOT NULL," +
-                            "nome VARCHAR(255) NOT NULL," +
-                            "descricao VARCHAR(255)," +
-                            "cidade VARCHAR(255) NOT NULL," +
-                            "estado VARCHAR(2) NOT NULL," +
-                            "FOREIGN KEY (id_empresa) REFERENCES empresa(id) ON DELETE CASCADE" +
-                            ")",
-                    "CREATE TABLE competencia_candidato (" +
-                            "id_competencia INT NOT NULL," +
-                            "id_candidato INT NOT NULL," +
-                            "PRIMARY KEY (id_competencia, id_candidato)," +
-                            "FOREIGN KEY (id_competencia) REFERENCES competencia(id) ON DELETE CASCADE," +
-                            "FOREIGN KEY (id_candidato) REFERENCES candidato(id) ON DELETE CASCADE" +
-                            ")",
-                    "CREATE TABLE competencia_empresa (" +
-                            "id_competencia INT NOT NULL," +
-                            "id_empresa INT NOT NULL," +
-                            "PRIMARY KEY (id_competencia, id_empresa)," +
-                            "FOREIGN KEY (id_competencia) REFERENCES competencia(id) ON DELETE CASCADE," +
-                            "FOREIGN KEY (id_empresa) REFERENCES empresa(id) ON DELETE CASCADE" +
-                            ")",
-                    "CREATE TABLE competencia_vaga (" +
-                            "id_competencia INT NOT NULL," +
-                            "id_vaga INT NOT NULL," +
-                            "PRIMARY KEY (id_competencia, id_vaga)," +
-                            "FOREIGN KEY (id_competencia) REFERENCES competencia(id) ON DELETE CASCADE," +
-                            "FOREIGN KEY (id_vaga) REFERENCES vaga(id) ON DELETE CASCADE" +
-                            ")"
-            };
-
-            for (String sql : createStatements) {
-                statement.execute(sql);
+            // Usa o mesmo script do banco real para o esquema de teste não ficar diferente do de produção
+            String script = Files.readString(Path.of("../database/scriptEstruturaBasica.sql"));
+            for (String sql : script.replaceAll("(?m)^--.*$", "").split(";")) {
+                if (!sql.isBlank()) {
+                    statement.execute(sql);
+                }
             }
         }
     }
