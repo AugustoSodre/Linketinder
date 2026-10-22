@@ -2,8 +2,11 @@ import { Chart, registerables } from "chart.js";
 import type {ChartConfiguration} from "chart.js"
 import { listCandidatos, listCompetenciasDisponiveis } from "../storage/lists";
 
+Chart.register(...registerables);
+let grafico: Chart<"bar"> | undefined
+
 export function generateCandidatosCompetenciaGraphListener(){
-    Chart.register(...registerables);
+    grafico?.destroy()
 
     const canva = document.getElementById('chart-candidatos-competencias') as HTMLCanvasElement;
 
@@ -32,9 +35,7 @@ export function generateCandidatosCompetenciaGraphListener(){
     },
     };
 
-    new Chart(canva, config);
-
-
+    grafico = new Chart(canva, config);
 }
 
 function contarNumeroCompetenciasCandidatos(): Map<string, number>{
