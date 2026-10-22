@@ -147,8 +147,7 @@ Pré-requisitos: JDK 8+ e Gradle Wrapper (já incluso).
 cd backend
 ./gradlew run            # executa a CLI
 
-# Rodar testes (os testes de DAO já usam H2 em memória; não exporte DB_PROVIDER=h2,
-# pois dois testes verificam o provider padrão)
+# Rodar testes (usam H2 em memória; não precisam do PostgreSQL)
 ./gradlew test
 ```
 
@@ -278,6 +277,8 @@ A API foi desenvolvida utilizando uma arquitetura em camadas com separação cla
 - `POST /login` com `{"cpf": "...", "senha": "..."}` (candidato) ou `{"cnpj": "...", "senha": "..."}` (empresa) retorna `{"token", "tipo", "id"}`; credenciais erradas retornam `401`.
 - Envie o token no header `Authorization: Bearer <token>` para rotas protegidas: `PUT`/`DELETE` em candidatos e empresas e `POST`/`PUT`/`DELETE` em vagas. Cadastro (`POST /candidatos`, `POST /empresas`) e todos os `GET` são públicos.
 - Cada usuário só altera/remove o próprio perfil, e cada empresa só cria/altera/remove as próprias vagas; caso contrário a API retorna `403`.
+- Os dados enviados são validados na API: campo inválido retorna `400` com a mensagem (ex.: "CPF deve ter 11 dígitos"); CPF/CNPJ já cadastrado retorna `409`.
+- Após 5 senhas erradas seguidas para o mesmo CPF/CNPJ, o login fica bloqueado por 5 minutos (`429`).
 - Os tokens valem 8 horas e ficam só em memória: vencer ou reiniciar o servidor exige novo login (o frontend volta ao menu automaticamente).
 - `GET /competencias` lista as competências (`id`, `nome`) usadas nos cadastros.
 
