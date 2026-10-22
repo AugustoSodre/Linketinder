@@ -77,7 +77,7 @@ class MenuController {
                 vagaController.readVaga()
                 break
             case 3:
-                vagaController.atualizarVagaCampo(0, null, null)
+                vagaController.updateVaga()
                 break
             case 4:
                 vagaController.deleteVaga()
@@ -98,7 +98,7 @@ class MenuController {
                 competenciaController.readCompetencia()
                 break
             case 3:
-                competenciaController.atualizarCompetenciaNome(0, null)
+                competenciaController.updateCompetencia()
                 break
             case 4:
                 competenciaController.deleteCompetencia()

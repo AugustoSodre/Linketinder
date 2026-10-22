@@ -78,6 +78,13 @@ class VagaController {
         return vagaService.getCamposVaga()
     }
 
+    void updateVaga(){
+        println 'Atualização de Vaga'
+        new AtualizacaoCli(inputService).executar(vagaService.getVagaList(), vagaService.getCamposVaga()) { int id, String coluna, valor ->
+            atualizarVagaCampo(id, coluna, valor)
+        }
+    }
+
     void atualizarVagaCampo(int id, String coluna, Object novoValor) {
         vagaService.updateVaga(id, coluna, novoValor)
     }

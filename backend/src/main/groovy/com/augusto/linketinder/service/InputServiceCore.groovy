@@ -2,11 +2,13 @@ package com.augusto.linketinder.service
 
 class InputServiceCore {
 
+    private static final BufferedReader STDIN = new BufferedReader(new InputStreamReader(System.in))
+
     private BufferedReader br
     private ValidateService validateService
 
     InputServiceCore(){
-        this(new BufferedReader(new InputStreamReader(System.in)), new ValidateService())
+        this(STDIN, new ValidateService())
     }
 
     InputServiceCore(BufferedReader br, ValidateService validateService){

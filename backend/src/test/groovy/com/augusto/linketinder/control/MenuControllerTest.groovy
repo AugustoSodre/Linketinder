@@ -51,4 +51,16 @@ class MenuControllerTest {
         verifyNoMoreInteractions(competenciaController)
     }
 
+    @Test
+    void "opcao 3 de vaga e competencia abre a atualizacao interativa"() {
+        MenuController menuController = new MenuController(new InputService(), empresaController, candidatoController, vagaController, competenciaController)
+
+        menuController.handleVagaOption(3)
+        menuController.handleCompetenciaOption(3)
+
+        verify(vagaController).updateVaga()
+        verify(competenciaController).updateCompetencia()
+        verifyNoMoreInteractions(vagaController, competenciaController)
+    }
+
 }

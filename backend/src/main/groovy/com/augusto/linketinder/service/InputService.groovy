@@ -76,6 +76,22 @@ class InputService {
         return inputServiceCore.getIntInput()
     }
 
+    Object getCampoInput(String coluna) {
+        switch (coluna) {
+            case 'email': return getEmailInput()
+            case 'estado': return getEstadoInput()
+            case 'cep': return getCepInput()
+            case 'cpf': return getCpfInput()
+            case 'cnpj': return getCnpjInput()
+            case 'pais': return getPaisInput()
+            case 'senha': return getSenhaInput()
+            case 'descricao': return getDescricaoInput()
+            case 'idade': return getIdadeInput()
+            case 'id_empresa': return getIntInput()
+            default: return getNomeInput()
+        }
+    }
+
     int getIdadeInput(){
         return inputServiceCore.getIntInput()
     }

@@ -88,7 +88,10 @@ class EmpresaController {
     }
 
     void updateEmpresa(){
-        empresaView.printlnMessage('Atualizar Empresa via menu não implementada (use controller.updateEmpresa(id,col,valor))')
+        println 'Atualização de Empresa'
+        new AtualizacaoCli(inputService).executar(empresaService.getEmpresaList(), empresaService.getCamposEmpresa()) { int id, String coluna, valor ->
+            atualizarEmpresaCampo(id, coluna, valor)
+        }
     }
 
     void atualizarEmpresaCampo(int id, String coluna, Object novoValor) {

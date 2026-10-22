@@ -39,6 +39,13 @@ class CompetenciaController {
         competenciaView.showReadCompetencias(competenciaService.getCompetenciaList())
     }
 
+    void updateCompetencia(){
+        println 'Atualização de Competência'
+        new AtualizacaoCli(inputService).executar(competenciaService.getCompetenciaList(), ['nome': 'nome']) { int id, String coluna, valor ->
+            atualizarCompetenciaNome(id, valor as String)
+        }
+    }
+
     void atualizarCompetenciaNome(int id, String novoNome){
         competenciaService.updateCompetenciaNome(id, novoNome)
     }
