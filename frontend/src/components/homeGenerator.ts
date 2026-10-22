@@ -1,9 +1,10 @@
 import { createHomeListeners, renderHomeHeaderHTML, renderHomeLeftProfileHTML, renderHomeRightProfileHTML, renderHomeListaVagas, renderHomeListaCandidatos } from "../helpers/homeHelper"
 import { generateCandidatosCompetenciaGraphListener } from "./grafico"
+import type { UsuarioLogado } from "../models/types"
 import { createPerfilListeners, createVagasListeners, renderEditarPerfilHTML, renderMinhasVagasHTML } from "./perfil"
 
 
-export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
+export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: UsuarioLogado){
     let text = `
     <main id="profile-page" class="profile-page container">
     `
@@ -31,7 +32,7 @@ export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
     createPerfilListeners(currentUser)
 }
 
-export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
+export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: Extract<UsuarioLogado, { tipo: "empresa" }>){
     let text: string = `<main id="profile-page" class="profile-page container">`
     
     text += renderHomeHeaderHTML()

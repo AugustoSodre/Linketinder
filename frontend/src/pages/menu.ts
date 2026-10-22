@@ -1,5 +1,6 @@
 
 import PageFactory from "../factories/PageFactory";
+import type { PageName } from "../factories/PageFactory";
 
 export function renderMenu(app: HTMLDivElement){
     app.innerHTML = `
@@ -11,7 +12,7 @@ export function renderMenu(app: HTMLDivElement){
         </div>
     `
     
-    const actions: Record<string, { page: any, payload?: any }> = {
+    const actions: Record<string, { page: PageName, payload?: string }> = {
         "btn-cadastrar-candidato": { page: "cadastro", payload: "Candidato" },
         "btn-cadastrar-empresa": { page: "cadastro", payload: "Empresa" },
         "btn-login-candidato": { page: "login", payload: "Candidato" },
@@ -22,7 +23,7 @@ export function renderMenu(app: HTMLDivElement){
         const el = document.getElementById(id);
         if (!el) return;
         el.addEventListener("click", () => {
-            const page = PageFactory.create(info.page as any);
+            const page = PageFactory.create(info.page);
             if (page) {
                 if (info.payload !== undefined) page(app, info.payload);
                 else page(app);

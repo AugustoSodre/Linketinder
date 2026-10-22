@@ -6,7 +6,7 @@ import { refresh } from "../router"
 import { marcadas, semPontuacao, valor } from "../helpers/dom"
 import { FieldRequiredHandler } from "../validators/chain/FieldRequiredHandler"
 import { encadear, regra, regraSenha, regrasPessoa } from "../validators/regras"
-import type { Vaga } from "../models/types"
+import type { Empresa, UsuarioLogado, Vaga } from "../models/types"
 
 const input = (id: string) => document.getElementById(id) as HTMLInputElement
 
@@ -18,7 +18,7 @@ function campo(id: string, label: string, value: unknown, type: string = "text")
         </div>`
 }
 
-export function renderEditarPerfilHTML(currentUser: any): string{
+export function renderEditarPerfilHTML(currentUser: UsuarioLogado): string{
     const empresa = currentUser.tipo === "empresa"
     return `
     <details class="perfil-section" id="editar-perfil">
@@ -42,7 +42,7 @@ export function renderEditarPerfilHTML(currentUser: any): string{
     </details>`
 }
 
-export function renderMinhasVagasHTML(currentUser: any): string{
+export function renderMinhasVagasHTML(currentUser: Empresa): string{
     let text = `
     <section class="perfil-section" id="minhas-vagas">
         <h2>Minhas vagas</h2>`
@@ -83,7 +83,7 @@ export function renderMinhasVagasHTML(currentUser: any): string{
     return text
 }
 
-export function createPerfilListeners(currentUser: any){
+export function createPerfilListeners(currentUser: UsuarioLogado){
     document.getElementById("form-editar-perfil")?.addEventListener("submit", async (e) => {
         e.preventDefault()
         const empresa = currentUser.tipo === "empresa"
@@ -116,13 +116,13 @@ export function createPerfilListeners(currentUser: any){
     })
 }
 
-export function createVagasListeners(currentUser: any){
+export function createVagasListeners(currentUser: Empresa){
     const form = document.getElementById("form-vaga")
     if (!form) return
 
     document.querySelectorAll<HTMLButtonElement>(".btn-editar-vaga").forEach(btn => {
         btn.addEventListener("click", () => {
-            const vaga: Vaga = currentUser.vagas.find((v: Vaga) => v.id === Number(btn.dataset.id))
+            const vaga = currentUser.vagas.find(v => v.id === Number(btn.dataset.id))!
             input("vaga-id").value = String(vaga.id)
             input("vaga-nome").value = vaga.nome
             input("vaga-descricao").value = vaga.descricao

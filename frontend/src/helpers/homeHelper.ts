@@ -3,6 +3,7 @@ import { listarCandidatos, listarVagas } from "../components/listar"
 import { clearSession, deleteCurrentUser, getSession } from "../api"
 import { refresh } from "../router"
 import { notify } from "./notify"
+import type { UsuarioLogado } from "../models/types"
 
 export function createHomeListeners(){
 
@@ -48,7 +49,7 @@ const itemPerfil = (campo: string, label: string, valor: unknown) => `
             <p id="${campo}">${escapeHtml(valor)}</p>
         </div>`
 
-export function renderHomeLeftProfileHTML(currentUser: any): string{
+export function renderHomeLeftProfileHTML(currentUser: UsuarioLogado): string{
     const empresa = currentUser.tipo === "empresa"
     return `
     <div id="profile-left" class="profile-column">
@@ -60,7 +61,7 @@ export function renderHomeLeftProfileHTML(currentUser: any): string{
     </div>`
 }
 
-export function renderHomeRightProfileHTML(currentUser: any): string{
+export function renderHomeRightProfileHTML(currentUser: UsuarioLogado): string{
     const empresa = currentUser.tipo === "empresa"
     return `
     <div id="profile-right" class="profile-column">
@@ -73,7 +74,7 @@ export function renderHomeRightProfileHTML(currentUser: any): string{
     </div>`
 }
 
-export function renderHomeListaVagas(currentUser: any): string{
+export function renderHomeListaVagas(currentUser: UsuarioLogado): string{
     return `
     <div class="list-vagas" id="list-vagas-container">
         <h2>Vagas</h2>
@@ -81,7 +82,7 @@ export function renderHomeListaVagas(currentUser: any): string{
     </div>`
 }
 
-export function renderHomeListaCandidatos(currentUser: any): string{
+export function renderHomeListaCandidatos(currentUser: UsuarioLogado): string{
     return `
     <div class="list-candidatos" id="list-candidatos-container">
         <h2>Candidatos Disponíveis</h2>

@@ -1,17 +1,19 @@
 import PageFactory from "./factories/PageFactory";
 import { clearSession, getSession, loadData } from "./api";
 import { listCandidatos, listEmpresas } from "./storage/lists";
+import type { UsuarioLogado } from "./models/types";
 
 export function router(){
     const app = document.querySelector<HTMLDivElement>("#app")!;
 
     const session = getSession()
-    const lista: { id: number }[] = session?.tipo === "empresa" ? listEmpresas : listCandidatos
-    const user = session ? lista.find(u => u.id === session.id) : undefined
+    const empresa = session?.tipo === "empresa" ? listEmpresas.find(u => u.id === session.id) : undefined
+    const candidato = session?.tipo === "candidato" ? listCandidatos.find(u => u.id === session.id) : undefined
+    const currentUser: UsuarioLogado | undefined =
+        empresa ? { ...empresa, tipo: "empresa" } : candidato ? { ...candidato, tipo: "candidato" } : undefined
 
-    if(session && !user) clearSession()
+    if(session && !currentUser) clearSession()
 
-    const currentUser = user ? { ...user, tipo: session!.tipo } : undefined
     const page = currentUser ? PageFactory.create("home") : PageFactory.create("menu");
 
     if(page){

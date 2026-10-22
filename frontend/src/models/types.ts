@@ -20,3 +20,5 @@ type Pessoa = {
 
 export type Candidato = Pessoa & { cpf: string, idade: number }
 export type Empresa = Pessoa & { cnpj: string, pais: string, vagas: Vaga[] }
+
+export type UsuarioLogado = (Candidato & { tipo: "candidato" }) | (Empresa & { tipo: "empresa" })
