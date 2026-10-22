@@ -2,6 +2,7 @@ package com.augusto.linketinder.dao
 
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProviderFactory
+import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.Vaga
 import com.augusto.linketinder.model.pessoa.Empresa
 
@@ -96,6 +97,9 @@ class EmpresaDAO extends BaseDao {
     List<Empresa> listAll(Integer id = null) throws SQLException {
         final String sql = id == null ? "SELECT * FROM empresa ORDER BY id" : "SELECT * FROM empresa WHERE id = ?"
         List<Empresa> empresas = []
+        // Listando todas: vagas e competências vêm em poucas consultas em vez de várias por empresa
+        Map<Integer, List<Vaga>> vagasPorEmpresa = id == null ? vagaDao.listAll().groupBy { it.id_empresa } : null
+        Map<Integer, List<Competencia>> competencias = id == null ? competenciaDao.mapByEmpresa() : null
 
         Connection conn = null
         PreparedStatement stmt = null
@@ -110,7 +114,7 @@ class EmpresaDAO extends BaseDao {
 
             while (rs.next()) {
                 int empresaId = rs.getInt("id")
-                List<Vaga> vagas = vagaDao.listByEmpresa(empresaId)
+                List<Vaga> vagas = vagasPorEmpresa != null ? (vagasPorEmpresa[empresaId] ?: []) : vagaDao.listByEmpresa(empresaId)
                 empresas << new Empresa(
                         empresaId,
                         rs.getString("nome"),
@@ -120,7 +124,7 @@ class EmpresaDAO extends BaseDao {
                         rs.getString("pais"),
                         rs.getString("cnpj"),
                         rs.getString("descricao"),
-                        competenciaDao.listByEmpresa(empresaId),
+                        competencias != null ? (competencias[empresaId] ?: []) : competenciaDao.listByEmpresa(empresaId),
                         vagas,
                         rs.getString("senha")
                 )

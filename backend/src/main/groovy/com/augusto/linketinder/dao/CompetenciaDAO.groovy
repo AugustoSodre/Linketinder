@@ -199,6 +199,45 @@ class CompetenciaDAO extends BaseDao {
         }
     }
 
+    // Versões "em lote" para as listagens: uma consulta só, agrupada pelo id do candidato/empresa/vaga
+    Map<Integer, List<Competencia>> mapByCandidato() throws SQLException {
+        return mapByRelation("competencia_candidato", "id_candidato")
+    }
+
+    Map<Integer, List<Competencia>> mapByEmpresa() throws SQLException {
+        return mapByRelation("competencia_empresa", "id_empresa")
+    }
+
+    Map<Integer, List<Competencia>> mapByVaga() throws SQLException {
+        return mapByRelation("competencia_vaga", "id_vaga")
+    }
+
+    private Map<Integer, List<Competencia>> mapByRelation(String tabela, String colunaObjeto) throws SQLException {
+        final String sql = "SELECT rel.${colunaObjeto} AS id_objeto, comp.id, comp.nome FROM competencia comp " +
+                "INNER JOIN ${tabela} rel ON comp.id = rel.id_competencia ORDER BY comp.id"
+
+        Map<Integer, List<Competencia>> competencias = [:]
+
+        Connection conn = null
+        PreparedStatement stmt = null
+        ResultSet rs = null
+        try {
+            conn = getConnection()
+            stmt = conn.prepareStatement(sql)
+            rs = stmt.executeQuery()
+
+            while (rs.next()) {
+                competencias.computeIfAbsent(rs.getInt("id_objeto")) { [] } << buildCompetencia(rs)
+            }
+        } finally {
+            close(rs)
+            close(stmt)
+            close(conn)
+        }
+
+        return competencias
+    }
+
     private List<Competencia> listByRelation(String tabela, String colunaObjeto, int idObjeto) throws SQLException {
         final String sql = "SELECT comp.id, comp.nome FROM competencia comp " +
                 "INNER JOIN ${tabela} rel ON comp.id = rel.id_competencia " +

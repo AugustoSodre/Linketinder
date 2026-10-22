@@ -2,6 +2,7 @@ package com.augusto.linketinder.dao
 
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProvider
 import com.augusto.linketinder.dao.connectionProvider.ConnectionProviderFactory
+import com.augusto.linketinder.model.Competencia
 import com.augusto.linketinder.model.pessoa.Candidato
 
 import java.sql.Connection
@@ -83,6 +84,8 @@ class CandidatoDAO extends BaseDao {
     List<Candidato> listAll(Integer id = null) throws SQLException {
         final String sql = id == null ? "SELECT * FROM candidato ORDER BY id" : "SELECT * FROM candidato WHERE id = ?"
         List<Candidato> candidatos = []
+        // Listando todos: carrega as competências de uma vez em vez de uma consulta por candidato
+        Map<Integer, List<Competencia>> competencias = id == null ? competenciaDao.mapByCandidato() : null
 
         Connection conn = null
         PreparedStatement stmt = null
@@ -106,7 +109,7 @@ class CandidatoDAO extends BaseDao {
                         rs.getString("cpf"),
                         rs.getInt("idade"),
                         rs.getString("descricao"),
-                        competenciaDao.listByCandidato(candidatoId)
+                        competencias != null ? (competencias[candidatoId] ?: []) : competenciaDao.listByCandidato(candidatoId)
                 )
             }
         } finally {

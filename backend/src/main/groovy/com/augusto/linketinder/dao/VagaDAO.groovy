@@ -75,6 +75,8 @@ class VagaDAO extends BaseDao {
     List<Vaga> listAll(Integer id = null) throws SQLException {
         final String sql = id == null ? "SELECT * FROM vaga ORDER BY id" : "SELECT * FROM vaga WHERE id = ?"
         List<Vaga> vagas = []
+        // Listando todas: carrega as competências de uma vez em vez de uma consulta por vaga
+        Map<Integer, List<Competencia>> competencias = id == null ? competenciaDao.mapByVaga() : null
 
         Connection conn = null
         PreparedStatement stmt = null
@@ -88,7 +90,7 @@ class VagaDAO extends BaseDao {
             rs = stmt.executeQuery()
 
             while (rs.next()) {
-                vagas << buildVaga(rs)
+                vagas << buildVaga(rs, competencias)
             }
         } finally {
             close(rs)
@@ -169,9 +171,9 @@ class VagaDAO extends BaseDao {
         vagas.each { Vaga vaga -> delete(vaga.id) }
     }
 
-    private Vaga buildVaga(ResultSet rs) throws SQLException {
+    private Vaga buildVaga(ResultSet rs, Map<Integer, List<Competencia>> competenciasPorVaga = null) throws SQLException {
         int vagaId = rs.getInt("id")
-        List<Competencia> competencias = competenciaDao.listByVaga(vagaId)
+        List<Competencia> competencias = competenciasPorVaga != null ? (competenciasPorVaga[vagaId] ?: []) : competenciaDao.listByVaga(vagaId)
         return new Vaga(
                 vagaId,
                 rs.getInt("id_empresa"),
