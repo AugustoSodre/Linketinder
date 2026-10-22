@@ -18,13 +18,13 @@ export function createFormListeners(){
     }
 }
 
-export function generateCompetenciasText(sufixo: string): string{
+export function generateCompetenciasText(sufixo: string, marcadas: string[] = []): string{
     return listCompetenciasDisponiveis.map((competencia) => {
         const id = escapeHtml(`competencia-${sufixo}-${competencia}`)
         return `
         <div class="competencia-div">
             <label for="${id}">${escapeHtml(competencia)}</label>
-            <input type="checkbox" id="${id}" value="${escapeHtml(competencia)}" class="competencia-${sufixo}">
+            <input type="checkbox" id="${id}" value="${escapeHtml(competencia)}" class="competencia-${sufixo}"${marcadas.includes(competencia) ? " checked" : ""}>
         </div>`
     }).join("")
 }

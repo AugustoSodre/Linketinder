@@ -1,5 +1,7 @@
 package com.augusto.linketinder.API
 
+import com.augusto.linketinder.dao.RelationType
+import com.augusto.linketinder.service.CompetenciaService
 import com.sun.net.httpserver.HttpExchange
 
 abstract class CrudControllerAPI extends BaseControllerAPI {
@@ -7,11 +9,14 @@ abstract class CrudControllerAPI extends BaseControllerAPI {
     private final String base
     private final String rotulo
     private final String genero
+    private final RelationType relacao
+    private final CompetenciaService competenciaService = new CompetenciaService()
 
-    CrudControllerAPI(String base, String rotulo, String genero) {
+    CrudControllerAPI(String base, String rotulo, String genero, RelationType relacao) {
         this.base = base
         this.rotulo = rotulo
         this.genero = genero
+        this.relacao = relacao
     }
 
     protected abstract List listar()
@@ -72,15 +77,23 @@ abstract class CrudControllerAPI extends BaseControllerAPI {
         if (rejeitaInvalidos(exchange, campos, campos.keySet() as List<String>)) {
             return
         }
+        boolean trocaCompetencias = data.containsKey('competencias')
+        if (trocaCompetencias && !competenciasValidas(data.competencias)) {
+            sendErrorResponse(exchange, 400, "Competências inválidas")
+            return
+        }
 
         try {
             campos.each { key, value -> atualizar(id, key as String, value) }
+            if (trocaCompetencias) {
+                competenciaService.substituir(relacao, id, toCompetencias(data.competencias))
+            }
         } catch (Exception e) {
             if (!isDuplicado(e)) throw e
             sendErrorResponse(exchange, 409, "Valor já cadastrado por outro usuário")
             return
         }
-        sendJsonResponse(exchange, 200, [message: "$rotulo atualizad$genero com sucesso" as String, id: id, camposAtualizados: campos.keySet()])
+        sendJsonResponse(exchange, 200, [message: "$rotulo atualizad$genero com sucesso" as String, id: id, camposAtualizados: campos.keySet() + (trocaCompetencias ? ['competencias'] : [])])
     }
 
     @Override
@@ -95,6 +108,11 @@ abstract class CrudControllerAPI extends BaseControllerAPI {
         }
         remover(id)
         sendJsonResponse(exchange, 200, [message: "$rotulo removid$genero" as String, id: id])
+    }
+
+    private boolean competenciasValidas(Object lista) {
+        return lista instanceof List && lista.every { it instanceof Map && it.id instanceof Integer } &&
+                competenciaService.existem(lista*.id as List<Integer>)
     }
 
     private boolean checaExistenciaEDono(HttpExchange exchange, int id) {

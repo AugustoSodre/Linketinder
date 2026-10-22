@@ -37,6 +37,10 @@ export function renderEditarPerfilHTML(currentUser: UsuarioLogado): string{
                 <label for="perfil-senha">Nova senha (deixe em branco para manter):</label>
                 <input type="password" id="perfil-senha" minlength="6" autocomplete="new-password">
             </div>
+            <div class="form-item">
+                <label>Competências:</label>
+                ${generateCompetenciasText("perfil", currentUser.competencias)}
+            </div>
             <button type="submit" class="btn" id="perfil-submit">Salvar alterações</button>
         </form>
     </details>`
@@ -70,11 +74,10 @@ export function renderMinhasVagasHTML(currentUser: Empresa): string{
                 ${campo("vaga-descricao", "Descrição:", "")}
                 ${campo("vaga-cidade", "Cidade:", "")}
                 ${campo("vaga-estado", "Estado (UF):", currentUser.estado)}
-                <div class="form-item" id="vaga-competencias-form">
+                <div class="form-item">
                     <label>Competências da vaga:</label>
                     ${generateCompetenciasText("nova-vaga")}
                 </div>
-                <p id="vaga-competencias-aviso" hidden>As competências são definidas só na criação da vaga.</p>
                 <button type="submit" class="btn" id="vaga-submit">Criar vaga</button>
             </form>
         </details>
@@ -98,6 +101,7 @@ export function createPerfilListeners(currentUser: UsuarioLogado){
         else campos.idade = Number(valor("perfil-idade"))
         const senha = input("perfil-senha").value
         if (senha) campos.senha = senha
+        campos.competencias = toCompetenciasApi(marcadas("competencia-perfil"))
 
         const res = await encadear([
             ...regrasPessoa(),
@@ -128,8 +132,7 @@ export function createVagasListeners(currentUser: Empresa){
             input("vaga-descricao").value = vaga.descricao
             input("vaga-cidade").value = vaga.cidade ?? ""
             input("vaga-estado").value = vaga.estado ?? ""
-            document.getElementById("vaga-competencias-form")!.hidden = true
-            document.getElementById("vaga-competencias-aviso")!.hidden = false
+            document.querySelectorAll<HTMLInputElement>(".competencia-nova-vaga").forEach(c => c.checked = vaga.competencias.includes(c.value))
             document.getElementById("vaga-form-titulo")!.textContent = "Editar vaga"
             document.getElementById("vaga-submit")!.textContent = "Salvar vaga"
             ;(document.getElementById("vaga-form-container") as HTMLDetailsElement).open = true
@@ -153,6 +156,7 @@ export function createVagasListeners(currentUser: Empresa){
         e.preventDefault()
         const id = valor("vaga-id")
         const campos = { nome: valor("vaga-nome"), descricao: valor("vaga-descricao"), cidade: valor("vaga-cidade"), estado: valor("vaga-estado") }
+        const competencias = toCompetenciasApi(marcadas("competencia-nova-vaga"))
 
         const res = await encadear([
             regra("nome"),
@@ -164,9 +168,9 @@ export function createVagasListeners(currentUser: Empresa){
 
         try {
             if (id) {
-                await updateVaga(Number(id), campos)
+                await updateVaga(Number(id), { ...campos, competencias })
             } else {
-                await createVaga({ ...campos, id_empresa: currentUser.id, competencias: toCompetenciasApi(marcadas("competencia-nova-vaga")) })
+                await createVaga({ ...campos, id_empresa: currentUser.id, competencias })
             }
             notify(id ? "Vaga atualizada." : "Vaga criada.", "ok")
             await refresh()

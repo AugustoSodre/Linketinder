@@ -1,6 +1,7 @@
 package com.augusto.linketinder.API
 
 import com.augusto.linketinder.model.pessoa.Candidato
+import com.augusto.linketinder.dao.RelationType
 import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.CandidatoService
 import com.sun.net.httpserver.HttpExchange
@@ -10,7 +11,7 @@ class CandidatoControllerAPI extends CrudControllerAPI {
     private final CandidatoService candidatoService
 
     CandidatoControllerAPI() {
-        super("/candidatos", "Candidato", "o")
+        super("/candidatos", "Candidato", "o", RelationType.CANDIDATO)
         this.candidatoService = new CandidatoService()
     }
 

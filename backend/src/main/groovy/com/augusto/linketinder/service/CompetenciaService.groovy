@@ -2,6 +2,7 @@ package com.augusto.linketinder.service
 
 import com.augusto.linketinder.dao.CompetenciaDAO
 import com.augusto.linketinder.dao.DaoFactory
+import com.augusto.linketinder.dao.RelationType
 import com.augusto.linketinder.model.Competencia
 
 class CompetenciaService {
@@ -17,5 +18,13 @@ class CompetenciaService {
 
     List<Competencia> getCompetenciaList(){
         return competenciaDao.listAll()
+    }
+
+    boolean existem(List<Integer> ids) {
+        return competenciaDao.listAll()*.id.containsAll(ids)
+    }
+
+    void substituir(RelationType rel, int idObjeto, List<Competencia> competencias) {
+        competenciaDao.substituir(rel, idObjeto, competencias)
     }
 }

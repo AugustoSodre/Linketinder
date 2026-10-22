@@ -135,9 +135,20 @@ class ApiIntegrationTest {
             assertEquals([error: 'Valor já cadastrado por outro usuário', status: 409], req('PUT', "$base/$id", duplicado, token).json)
         }
 
-        def atualizado = req('PUT', "$base/$id", alteracao + [id: 1, competencias: []], token)
+        def atualizado = req('PUT', "$base/$id", alteracao + [id: 1], token)
         assertEquals([status: 200, json: [message: "$rotulo atualizad$genero com sucesso" as String, id: id, camposAtualizados: alteracao.keySet() as List]], atualizado)
         alteracao.each { k, v -> assertEquals(v, req('GET', "$base/$id").json[k]) }
+
+        def comCompetencias = req('PUT', "$base/$id", [competencias: [[id: 2, nome: 'Groovy'], [id: 1, nome: 'Java']]], token)
+        assertEquals(['competencias'], comCompetencias.json.camposAtualizados)
+        assertEquals([[id: 1, nome: 'Java'], [id: 2, nome: 'Groovy']], req('GET', "$base/$id").json.competencias)
+
+        assertEquals([error: 'Competências inválidas', status: 400], req('PUT', "$base/$id", [competencias: [[id: 999]]], token).json)
+        assertEquals([error: 'Competências inválidas', status: 400], req('PUT', "$base/$id", [competencias: 'Java'], token).json)
+        assertEquals(2, req('GET', "$base/$id").json.competencias.size())
+
+        req('PUT', "$base/$id", [competencias: []], token)
+        assertEquals([], req('GET', "$base/$id").json.competencias)
 
         assertEquals([status: 200, json: [message: "$rotulo removid$genero" as String, id: id]], req('DELETE', "$base/$id", null, token))
         assertEquals(404, req('GET', "$base/$id").status)

@@ -1,6 +1,7 @@
 package com.augusto.linketinder.API
 
 import com.augusto.linketinder.model.pessoa.Empresa
+import com.augusto.linketinder.dao.RelationType
 import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.EmpresaService
 import com.sun.net.httpserver.HttpExchange
@@ -10,7 +11,7 @@ class EmpresaControllerAPI extends CrudControllerAPI {
     private final EmpresaService empresaService
 
     EmpresaControllerAPI() {
-        super("/empresas", "Empresa", "a")
+        super("/empresas", "Empresa", "a", RelationType.EMPRESA)
         this.empresaService = new EmpresaService()
     }
 

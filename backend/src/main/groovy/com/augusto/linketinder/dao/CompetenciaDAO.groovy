@@ -102,6 +102,16 @@ class CompetenciaDAO extends BaseDao {
         }
     }
 
+    void substituir(RelationType rel, int objetoId, List<Competencia> competencias) throws SQLException {
+        final String insert = "INSERT INTO ${rel.table}(id_competencia, ${rel.column}) VALUES (?, ?)"
+        comSql { Sql db ->
+            db.withTransaction {
+                db.executeUpdate("DELETE FROM " + rel.table + " WHERE " + rel.column + " = ?", [objetoId])
+                competencias.each { db.executeUpdate(insert, [it.id, objetoId]) }
+            }
+        }
+    }
+
     private void removeByObject(RelationType rel, int objetoId) throws SQLException {
         executar("DELETE FROM " + rel.table + " WHERE " + rel.column + " = ?", [objetoId])
     }

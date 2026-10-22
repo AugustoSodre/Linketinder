@@ -1,6 +1,7 @@
 package com.augusto.linketinder.API
 
 import com.augusto.linketinder.model.Vaga
+import com.augusto.linketinder.dao.RelationType
 import com.augusto.linketinder.service.AuthService
 import com.augusto.linketinder.service.VagaService
 import com.sun.net.httpserver.HttpExchange
@@ -10,7 +11,7 @@ class VagaControllerAPI extends CrudControllerAPI {
     private final VagaService vagaService
 
     VagaControllerAPI() {
-        super("/vagas", "Vaga", "a")
+        super("/vagas", "Vaga", "a", RelationType.VAGA)
         this.vagaService = new VagaService()
     }
 
