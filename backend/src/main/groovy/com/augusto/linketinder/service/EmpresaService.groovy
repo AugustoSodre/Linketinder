@@ -55,7 +55,7 @@ class EmpresaService {
         try{
             empresaDao.updateField(id, coluna, novoValor)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 
@@ -63,7 +63,7 @@ class EmpresaService {
         try{
             empresaDao.delete(id)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 }

@@ -34,7 +34,7 @@ class CompetenciaService {
         try{
             competenciaDao.updateName(id, novoNome)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 
@@ -42,7 +42,7 @@ class CompetenciaService {
         try {
             return competenciaDao.listRelations(objeto)
         } catch (Exception e) {
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 
@@ -50,7 +50,7 @@ class CompetenciaService {
         try{
             competenciaDao.addRelation(objeto, idCompetencia, idObjeto)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 
@@ -58,7 +58,7 @@ class CompetenciaService {
         try{
             competenciaDao.removeRelation(objeto, idCompetencia, idObjeto)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 
@@ -67,7 +67,7 @@ class CompetenciaService {
             competenciaDao.removeAllRelationsFromCompetencia(id)
             competenciaDao.delete(id)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 

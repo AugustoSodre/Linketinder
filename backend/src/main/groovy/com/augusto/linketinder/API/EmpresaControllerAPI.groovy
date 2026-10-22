@@ -94,8 +94,27 @@ class EmpresaControllerAPI extends BaseControllerAPI {
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
 
+            if (rejeitaInvalidos(exchange, data, ['nome', 'email', 'estado', 'cep', 'pais', 'cnpj', 'descricao', 'senha'])) {
+                return
+            }
+            for (def vaga in (data.vagas ?: [])) {
+                if (!(vaga instanceof Map)) {
+                    sendErrorResponse(exchange, 400, "Vaga inválida")
+                    return
+                }
+                if (rejeitaInvalidos(exchange, vaga as Map, ['nome', 'descricao'])) {
+                    return
+                }
+            }
+
             def empresa = mapToEmpresa(data)
-            empresaService.createEmpresa(empresa)
+            try {
+                empresaService.createEmpresa(empresa)
+            } catch (Exception e) {
+                if (!isDuplicado(e)) throw e
+                sendErrorResponse(exchange, 409, "CNPJ já cadastrado")
+                return
+            }
             
             sendJsonResponse(exchange, 201, [message: "Empresa criada com sucesso", data: empresaToJson(empresa)])
         } else {
@@ -124,9 +143,18 @@ class EmpresaControllerAPI extends BaseControllerAPI {
                 sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
                 return
             }
+            if (rejeitaInvalidos(exchange, campos, campos.keySet() as List<String>)) {
+                return
+            }
 
-            campos.each { key, value ->
-                empresaService.updateEmpresa(id, (camposValidos[key] ?: key) as String, value)
+            try {
+                campos.each { key, value ->
+                    empresaService.updateEmpresa(id, (camposValidos[key] ?: key) as String, value)
+                }
+            } catch (Exception e) {
+                if (!isDuplicado(e)) throw e
+                sendErrorResponse(exchange, 409, "Valor já cadastrado por outro usuário")
+                return
             }
             def camposAtualizados = campos.keySet()
 

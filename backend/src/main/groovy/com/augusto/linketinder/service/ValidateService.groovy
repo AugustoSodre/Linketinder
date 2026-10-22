@@ -118,6 +118,31 @@ class ValidateService {
         return descricao.trim().length() >= 1
     }
 
+    // Regras usadas pela API REST; os formatos batem com as colunas do banco (cpf 11, cnpj 14, cep 8 dígitos, siglas de 2 letras)
+    // Retorna a mensagem de erro do campo, ou null se estiver ok (ou se o campo não tiver regra)
+    String erroDoCampo(String campo, Object valor) {
+        String texto = valor instanceof String ? valor : null
+        switch (campo) {
+            case 'nome': return isNomeValid(texto) ? null : 'Nome é obrigatório'
+            case 'email': return isEmailValid(texto) ? null : 'Email inválido'
+            case 'estado': return isEstadoValid(texto) ? null : 'Estado inválido (use a sigla, ex: SP)'
+            case 'cep': return (texto ?: '') ==~ /^\d{8}$/ ? null : 'CEP deve ter 8 dígitos'
+            case 'cpf': return (texto ?: '') ==~ /^\d{11}$/ ? null : 'CPF deve ter 11 dígitos'
+            case 'cnpj': return (texto ?: '') ==~ /^\d{14}$/ ? null : 'CNPJ deve ter 14 dígitos'
+            case 'pais': return (texto ?: '') ==~ /^[A-Z]{2}$/ ? null : 'País inválido (use a sigla, ex: BR)'
+            case 'idade': return valor instanceof Integer && isIdadeValid(valor as int) ? null : 'Idade deve estar entre 0 e 120'
+            case 'descricao': return isDescricaoValid(texto) ? null : 'Descrição é obrigatória'
+            case 'senha': return texto?.length() >= 6 ? null : 'A senha deve ter pelo menos 6 caracteres'
+            default: return null
+        }
+    }
+
+    // Usado pela API: valida os obrigatórios e qualquer outro campo que veio preenchido; retorna as mensagens de erro
+    List<String> validarCampos(Map data, List<String> obrigatorios) {
+        def campos = (obrigatorios + data.keySet().findAll { data[it] != null }).unique()
+        return campos.collect { erroDoCampo(it as String, data[it]) }.findAll { it != null }
+    }
+
     boolean isSenhaValid(String senha) {
         if (!senha) {
             return false

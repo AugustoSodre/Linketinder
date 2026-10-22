@@ -61,7 +61,7 @@ class CandidatoService {
         try{
             candidatoDao.updateField(id, coluna, novoValor)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 
@@ -69,7 +69,7 @@ class CandidatoService {
         try{
             candidatoDao.delete(id)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 }

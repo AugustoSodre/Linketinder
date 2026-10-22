@@ -93,8 +93,18 @@ class CandidatoControllerAPI extends BaseControllerAPI {
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
 
+            if (rejeitaInvalidos(exchange, data, ['nome', 'email', 'estado', 'cep', 'idade', 'cpf', 'descricao', 'senha'])) {
+                return
+            }
+
             def candidato = mapToCandidato(data)
-            candidatoService.createCandidato(candidato)
+            try {
+                candidatoService.createCandidato(candidato)
+            } catch (Exception e) {
+                if (!isDuplicado(e)) throw e
+                sendErrorResponse(exchange, 409, "CPF já cadastrado")
+                return
+            }
             
             sendJsonResponse(exchange, 201, [message: "Candidato criado com sucesso", data: candidatoToJson(candidato)])
         } else {
@@ -123,9 +133,18 @@ class CandidatoControllerAPI extends BaseControllerAPI {
                 sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
                 return
             }
+            if (rejeitaInvalidos(exchange, campos, campos.keySet() as List<String>)) {
+                return
+            }
 
-            campos.each { key, value ->
-                candidatoService.updateCandidato(id, (camposValidos[key] ?: key) as String, value)
+            try {
+                campos.each { key, value ->
+                    candidatoService.updateCandidato(id, (camposValidos[key] ?: key) as String, value)
+                }
+            } catch (Exception e) {
+                if (!isDuplicado(e)) throw e
+                sendErrorResponse(exchange, 409, "Valor já cadastrado por outro usuário")
+                return
             }
             def camposAtualizados = campos.keySet()
 

@@ -48,7 +48,7 @@ class VagaService {
         try{
             vagaDao.updateField(id, coluna, novoValor)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 
@@ -56,7 +56,7 @@ class VagaService {
         try{
             vagaDao.delete(id)
         } catch (Exception e){
-            throw new SQLException("Error: " + e.message)
+            throw new SQLException("Error: " + e.message, e)
         }
     }
 }

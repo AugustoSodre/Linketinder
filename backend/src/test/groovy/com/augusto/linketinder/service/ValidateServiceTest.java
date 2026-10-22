@@ -19,6 +19,26 @@ class ValidateServiceTest {
     }
 
     @Test
+    void validarCamposShouldReportMissingAndMalformedFields() {
+        java.util.Map<String, Object> valido = new java.util.HashMap<>(java.util.Map.of(
+                "nome", "Jim", "email", "jim@office.com", "estado", "SP", "cep", "12345678",
+                "idade", 30, "cpf", "12345678901", "descricao", "d", "senha", "123456"));
+        java.util.List<String> obrigatorios = java.util.List.copyOf(valido.keySet());
+
+        assertTrue(validateService.validarCampos(valido, obrigatorios).isEmpty());
+
+        java.util.Map<String, Object> invalido = new java.util.HashMap<>(valido);
+        invalido.put("cpf", "123.456.789-01");
+        invalido.put("senha", "123");
+        invalido.remove("nome");
+        assertEquals(3, validateService.validarCampos(invalido, obrigatorios).size());
+
+        // Em atualização parcial só os campos enviados são conferidos
+        assertTrue(validateService.validarCampos(java.util.Map.of("cep", "12345678"), java.util.List.of()).isEmpty());
+        assertEquals(1, validateService.validarCampos(java.util.Map.of("idade", "abc"), java.util.List.of()).size());
+    }
+
+    @Test
     void isEmailValid() {
         assertFalse(validateService.isEmailValid(""));
         assertFalse(validateService.isEmailValid("@"));

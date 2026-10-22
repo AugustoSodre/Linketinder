@@ -92,6 +92,10 @@ class VagaControllerAPI extends BaseControllerAPI {
             def body = getRequestBody(exchange)
             def data = objectMapper.readValue(body, Map.class)
 
+            if (rejeitaInvalidos(exchange, data, ['nome', 'descricao'])) {
+                return
+            }
+
             def vaga = mapToVaga(data)
             if (vaga.id_empresa != AuthService.getSession(exchange).id) {
                 sendErrorResponse(exchange, 403, "Acesso negado")
@@ -130,9 +134,18 @@ class VagaControllerAPI extends BaseControllerAPI {
                 sendErrorResponse(exchange, 400, "Campos inválidos: ${invalidos.join(', ')}")
                 return
             }
+            if (rejeitaInvalidos(exchange, campos, campos.keySet() as List<String>)) {
+                return
+            }
 
-            campos.each { key, value ->
-                vagaService.updateVaga(id, (camposValidos[key] ?: key) as String, value)
+            try {
+                campos.each { key, value ->
+                    vagaService.updateVaga(id, (camposValidos[key] ?: key) as String, value)
+                }
+            } catch (Exception e) {
+                if (!isDuplicado(e)) throw e
+                sendErrorResponse(exchange, 409, "Valor já cadastrado por outro usuário")
+                return
             }
             def camposAtualizados = campos.keySet()
 

@@ -1,17 +1,40 @@
 package com.augusto.linketinder.API
 
+import com.augusto.linketinder.service.ValidateService
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.sun.net.httpserver.HttpExchange
 import com.sun.net.httpserver.HttpHandler
 
+import java.sql.SQLException
+
 abstract class BaseControllerAPI implements HttpHandler {
 
     protected final ObjectMapper objectMapper = new ObjectMapper()
+    protected final ValidateService validateService = new ValidateService()
 
     BaseControllerAPI() {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT)
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
+    }
+
+    // Responde 400 e retorna true se algum campo for inválido
+    protected boolean rejeitaInvalidos(HttpExchange exchange, Map data, List<String> obrigatorios) {
+        def erros = validateService.validarCampos(data, obrigatorios)
+        if (erros) {
+            sendErrorResponse(exchange, 400, erros.join('; '))
+        }
+        return erros as boolean
+    }
+
+    // 23505 = unique_violation (mesmo código no PostgreSQL e no H2)
+    protected static boolean isDuplicado(Throwable e) {
+        for (def causa = e; causa != null; causa = causa.cause) {
+            if (causa instanceof SQLException && causa.SQLState == '23505') {
+                return true
+            }
+        }
+        return false
     }
 
     protected String getRequestBody(HttpExchange exchange) {
