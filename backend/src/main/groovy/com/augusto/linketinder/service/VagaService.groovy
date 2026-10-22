@@ -4,8 +4,6 @@ import com.augusto.linketinder.dao.VagaDAO
 import com.augusto.linketinder.dao.DaoFactory
 import com.augusto.linketinder.model.Vaga
 
-import java.sql.SQLException
-
 class VagaService {
     private final VagaDAO vagaDao
 
@@ -44,19 +42,11 @@ class VagaService {
         if (!(coluna in getCamposVaga().values())) {
             throw new IllegalArgumentException("Campo inválido: " + coluna)
         }
-        try{
-            vagaDao.updateField(id, coluna, novoValor)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        vagaDao.updateField(id, coluna, novoValor)
     }
 
     void deleteVaga(int id){
-        try{
-            vagaDao.delete(id)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        vagaDao.delete(id)
     }
 }
  

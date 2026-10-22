@@ -4,8 +4,6 @@ import com.augusto.linketinder.dao.CandidatoDAO
 import com.augusto.linketinder.dao.DaoFactory
 import com.augusto.linketinder.model.pessoa.Candidato
 
-import java.sql.SQLException
-
 class CandidatoService {
     private final CandidatoDAO candidatoDao
 
@@ -28,13 +26,7 @@ class CandidatoService {
     }
 
     List<Candidato> getCandidatoList(){
-        try{
-            return candidatoDao.listAll()
-        } catch (Exception e){
-            println("Erro ao listar candidatos: " + e.message)
-            return []
-        }
-
+        return candidatoDao.listAll()
     }
 
     Map<String, String> getCamposCandidato() {
@@ -57,18 +49,10 @@ class CandidatoService {
         if (coluna == 'senha') {
             novoValor = AuthService.hash(novoValor as String)
         }
-        try{
-            candidatoDao.updateField(id, coluna, novoValor)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        candidatoDao.updateField(id, coluna, novoValor)
     }
 
     void deleteCandidato(int id){
-        try{
-            candidatoDao.delete(id)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        candidatoDao.delete(id)
     }
 }

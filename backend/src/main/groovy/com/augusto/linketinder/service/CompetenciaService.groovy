@@ -4,8 +4,6 @@ import com.augusto.linketinder.dao.CompetenciaDAO
 import com.augusto.linketinder.dao.DaoFactory
 import com.augusto.linketinder.model.Competencia
 
-import java.sql.SQLException
-
 class CompetenciaService {
     private final CompetenciaDAO competenciaDao
 
@@ -31,44 +29,24 @@ class CompetenciaService {
     }
 
     void updateCompetenciaNome(int id, String novoNome){
-        try{
-            competenciaDao.updateName(id, novoNome)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        competenciaDao.updateName(id, novoNome)
     }
 
     String listarRelacionamentos(String objeto) {
-        try {
-            return competenciaDao.listRelations(objeto)
-        } catch (Exception e) {
-            throw new SQLException("Error: " + e.message, e)
-        }
+        return competenciaDao.listRelations(objeto)
     }
 
     void adicionarRelacionamento(String objeto, int idCompetencia, int idObjeto) {
-        try{
-            competenciaDao.addRelation(objeto, idCompetencia, idObjeto)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        competenciaDao.addRelation(objeto, idCompetencia, idObjeto)
     }
 
     void removerRelacionamento(String objeto, int idCompetencia, int idObjeto) {
-        try{
-            competenciaDao.removeRelation(objeto, idCompetencia, idObjeto)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        competenciaDao.removeRelation(objeto, idCompetencia, idObjeto)
     }
 
     void deleteCompetencia(int id){
-        try{
-            competenciaDao.removeAllRelationsFromCompetencia(id)
-            competenciaDao.delete(id)
-        } catch (Exception e){
-            throw new SQLException("Error: " + e.message, e)
-        }
+        competenciaDao.removeAllRelationsFromCompetencia(id)
+        competenciaDao.delete(id)
     }
 
 }

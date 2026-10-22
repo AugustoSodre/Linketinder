@@ -20,6 +20,15 @@ class MenuView {
 	boolean showMainMenu() {
 		printMainOptions()
 		int option = inputService.getIntInput()
+		try {
+			return abrirSubmenu(option)
+		} catch (Exception e) {
+			println "Erro: ${e.message}"
+			return false
+		}
+	}
+
+	private boolean abrirSubmenu(int option) {
 		switch (option) {
 			case 1:
 				limpaTela()
