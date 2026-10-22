@@ -1,7 +1,6 @@
-import { Candidato } from "../models/Candidato"
-import { Empresa } from "../models/Empresa"
-import { Vaga } from "../models/Vaga"
 import { createCandidato, createEmpresa, login, toCompetenciasApi } from "../api"
+import { refresh } from "../router"
+import { notify } from "../helpers/notify"
 
 import { FieldRequiredHandler } from "../validators/chain/FieldRequiredHandler"
 import { RegexHandler } from "../validators/chain/RegexHandler"
@@ -43,18 +42,17 @@ export function handleFormCandidato(listCompetenciasCandidato: string[]){
 
     nomeHandler.handle(context).then(async res => {
         if (!res.ok) {
-            alert(res.message)
+            notify(res.message)
             return
         }
 
         // all good: create and persist
-        const newCandidato = new Candidato(nome, email, estado, cep, descricao, competencias, idade, cpf)
         try {
-            await createCandidato({ ...newCandidato, senha, competencias: toCompetenciasApi(competencias) })
-            alert("Cadastro realizado! Faça login com seu CPF e senha.")
-            window.location.reload()
+            await createCandidato({ nome, email, estado, cep, descricao, idade, cpf, senha, competencias: toCompetenciasApi(competencias) })
+            notify("Cadastro realizado! Faça login com seu CPF e senha.", "ok")
+            await refresh()
         } catch (e) {
-            alert((e as Error).message)
+            notify((e as Error).message)
         }
     })
 
@@ -73,11 +71,12 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
 
     const nomeVaga = (document.getElementById("nome-vaga") as HTMLInputElement)?.value ?? ''
     const descricaoVaga = (document.getElementById("descricao-vaga") as HTMLInputElement)?.value ?? ''
+    const cidadeVaga = (document.getElementById("cidade-vaga") as HTMLInputElement)?.value ?? ''
 
     const cep = cepRaw.replaceAll('-', '').trim()
     const cnpj = cnpjRaw.replaceAll('.', '').replaceAll('-', '').replaceAll('/', '').trim()
 
-    const context: Record<string, any> = { nome, email, estado, cep, descricao, pais, cnpj, senha, nomeVaga, descricaoVaga }
+    const context: Record<string, any> = { nome, email, estado, cep, descricao, pais, cnpj, senha, nomeVaga, descricaoVaga, cidadeVaga }
 
     // chain: nome -> email -> estado -> cep -> descricao -> pais -> cnpj format -> cnpj unique -> vaga fields
     const root = new FieldRequiredHandler('nome', 'Nome inválido')
@@ -94,25 +93,22 @@ export function handleFormEmpresa(listCompetenciasEmpresa: string[], listCompete
         .setNext(new RegexHandler('senha', /^.{6,}$/, 'A senha deve ter pelo menos 6 caracteres'))
         .setNext(new FieldRequiredHandler('nomeVaga', 'Nome da vaga inválido'))
         .setNext(new FieldRequiredHandler('descricaoVaga', 'Descrição da vaga inválida'))
+        .setNext(new FieldRequiredHandler('cidadeVaga', 'Cidade da vaga inválida'))
 
     root.handle(context).then(async res => {
-        if (!res.ok) { alert(res.message); return }
-
-        const vaga = new Vaga(nomeVaga, descricaoVaga, listCompetenciasVaga)
-        const newEmpresa = new Empresa(nome, email, estado, cep, descricao, competencias, pais, cnpj, vaga)
+        if (!res.ok) { notify(res.message); return }
 
         try {
             // A API cria a empresa e suas vagas numa única requisição
             await createEmpresa({
-                ...newEmpresa,
-                senha,
+                nome, email, estado, cep, descricao, pais, cnpj, senha,
                 competencias: toCompetenciasApi(competencias),
-                vagas: [{ ...vaga, estado, competencias: toCompetenciasApi(listCompetenciasVaga) }]
+                vagas: [{ nome: nomeVaga, descricao: descricaoVaga, cidade: cidadeVaga, estado, competencias: toCompetenciasApi(listCompetenciasVaga) }]
             })
-            alert("Cadastro realizado! Faça login com seu CNPJ e senha.")
-            window.location.reload()
+            notify("Cadastro realizado! Faça login com seu CNPJ e senha.", "ok")
+            await refresh()
         } catch (e) {
-            alert((e as Error).message)
+            notify((e as Error).message)
         }
     })
 
@@ -128,12 +124,13 @@ export function handleFormLoginCandidato(){
     root.setNext(new FieldRequiredHandler('senha', 'Informe a senha'))
 
     root.handle(context).then(async res => {
-        if (!res.ok) { alert(res.message); return }
+        if (!res.ok) { notify(res.message); return }
         try {
             await login({ cpf, senha })
-            window.location.reload()
-        } catch {
-            alert('CPF ou senha inválidos')
+            await refresh()
+        } catch (e) {
+            // 401 = senha errada; outros (ex.: 429 muitas tentativas) mostram a mensagem da API
+            notify((e as any).status === 401 ? 'CPF ou senha inválidos' : (e as Error).message)
         }
     })
 
@@ -150,12 +147,13 @@ export function handleFormLoginEmpresa(){
     root.setNext(new FieldRequiredHandler('senha', 'Informe a senha'))
 
     root.handle(context).then(async res => {
-        if (!res.ok) { alert(res.message); return }
+        if (!res.ok) { notify(res.message); return }
         try {
             await login({ cnpj, senha })
-            window.location.reload()
-        } catch {
-            alert('CNPJ ou senha inválidos')
+            await refresh()
+        } catch (e) {
+            // 401 = senha errada; outros (ex.: 429 muitas tentativas) mostram a mensagem da API
+            notify((e as any).status === 401 ? 'CNPJ ou senha inválidos' : (e as Error).message)
         }
     })
 

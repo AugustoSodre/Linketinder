@@ -7,6 +7,10 @@ export let competenciasSelecionadas: string[] = []
 export let competenciasSelecionadasVaga: string[] = []
 
 export function createFormListeners(){
+    // Sem reload entre telas, as seleções do formulário anterior ficariam guardadas
+    competenciasSelecionadas.length = 0
+    competenciasSelecionadasVaga.length = 0
+
     const formCadastroCandidato = document.getElementById("form-cadastro-candidato")
     const formCadastroEmpresa   = document.getElementById("form-cadastro-empresa")
     const formLoginCandidato    = document.getElementById("form-login-candidato")

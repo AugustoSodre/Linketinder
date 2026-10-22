@@ -1,5 +1,6 @@
 import { createHomeListeners, renderHomeHeaderHTML, renderHomeLeftProfileHTML, renderHomeRightProfileHTML, renderHomeListaVagas, renderHomeListaCandidatos } from "../helpers/homeHelper"
 import { generateCandidatosCompetenciaGraphListener } from "./grafico"
+import { createPerfilListeners, createVagasListeners, renderEditarPerfilHTML, renderMinhasVagasHTML } from "./perfil"
 
 
 export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
@@ -15,6 +16,8 @@ export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
 
     text += renderHomeRightProfileHTML(currentUser)
 
+    text += renderEditarPerfilHTML(currentUser)
+
     text += renderHomeListaVagas(currentUser)
 
     text +=
@@ -25,6 +28,7 @@ export function renderHomeCandidatoHTML(app: HTMLDivElement, currentUser: any){
     app.innerHTML = text
 
     createHomeListeners()
+    createPerfilListeners(currentUser)
 }
 
 export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
@@ -38,6 +42,10 @@ export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
 
     text += renderHomeRightProfileHTML(currentUser)
 
+    text += renderEditarPerfilHTML(currentUser)
+
+    text += renderMinhasVagasHTML(currentUser)
+
     text += renderHomeListaCandidatos(currentUser)
 
     text += `<canvas id="chart-candidatos-competencias" style="width:100%;max-width:600px"></canvas>`
@@ -50,6 +58,8 @@ export function renderHomeEmpresaHTML(app: HTMLDivElement, currentUser: any){
     app.innerHTML = text
 
     createHomeListeners()
+    createPerfilListeners(currentUser)
+    createVagasListeners(currentUser)
     generateCandidatosCompetenciaGraphListener()
 }
 

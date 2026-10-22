@@ -146,6 +146,11 @@ export function renderFormEmpresa(app: HTMLDivElement){
             </div>
 
             <div class="form-item">
+            <label for="cidade-vaga">Cidade da Vaga:</label>
+            <input type="text" id="cidade-vaga" name="cidade-vaga" required>
+            </div>
+
+            <div class="form-item">
             <label for="competencias-vaga">Competências da Vaga:</label>
     `
 

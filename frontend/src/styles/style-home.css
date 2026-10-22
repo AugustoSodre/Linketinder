@@ -255,3 +255,39 @@
         padding: 1rem;
     }
 }
+/* Editar perfil / Minhas vagas (components/perfil.ts) */
+.perfil-section {
+    grid-column: 1 / -1;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 1.5rem;
+}
+
+.perfil-section summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--accent-primary);
+    font-size: 1.2rem;
+}
+
+.perfil-section form {
+    margin-top: 1.5rem;
+}
+
+.perfil-section .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    background-color: var(--accent-primary);
+    color: var(--text-primary);
+}
+
+.perfil-section .btn-danger {
+    background-color: #dc3545;
+}
+
+.minha-vaga .profile-actions {
+    margin-top: 1rem;
+}

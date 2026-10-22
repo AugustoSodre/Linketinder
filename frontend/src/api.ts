@@ -1,4 +1,6 @@
 import { listCandidatos, listEmpresas, listCompetenciasDisponiveis } from "./storage/lists"
+import { notify } from "./helpers/notify"
+import { refresh } from "./router"
 
 const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:8080"
 
@@ -26,11 +28,11 @@ async function request(path: string, method: string = "GET", body?: unknown): Pr
     // Token vencido (ou servidor reiniciado): sai da conta em vez de deixar a tela num estado logado falso
     if (res.status === 401 && session) {
         clearSession()
-        alert("Sua sessão expirou. Faça login novamente.")
-        window.location.reload()
-        return new Promise(() => {}) // a página vai recarregar; não deixa quem chamou mostrar outro alerta
+        notify("Sua sessão expirou. Faça login novamente.")
+        refresh()
+        return new Promise(() => {}) // a tela volta ao menu; não deixa quem chamou mostrar outra mensagem
     }
-    if (!res.ok) throw new Error(data?.error ?? `Erro ${res.status}`)
+    if (!res.ok) throw Object.assign(new Error(data?.error ?? `Erro ${res.status}`), { status: res.status })
     return data
 }
 
@@ -70,3 +72,11 @@ export const createEmpresa = (empresa: unknown) => request("/empresas", "POST", 
 export function deleteCurrentUser(session: Session){
     return request(`/${session.tipo}s/${session.id}`, "DELETE")
 }
+
+export function updateCurrentUser(session: Session, campos: Record<string, unknown>){
+    return request(`/${session.tipo}s/${session.id}`, "PUT", campos)
+}
+
+export const createVaga = (vaga: unknown) => request("/vagas", "POST", vaga)
+export const updateVaga = (id: number, campos: Record<string, unknown>) => request(`/vagas/${id}`, "PUT", campos)
+export const deleteVaga = (id: number) => request(`/vagas/${id}`, "DELETE")

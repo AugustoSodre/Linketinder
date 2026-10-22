@@ -128,6 +128,8 @@ O banco de dados foi modelado seguindo as melhores práticas de normalização e
 - ✅ Formulários interativos com validação em cadeia
 - ✅ Gráficos e visualizações
 - ✅ Dados carregados da API REST; login com senha e token na sessão (sessionStorage)
+- ✅ Edição do próprio perfil (incluindo troca de senha) e gestão das vagas da empresa (criar, editar, excluir)
+- ✅ Navegação sem recarregar a página e mensagens na própria tela
 - ✅ Roteamento SPA
 
 ### Banco de Dados (PostgreSQL)

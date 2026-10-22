@@ -147,3 +147,30 @@ button:active {
         padding: 1rem;
     }
 }
+/* Mensagens (helpers/notify.ts) */
+.notify {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 90vw;
+    padding: 0.875rem 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    color: var(--text-primary);
+    display: none;
+    z-index: 10;
+}
+
+.notify-erro,
+.notify-ok {
+    display: block;
+}
+
+.notify-erro {
+    background-color: #dc3545;
+}
+
+.notify-ok {
+    background-color: #2e8b57;
+}

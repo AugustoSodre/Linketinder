@@ -1,12 +1,14 @@
 import { escapeHtml } from "./escapeHtml"
 import { listarCandidatos, listarVagas } from "../components/listar"
 import { clearSession, deleteCurrentUser, getSession } from "../api"
+import { refresh } from "../router"
+import { notify } from "./notify"
 
 export function createHomeListeners(){
 
     document.getElementById("btn-logout")?.addEventListener("click", () => {
         clearSession()
-        window.location.reload()
+        refresh()
     })
 
     document.getElementById("btn-delete")?.addEventListener("click", async () => {
@@ -16,9 +18,10 @@ export function createHomeListeners(){
         try {
             await deleteCurrentUser(session)
             clearSession()
-            window.location.reload()
+            notify("Perfil excluído.", "ok")
+            await refresh()
         } catch (e) {
-            alert((e as Error).message)
+            notify((e as Error).message)
         }
     })
 

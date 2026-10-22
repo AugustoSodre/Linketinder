@@ -1,5 +1,7 @@
-// Preenchidas a partir da API REST em loadData() (src/api.ts); guardam o JSON cru da API
-export var listCandidatos: any[] = []
-export var listEmpresas: any[] = []
+import type { Candidato, Empresa } from "../models/types"
+
+// Preenchidas a partir da API REST em loadData() (src/api.ts)
+export var listCandidatos: Candidato[] = []
+export var listEmpresas: Empresa[] = []
 
 export var listCompetenciasDisponiveis: string[] = []
