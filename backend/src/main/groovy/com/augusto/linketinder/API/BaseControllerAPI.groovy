@@ -14,7 +14,6 @@ abstract class BaseControllerAPI implements HttpHandler {
     protected final ValidateService validateService = new ValidateService()
 
     BaseControllerAPI() {
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT)
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)
     }
 
